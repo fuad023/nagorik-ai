@@ -85,21 +85,21 @@ People from all sectors can use this service, but our primary target audience is
 
 ##  Milestones & Roadmap
 
-| Phase | Description |
-|-----|------------|
-| Phase 1 | Landing page, Login, Registration & Home Page |
-| Phase 2 | Database setup, Problem reporting & public listing |
-| Phase 3 | Admin dashboard & emergency notification system |
+| Phase | Front end | Backend |
+|------|----------|--------|
+| **Phase 1: Core System Setup** | •Design and develop Landing Page<br>•Login Page UI<br>•Registration Page UI<br>•Home Page UI | •User Authentication System (Login & Registration)<br>•Password Encryption & Validation<br>•Session & Token Management |
+| **Phase 2: Reporting System & Mapping** | •User Profile Page<br>•Report Submission Page<br>•Report History & Status Section<br>•Google Maps Integration for location tagging | •User Database Design & Management<br>•Report Database Structure & Storage<br>•API Development for sending/receiving report data<br>•Automatic report categorization based on type & location |
+| **Phase 3: Admin Panel & AI Integration** | •Admin Dashboard UI<br>•Report Management Panel<br>•AI Chatbot Interface for users<br>•Visual analytics and charts | •Admin Control APIs<br>•AI Model Integration for report classification<br>•Chatbot API & Response Management<br>•Data filtering, priority detection, and automation logic |
 
 ---
 
 ## Team members
 
-| Name           | Role           | Details         | ID           |
-| -------------- | ------------------- | ------------------------------------ | -------------|
-| Arnob          | Boss                | bossnocap@gmail.com | 20230104012    |
-| Sajid Al Amin  | Lead                | dj12@gmail.com | 20230104025         |
-| Rashedul Hasan | Front-end Developer | rashed@gmail.com | 20230104025       |
+| Name           | Role                | Details                | ID          |
+| -------------- | ------------------- | ---------------------- | ----------- |
+| Arnob          | Front-end Developer | sadmanrahman438@gmail.com    | 20230104012 |
+| Sajid Al Amin  | Lead                | sajidalaminsaa2003@gmail.com         | 20230104025 |
+| Rashedul Hasan | Front-end Developer | rashedul.cse.20230104022@aust.edu     | 20230104025 |
 | Nafis Fuad     | Back-end Developer  | nafisfuadisc@gmail.com | 20230104025 |
 
 ---
