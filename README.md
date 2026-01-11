@@ -57,12 +57,29 @@ People from all sectors can use this service, but our primary target audience is
 ###  Authority Dashboard
 - Admin panel for authorities to view categorized issues and manage resolutions.
 
-###  CRAUD Operation
-- ** Edit here **
+
+### CRUD Operations
+
+The Nagorik website implements full **CRUD (Create, Read, Update, Delete) operations** to manage user data efficiently and securely. The main features include:
+
+- **Create** – Add new records like user profiles, feedback, or reports through simple and intuitive forms.  
+- **Read** – Retrieve and display data dynamically on different sections of the website, giving real-time access to information.  
+- **Update** – Edit existing records to ensure accuracy and keep information up-to-date.  
+- **Delete** – Remove unnecessary or outdated records while maintaining database integrity.  
 
 ###  RESTful API Endpoints
-- ** Edit here **
-
+ | Method | Endpoint         | Description                 |
+|--------|-----------------|-----------------------------|
+| POST   | `/api/users`     | Create a new user           |
+| GET    | `/api/users`     | Get all users               |
+| GET    | `/api/users/:id` | Get a single user by ID     |
+| PUT    | `/api/users/:id` | Update user information     |
+| DELETE | `/api/users/:id` | Delete a user by ID         
+| POST   | `/api/reports`      | Create a new report              |
+| GET    | `/api/reports`      | Get all reports                  |
+| GET    | `/api/reports/:id`  | Get a single report by ID        |
+| PUT    | `/api/reports/:id`  | Update report details            |
+| DELETE | `/api/reports/:id`  | Delete a report by ID            |
 ---
 
 ##  Problem Domains Covered
