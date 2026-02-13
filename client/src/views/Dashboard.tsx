@@ -1,0 +1,416 @@
+import React, { useState } from 'react';
+import {
+    MDBContainer,
+    MDBRow,
+    MDBCol,
+    MDBBtn,
+    MDBCard,
+    MDBCardBody,
+    MDBIcon,
+    MDBTypography,
+    MDBNavbar,
+    MDBNavbarBrand,
+    MDBNavbarNav,
+    MDBNavbarItem,
+    MDBBadge,
+    MDBInput,
+    MDBTextArea,
+    MDBModal,
+    MDBModalDialog,
+    MDBModalContent,
+    MDBModalHeader,
+    MDBModalTitle,
+    MDBModalBody,
+    MDBModalFooter,
+} from 'mdb-react-ui-kit';
+import { useNavigate } from 'react-router-dom';
+import '../styles/Dashboard.css';
+
+interface Report {
+    id: number;
+    title: string;
+    category: string;
+    status: 'pending' | 'in-progress' | 'resolved';
+    lastUpdated: string;
+    description: string;
+}
+
+interface NearbyIssue {
+    id: number;
+    title: string;
+    distance: string;
+    category: string;
+}
+
+const Dashboard: React.FC = () => {
+    const navigate = useNavigate();
+    const [showNewReportModal, setShowNewReportModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterStatus, setFilterStatus] = useState('all');
+
+    // Mock data - replace with actual API calls
+    const [reports] = useState<Report[]>([
+        {
+            id: 1,
+            title: 'Broken Street Light',
+            category: 'Infrastructure',
+            status: 'in-progress',
+            lastUpdated: '2 hours ago',
+            description: 'Street light on Main St is not working',
+        },
+        {
+            id: 2,
+            title: 'Pothole on Highway',
+            category: 'Roads',
+            status: 'pending',
+            lastUpdated: '1 day ago',
+            description: 'Large pothole causing traffic issues',
+        },
+        {
+            id: 3,
+            title: 'Garbage Not Collected',
+            category: 'Sanitation',
+            status: 'resolved',
+            lastUpdated: '3 days ago',
+            description: 'Garbage collection missed for a week',
+        },
+    ]);
+
+    const [nearbyIssues] = useState<NearbyIssue[]>([
+        { id: 1, title: 'Water Leakage', distance: '0.5 km', category: 'Water Supply' },
+        { id: 2, title: 'Traffic Signal Malfunction', distance: '1.2 km', category: 'Traffic' },
+        { id: 3, title: 'Park Maintenance', distance: '2.1 km', category: 'Parks' },
+    ]);
+
+    const toggleNewReportModal = () => setShowNewReportModal(!showNewReportModal);
+
+    const getStatusBadge = (status: string) => {
+        const statusConfig = {
+            pending: { color: 'warning' as const, text: 'Pending', icon: 'clock' },
+            'in-progress': { color: 'info' as const, text: 'In Progress', icon: 'cog' },
+            resolved: { color: 'success' as const, text: 'Resolved', icon: 'check-circle' },
+        };
+
+        const config = statusConfig[status as keyof typeof statusConfig];
+        return (
+            <MDBBadge color={config.color} className="status-badge">
+                <MDBIcon fas icon={config.icon} className="me-1" />
+                {config.text}
+            </MDBBadge>
+        );
+    };
+
+    const filteredReports = reports.filter((report) => {
+        const matchesSearch =
+            report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            report.category.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesFilter = filterStatus === 'all' || report.status === filterStatus;
+        return matchesSearch && matchesFilter;
+    });
+
+    return (
+        <div className="dashboard-page">
+            {/* Top Navigation */}
+            <MDBNavbar expand="lg" light bgColor="white" className="shadow-sm sticky-top">
+                <MDBContainer fluid>
+                    <MDBNavbarBrand href="#" onClick={() => navigate('/landing')}>
+                        <MDBIcon fas icon="city" size="2x" className="text-primary me-2" />
+                        <span className="fw-bold text-primary">Nagorik-AI</span>
+                    </MDBNavbarBrand>
+                    <MDBNavbarNav className="ms-auto d-flex flex-row align-items-center">
+                        <MDBNavbarItem className="me-3 position-relative">
+                            <MDBIcon fas icon="bell" size="lg" className="text-muted cursor-pointer" />
+                            <MDBBadge color="danger" notification pill className="notification-badge">
+                                3
+                            </MDBBadge>
+                        </MDBNavbarItem>
+                        <MDBNavbarItem className="me-3">
+                            <div className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer">
+                                <MDBIcon fas icon="user" />
+                            </div>
+                        </MDBNavbarItem>
+                        <MDBNavbarItem>
+                            <MDBBtn
+                                color="link"
+                                className="text-muted"
+                                onClick={() => navigate('/landing')}
+                            >
+                                <MDBIcon fas icon="sign-out-alt" className="me-1" />
+                                Logout
+                            </MDBBtn>
+                        </MDBNavbarItem>
+                    </MDBNavbarNav>
+                </MDBContainer>
+            </MDBNavbar>
+
+            {/* Main Content */}
+            <MDBContainer fluid className="py-4">
+                {/* User Greeting */}
+                <MDBRow className="mb-4">
+                    <MDBCol>
+                        <div className="greeting-card p-4 bg-gradient-primary text-white rounded shadow">
+                            <MDBRow className="align-items-center">
+                                <MDBCol md="8">
+                                    <MDBTypography tag="h3" className="fw-bold mb-2">
+                                        Welcome back, Citizen!
+                                    </MDBTypography>
+                                    <MDBTypography tag="p" className="mb-0 opacity-90">
+                                        You have {reports.filter((r) => r.status !== 'resolved').length} active
+                                        reports and {nearbyIssues.length} nearby issues
+                                    </MDBTypography>
+                                </MDBCol>
+                                <MDBCol md="4" className="text-md-end">
+                                    <MDBBtn
+                                        color="light"
+                                        size="lg"
+                                        className="new-report-btn"
+                                        onClick={toggleNewReportModal}
+                                    >
+                                        <MDBIcon fas icon="plus" className="me-2" />
+                                        New Report
+                                    </MDBBtn>
+                                </MDBCol>
+                            </MDBRow>
+                        </div>
+                    </MDBCol>
+                </MDBRow>
+
+                <MDBRow>
+                    {/* Left Column - My Reports */}
+                    <MDBCol lg="8" className="mb-4">
+                        <MDBCard className="border-0 shadow-sm h-100">
+                            <MDBCardBody>
+                                <div className="d-flex justify-content-between align-items-center mb-4">
+                                    <MDBTypography tag="h5" className="fw-bold mb-0">
+                                        <MDBIcon fas icon="file-alt" className="me-2 text-primary" />
+                                        My Reports
+                                    </MDBTypography>
+                                </div>
+
+                                {/* Search and Filter */}
+                                <MDBRow className="mb-4">
+                                    <MDBCol md="8">
+                                        <MDBInput
+                                            label="Search reports..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                        />
+                                    </MDBCol>
+                                    <MDBCol md="4">
+                                        <select
+                                            className="form-select"
+                                            value={filterStatus}
+                                            onChange={(e) => setFilterStatus(e.target.value)}
+                                        >
+                                            <option value="all">All Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="in-progress">In Progress</option>
+                                            <option value="resolved">Resolved</option>
+                                        </select>
+                                    </MDBCol>
+                                </MDBRow>
+
+                                {/* Reports List */}
+                                <div className="reports-list">
+                                    {filteredReports.length === 0 ? (
+                                        <div className="text-center py-5 text-muted">
+                                            <MDBIcon fas icon="inbox" size="3x" className="mb-3 opacity-50" />
+                                            <p>No reports found</p>
+                                        </div>
+                                    ) : (
+                                        filteredReports.map((report) => (
+                                            <MDBCard key={report.id} className="report-card mb-3 border-0 shadow-sm">
+                                                <MDBCardBody>
+                                                    <MDBRow className="align-items-center">
+                                                        <MDBCol md="8">
+                                                            <MDBTypography tag="h6" className="fw-bold mb-2">
+                                                                {report.title}
+                                                            </MDBTypography>
+                                                            <div className="d-flex align-items-center text-muted small mb-2">
+                                                                <MDBIcon fas icon="tag" className="me-1" />
+                                                                <span className="me-3">{report.category}</span>
+                                                                <MDBIcon fas icon="clock" className="me-1" />
+                                                                <span>{report.lastUpdated}</span>
+                                                            </div>
+                                                            <p className="text-muted small mb-0">{report.description}</p>
+                                                        </MDBCol>
+                                                        <MDBCol md="4" className="text-md-end">
+                                                            {getStatusBadge(report.status)}
+                                                            <div className="mt-2">
+                                                                <MDBBtn color="link" size="sm" className="text-primary">
+                                                                    View Details
+                                                                </MDBBtn>
+                                                            </div>
+                                                        </MDBCol>
+                                                    </MDBRow>
+                                                </MDBCardBody>
+                                            </MDBCard>
+                                        ))
+                                    )}
+                                </div>
+                            </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+
+                    {/* Right Column - Nearby Issues */}
+                    <MDBCol lg="4">
+                        <MDBCard className="border-0 shadow-sm mb-4">
+                            <MDBCardBody>
+                                <MDBTypography tag="h5" className="fw-bold mb-4">
+                                    <MDBIcon fas icon="map-marker-alt" className="me-2 text-danger" />
+                                    Nearby Issues
+                                </MDBTypography>
+
+                                {/* Map Placeholder */}
+                                <div className="map-placeholder bg-light rounded mb-3 d-flex align-items-center justify-content-center">
+                                    <div className="text-center text-muted">
+                                        <MDBIcon fas icon="map" size="3x" className="mb-2 opacity-50" />
+                                        <p className="small mb-0">Interactive map coming soon</p>
+                                    </div>
+                                </div>
+
+                                {/* Nearby Issues List */}
+                                <div className="nearby-issues-list">
+                                    {nearbyIssues.map((issue) => (
+                                        <div key={issue.id} className="nearby-issue-item p-3 mb-2 bg-light rounded">
+                                            <div className="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <MDBTypography tag="h6" className="fw-bold mb-1 small">
+                                                        {issue.title}
+                                                    </MDBTypography>
+                                                    <p className="text-muted mb-0 small">
+                                                        <MDBIcon fas icon="tag" className="me-1" />
+                                                        {issue.category}
+                                                    </p>
+                                                </div>
+                                                <MDBBadge color="light" className="text-dark">
+                                                    <MDBIcon fas icon="location-arrow" className="me-1" />
+                                                    {issue.distance}
+                                                </MDBBadge>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </MDBCardBody>
+                        </MDBCard>
+
+                        {/* Quick Stats */}
+                        <MDBCard className="border-0 shadow-sm">
+                            <MDBCardBody>
+                                <MDBTypography tag="h5" className="fw-bold mb-4">
+                                    <MDBIcon fas icon="chart-bar" className="me-2 text-success" />
+                                    Quick Stats
+                                </MDBTypography>
+
+                                <div className="stat-item mb-3">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className="text-muted">Total Reports</span>
+                                        <span className="fw-bold fs-5 text-primary">{reports.length}</span>
+                                    </div>
+                                </div>
+
+                                <div className="stat-item mb-3">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className="text-muted">Resolved</span>
+                                        <span className="fw-bold fs-5 text-success">
+                                            {reports.filter((r) => r.status === 'resolved').length}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="stat-item">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className="text-muted">Active</span>
+                                        <span className="fw-bold fs-5 text-warning">
+                                            {reports.filter((r) => r.status !== 'resolved').length}
+                                        </span>
+                                    </div>
+                                </div>
+                            </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
+
+            {/* New Report Modal */}
+            <MDBModal open={showNewReportModal} onClose={toggleNewReportModal} tabIndex="-1">
+                <MDBModalDialog size="lg">
+                    <MDBModalContent>
+                        <MDBModalHeader>
+                            <MDBModalTitle>
+                                <MDBIcon fas icon="flag" className="me-2 text-primary" />
+                                Submit New Report
+                            </MDBModalTitle>
+                            <MDBBtn
+                                className="btn-close"
+                                color="none"
+                                onClick={toggleNewReportModal}
+                            ></MDBBtn>
+                        </MDBModalHeader>
+                        <MDBModalBody>
+                            <form>
+                                <div className="mb-4">
+                                    <MDBInput label="Report Title" type="text" required />
+                                </div>
+
+                                <div className="mb-4">
+                                    <select className="form-select" defaultValue="" required>
+                                        <option value="" disabled>
+                                            Select Category
+                                        </option>
+                                        <option value="infrastructure">Infrastructure</option>
+                                        <option value="roads">Roads</option>
+                                        <option value="sanitation">Sanitation</option>
+                                        <option value="water">Water Supply</option>
+                                        <option value="traffic">Traffic</option>
+                                        <option value="parks">Parks & Recreation</option>
+                                    </select>
+                                </div>
+
+                                <div className="mb-4">
+                                    <MDBInput label="Location" type="text" required />
+                                    <small className="text-muted d-block mt-1">
+                                        <MDBIcon fas icon="map-marker-alt" className="me-1" />
+                                        Enter the location of the issue
+                                    </small>
+                                </div>
+
+                                <div className="mb-4">
+                                    <MDBTextArea label="Description" rows={4} required />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label className="form-label">Upload Photos (Optional)</label>
+                                    <input type="file" className="form-control" multiple accept="image/*" />
+                                    <small className="text-muted">You can upload up to 5 photos</small>
+                                </div>
+                            </form>
+                        </MDBModalBody>
+                        <MDBModalFooter>
+                            <MDBBtn color="secondary" onClick={toggleNewReportModal}>
+                                Cancel
+                            </MDBBtn>
+                            <MDBBtn color="primary" onClick={toggleNewReportModal}>
+                                <MDBIcon fas icon="paper-plane" className="me-2" />
+                                Submit Report
+                            </MDBBtn>
+                        </MDBModalFooter>
+                    </MDBModalContent>
+                </MDBModalDialog>
+            </MDBModal>
+
+            {/* Floating Action Button (Mobile) */}
+            <MDBBtn
+                color="primary"
+                size="lg"
+                floating
+                className="fab-mobile d-lg-none"
+                onClick={toggleNewReportModal}
+            >
+                <MDBIcon fas icon="plus" size="2x" />
+            </MDBBtn>
+        </div>
+    );
+};
+
+export default Dashboard;
