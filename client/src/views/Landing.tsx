@@ -20,8 +20,12 @@ import '../styles/Landing.css';
 const Landing: React.FC = () => {
     const navigate = useNavigate();
 
-    const handleGetStarted = () => {
-        navigate('/dashboard');
+    const handleLogin = () => {
+        navigate('/login');
+    };
+
+    const handleRegister = () => {
+        navigate('/registration');
     };
 
     return (
@@ -41,7 +45,7 @@ const Landing: React.FC = () => {
                             <MDBNavbarLink href="#about">About</MDBNavbarLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="ms-3">
-                            <MDBBtn color="primary" size="sm" onClick={handleGetStarted}>
+                            <MDBBtn color="primary" size="sm" onClick={handleLogin}>
                                 Sign In
                             </MDBBtn>
                         </MDBNavbarItem>
@@ -67,7 +71,7 @@ const Landing: React.FC = () => {
                                         color="primary"
                                         size="lg"
                                         className="me-3 mb-3 pulse-animation"
-                                        onClick={handleGetStarted}
+                                        onClick={handleRegister}
                                     >
                                         <MDBIcon fas icon="flag" className="me-2" />
                                         Report an Issue
@@ -333,7 +337,7 @@ const Landing: React.FC = () => {
                     <MDBTypography tag="p" className="fs-5 mb-4 opacity-75">
                         Join the movement of empowered citizens transforming their communities
                     </MDBTypography>
-                    <MDBBtn color="light" size="lg" onClick={handleGetStarted}>
+                    <MDBBtn color="light" size="lg" onClick={handleRegister}>
                         <MDBIcon fas icon="rocket" className="me-2" />
                         Get Started Now
                     </MDBBtn>
