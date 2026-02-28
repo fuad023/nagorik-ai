@@ -5,6 +5,7 @@
 }
 body {
   font-family: 'Josefin Sans', serif;
+  background-color: #f8f9fa; /* Light grey */
 }
 
 .layout {

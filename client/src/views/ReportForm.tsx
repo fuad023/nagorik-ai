@@ -122,7 +122,8 @@ export default function ReportForm() {
     const descLen = formData.description.length
 
     return (
-        <MDBContainer style={{ maxWidth: 720, width: '100%' }}>
+        <div className="app-wrapper">
+            <MDBContainer style={{ maxWidth: 720, width: '100%' }}>
              {/* Header */}
             <div className="report-header">
                 <div className="badge-chip">
@@ -164,7 +165,6 @@ export default function ReportForm() {
                                 feedback="Please enter a location."
                             >
                                 <div className="input-icon-wrapper">
-                                    <i className="fas fa-map-marker-alt field-icon" />
                                     <MDBInput
                                         name="location"
                                         value={formData.location}
@@ -193,7 +193,6 @@ export default function ReportForm() {
                                 feedback="Please describe the issue."
                             >
                                 <div className="input-icon-wrapper textarea-wrapper">
-                                    <i className="fas fa-comment-alt field-icon" style={{ top: 16 }} />
                                     <MDBTextArea
                                         name="description"
                                         value={formData.description}
@@ -281,7 +280,7 @@ export default function ReportForm() {
                         <MDBCol size="12" className="d-flex flex-column align-items-center gap-2 mt-2">
                             <MDBBtn
                                 type="submit"
-                                className="submit-btn w-100"
+                                className="submit-btn w-100 text-white fw-bold"
                                 disabled={isSubmitting}
                                 size="lg"
                             >
@@ -306,5 +305,7 @@ export default function ReportForm() {
                 </MDBCardBody>
             </MDBCard>
         </MDBContainer>
+        </div>
+        
     )
 }
