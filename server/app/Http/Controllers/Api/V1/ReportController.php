@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreReportRequest;
+use App\Models\Report;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -14,18 +16,7 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return [
-            [
-                'id' => 10,
-                'title' => 'Title 10',
-                'content' => 'Content 10.',
-            ],
-            [
-                'id' => 23,
-                'title' => 'Title 23',
-                'content' => 'Content 23.',
-            ]
-        ];
+        return Report::all();
     }
 
     /**
@@ -34,14 +25,12 @@ class ReportController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreReportRequest $request)
     {
-        $data = $request->only('title', 'content');
-        return response()->json([
-            'id' => 1,
-            'title' => $data['title'],
-            'content' => $data['content'],
-        ], 201);
+        $data = $request->validated();
+        $data['author_id'] = 23;
+        $report = Report::create($data);
+        return response()->json($report, 201);
     }
 
     /**
@@ -50,13 +39,9 @@ class ReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Report $report)
     {
-        return response()->json([
-            'id' => (int) $id,
-            'title' => 'Title '.$id,
-            'content' => 'Content '.$id.'.',
-        ]);
+        return response()->json($report);
     }
 
     /**
@@ -66,14 +51,11 @@ class ReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreReportRequest $request, Report $report)
     {
-        $data = $request->validate([
-            'title' => 'required|string|max:32',
-            'content' => ['required', 'string', 'min:16']
-        ]);
-
-        return $data;
+        $data = $request->validated();
+        $report->update($data);
+        return response()->json($report);
     }
 
     /**
@@ -82,8 +64,9 @@ class ReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Report $report)
     {
+        $report->delete();
         return response()->noContent();
     }
 }
