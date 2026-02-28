@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ReportController;
+use App\Http\Controllers\SessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,7 @@ Route::post('/session', [SessionController::class, 'createSession'])->middleware
 Route::put('/session', [SessionController::class, 'updateSession'])->middleware('check.admin');
 Route::post('/sessions', [SessionController::class, 'viewSessions'])->middleware('check.admin');
 Route::post('/attendance', [SessionController::class, 'submitAttendance']);
+
+Route::prefix('v1')->group(function () {
+    Route::apiResource('reports', ReportController::class);
+});
