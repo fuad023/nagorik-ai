@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReportRequest;
+use App\Http\Resources\ReportResource;
 use App\Models\Report;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return Report::all();
+        return ReportResource::collection(Report::with('author')->paginate(10));
     }
 
     /**
@@ -30,7 +31,7 @@ class ReportController extends Controller
         $data = $request->validated();
         $data['author_id'] = 23;
         $report = Report::create($data);
-        return response()->json($report, 201);
+        return new ReportResource($report);
     }
 
     /**
@@ -41,7 +42,7 @@ class ReportController extends Controller
      */
     public function show(Report $report)
     {
-        return response()->json($report);
+        return new ReportResource($report);
     }
 
     /**
@@ -55,7 +56,7 @@ class ReportController extends Controller
     {
         $data = $request->validated();
         $report->update($data);
-        return response()->json($report);
+        return new ReportResource($report);
     }
 
     /**
