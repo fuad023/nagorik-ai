@@ -1,0 +1,252 @@
+/* Landing Page Styles */
+.landing-page {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 75vh;
+  position: relative;
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+.hero-content {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-illustration {
+  animation: slideInRight 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Pulse Animation for CTA Button */
+.pulse-animation {
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+  }
+}
+
+/* Feature Cards */
+.feature-card {
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.shadow-hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.feature-icon {
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1);
+}
+
+/* Trust Section */
+.trust-section {
+  background: #ffffff;
+}
+
+.stat-card {
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 25px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e0e0e0;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 60px;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-badge {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-badge.pulse {
+  animation: pulse-icon 1.5s infinite;
+}
+
+@keyframes pulse-icon {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.timeline-content {
+  padding: 10px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: auto;
+    padding: 40px 0;
+  }
+
+  .display-3 {
+    font-size: 2.5rem;
+  }
+
+  .display-5 {
+    font-size: 2rem;
+  }
+
+  .display-6 {
+    font-size: 1.75rem;
+  }
+
+  .cta-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-buttons .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .timeline::before {
+    left: 15px;
+  }
+
+  .timeline-badge {
+    left: 0;
+    width: 30px;
+    height: 30px;
+  }
+
+  .timeline-item {
+    padding-left: 50px;
+  }
+}
+
+/* Accessibility */
+.cursor-pointer {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.cursor-pointer:hover {
+  opacity: 0.7;
+}
+
+.cursor-pointer:focus {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Link hover effects */
+.navbar-light .navbar-nav .nav-link {
+  transition: color 0.2s ease;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #0d6efd !important;
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideInRight 1s ease-out;
+}
+
+/* Card elevations on hover */
+.shadow-lg {
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-lg:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2) !important;
+}

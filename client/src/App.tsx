@@ -1,25 +1,34 @@
-import { Outlet, Route, Routes } from 'react-router';
-import BaseLayout from './views/BaseLayout';
-import Home from './views/Home';
+import { Navigate, Route, Routes } from 'react-router';
+import Landing from './views/Landing';
+import Dashboard from './views/Dashboard';
+import Login from './views/login';
+import Registration from './views/registration';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
-import Sessions from './views/Sessions';
+import ReportForm from './views/ReportForm';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route
-          element={
-            <BaseLayout>
-              <Outlet />
-            </BaseLayout>
-          }
-        >
-          <Route path={'/'} element={<Home />} />
-          <Route path={'/sessions'} element={<Sessions />} />
-        </Route>
+        {/* Redirect root to Landing Page */}
+        <Route path="/" element={<Navigate to="/landing" replace />} />
+
+        {/* Public Landing Page */}
+        <Route path="/landing" element={<Landing />} />
+
+        {/* Dashboard Route */}
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Authentication Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/registration" element={<Registration />} />
+
+        <Route path='/report' element = {<ReportForm/>}/>
+
       </Routes>
       <Toaster
         position="top-center"
@@ -34,3 +43,4 @@ function App() {
 }
 
 export default App;
+
