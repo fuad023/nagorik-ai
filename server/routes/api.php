@@ -16,18 +16,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('/session', [SessionController::class, 'getSession']);
 Route::post('/session', [SessionController::class, 'createSession'])->middleware('check.admin');
 Route::put('/session', [SessionController::class, 'updateSession'])->middleware('check.admin');
 Route::post('/sessions', [SessionController::class, 'viewSessions'])->middleware('check.admin');
 Route::post('/attendance', [SessionController::class, 'submitAttendance']);
 
-Route::prefix('v1')->group(function () {
-    Route::apiResource('reports', ReportController::class);
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::prefix('v1')->group(function () {
+        Route::apiResource('/reports', ReportController::class);
+    });
 });
 
 require __DIR__ . '/auth.php';

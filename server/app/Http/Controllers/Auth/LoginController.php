@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -18,10 +18,12 @@ class LoginController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-
-        $request->session()->regenerate();
-
-        return response()->noContent();
+        $user = $request->user();
+        $token = $user->createToken('main')->plainTextToken;
+        return [
+            'user' => new UserResource($user),
+            'token' => $token,
+        ];
     }
 
     /**
@@ -32,12 +34,8 @@ class LoginController extends Controller
      */
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
         return response()->noContent();
     }
 }
