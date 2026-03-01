@@ -29,3 +29,5 @@ Route::post('/attendance', [SessionController::class, 'submitAttendance']);
 Route::prefix('v1')->group(function () {
     Route::apiResource('reports', ReportController::class);
 });
+
+require __DIR__ . '/auth.php';
