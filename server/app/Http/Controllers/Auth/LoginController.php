@@ -9,12 +9,6 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-     *
-     * @param  \App\Http\Requests\Auth\LoginRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(LoginRequest $request)
     {
         $request->authenticate();
@@ -26,12 +20,6 @@ class LoginController extends Controller
         ];
     }
 
-    /**
-     * Destroy an authenticated session.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         $user = $request->user();
