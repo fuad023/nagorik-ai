@@ -17,7 +17,7 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return ReportResource::collection(Report::with('author')->paginate(10));
+        return ReportResource::collection(Report::with('reporter')->paginate(10));
     }
 
     /**
@@ -29,7 +29,7 @@ class ReportController extends Controller
     public function store(StoreReportRequest $request)
     {
         $data = $request->validated();
-        $data['author_id'] = 23;
+        $data['user_id'] = 23;
         $report = Report::create($data);
         return new ReportResource($report);
     }

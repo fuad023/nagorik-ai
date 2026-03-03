@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Report extends Model
 {
     protected $fillable = [
+        'user_id',
         'title',
         'content',
-        'author_id'
     ];
 
-    public function author(): BelongsTo
+    public function reporter()
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class);
     }
 }

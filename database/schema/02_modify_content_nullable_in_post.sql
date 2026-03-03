@@ -1,0 +1,2 @@
+ALTER TABLE reports
+MODIFY COLUMN content TEXT NULL;

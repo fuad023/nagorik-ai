@@ -20,7 +20,7 @@ class ReportResource extends JsonResource
             'content'    => $this->content,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'author'     => new UserResource($this->whenLoaded('author')), // $this->author for always
+            'reporter'     => new UserResource($this->whenLoaded('reporter')), // $this->reporter for always
         ];
     }
 }
