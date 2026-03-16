@@ -4,7 +4,7 @@ CREATE TABLE reports (
     reporter_id       BIGINT UNSIGNED NOT NULL,
 
     title             VARCHAR(255)    NOT NULL,
-    content           TEXT                NULL,
+    description       TEXT                NULL,
 
     created_at        TIMESTAMP           NULL DEFAULT NULL,
     updated_at        TIMESTAMP           NULL DEFAULT NULL,
