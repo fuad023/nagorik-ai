@@ -13,8 +13,9 @@ CREATE TABLE users (
     created_at        TIMESTAMP           NULL DEFAULT NULL,
     updated_at        TIMESTAMP           NULL DEFAULT NULL,
 
-    CONSTRAINT PK_user       PRIMARY KEY (id),
-    CONSTRAINT UQ_user_email UNIQUE      (email)
+    CONSTRAINT PK_users       PRIMARY KEY (id),
+    CONSTRAINT UQ_users_email UNIQUE      (email),
+    INDEX IDX_users_name (first_name, last_name)
 );
 
 -- SANCTUM TOKENS
