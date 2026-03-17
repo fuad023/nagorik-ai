@@ -20,7 +20,10 @@ class ReportResource extends JsonResource
             'description' => $this->description,
             'created_at'  => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at'  => $this->updated_at->format('Y-m-d H:i:s'),
-            'reporter'    => new UserResource($this->whenLoaded('reporter')),
+            'reporter'    => $this->when(
+                $this->reporter_id !== $request->user()->id,
+                fn () => new UserResource($this->reporter)
+            ),
         ];
     }
 }
