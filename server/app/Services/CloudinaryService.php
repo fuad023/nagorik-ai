@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\File;
+use App\Models\Report;
 use Cloudinary\Cloudinary;
 
 class CloudinaryService
@@ -11,5 +13,58 @@ class CloudinaryService
     public function __construct()
     {
         $this->cloudinary = new Cloudinary(config('services.cloudinary.url'));
+    }
+
+    public function uploadFiles(Report $report, array $files)
+    {
+        $uploaded = [];
+        $failed   = [];
+
+        foreach ($files as $file) {
+            try {
+                $result = $this->uploadToCloudinary($report, $file);
+
+                $file_created = $this->storeMetaDataInDatabase($result, $file);
+
+                $uploaded[] = $file_created;
+
+            } catch (\Exception $e) {
+                $failed[] = [
+                    'file'    => $file->getClientOriginalName(),
+                    'message' => $e->getMessage(),
+                ];
+            }
+        }
+
+        return [
+            'uploaded' => $uploaded,
+            'failed'   => $failed
+        ];
+    }
+
+    private function uploadToCloudinary($report, $file) {
+        return $this->cloudinary->uploadApi()->upload(
+            $file->getRealPath(),
+            [
+                'folder' => $this->getPath($report),
+                'resource_type' => 'auto'
+            ]
+        );
+    }
+
+    private function getPath(Report $report)
+    {
+        return "nagorik-ai/{$report->reporter_id}/{$report->id}";
+    }
+
+    private function storeMetaDataInDatabase($result, $file) {
+        return File::create([
+            'original_name' => $file->getClientOriginalName(),
+            'public_id'     => $result['public_id'],
+            'url'           => $result['secure_url'],
+            'size'          => $result['bytes'],
+            'type'          => $result['resource_type'],
+            'mime_type'     => $file->getMimeType(),
+        ]);
     }
 }
