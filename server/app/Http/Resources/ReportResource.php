@@ -7,11 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReportResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -20,10 +15,9 @@ class ReportResource extends JsonResource
             'description' => $this->description,
             'created_at'  => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at'  => $this->updated_at->format('Y-m-d H:i:s'),
-            'reporter'    => $this->when(
-                $this->reporter_id !== $request->user()->id,
-                fn () => new UserResource($this->reporter)
-            ),
+
+            'files'       => new FileResource($this->whenLoaded('files')),
+            'reporter'    => new UserResource($this->whenLoaded('reporter')),
         ];
     }
 }
