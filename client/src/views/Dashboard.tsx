@@ -125,7 +125,10 @@ const Dashboard: React.FC = () => {
                             </MDBBadge>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="me-3">
-                            <div className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer">
+                            <div 
+                                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
+                                onClick={() => navigate('/profile')}
+                            >
                                 <MDBIcon fas icon="user" />
                             </div>
                         </MDBNavbarItem>
@@ -164,7 +167,7 @@ const Dashboard: React.FC = () => {
                                         color="light"
                                         size="lg"
                                         className="new-report-btn"
-                                        onClick={toggleNewReportModal}
+                                        onClick={() => navigate('/submit-report')}
                                     >
                                         <MDBIcon fas icon="plus" className="me-2" />
                                         New Report
@@ -185,6 +188,9 @@ const Dashboard: React.FC = () => {
                                         <MDBIcon fas icon="file-alt" className="me-2 text-primary" />
                                         My Reports
                                     </MDBTypography>
+                                    <MDBBtn color="link" size="sm" onClick={() => navigate('/history')}>
+                                        View All
+                                    </MDBBtn>
                                 </div>
 
                                 {/* Search and Filter */}
@@ -237,7 +243,12 @@ const Dashboard: React.FC = () => {
                                                         <MDBCol md="4" className="text-md-end">
                                                             {getStatusBadge(report.status)}
                                                             <div className="mt-2">
-                                                                <MDBBtn color="link" size="sm" className="text-primary">
+                                                                <MDBBtn 
+                                                                    color="link" 
+                                                                    size="sm" 
+                                                                    className="text-primary"
+                                                                    onClick={() => navigate('/history')}
+                                                                >
                                                                     View Details
                                                                 </MDBBtn>
                                                             </div>
@@ -262,10 +273,14 @@ const Dashboard: React.FC = () => {
                                 </MDBTypography>
 
                                 {/* Map Placeholder */}
-                                <div className="map-placeholder bg-light rounded mb-3 d-flex align-items-center justify-content-center">
-                                    <div className="text-center text-muted">
-                                        <MDBIcon fas icon="map" size="3x" className="mb-2 opacity-50" />
-                                        <p className="small mb-0">Interactive map coming soon</p>
+                                <div 
+                                    className="map-placeholder bg-light rounded mb-3 d-flex align-items-center justify-content-center"
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => navigate('/location-picker')}
+                                >
+                                    <div className="text-center text-muted p-4">
+                                        <MDBIcon fas icon="map-marked-alt" size="3x" className="mb-2 text-primary opacity-75" />
+                                        <p className="small mb-0 fw-bold">Open Interactive Map</p>
                                     </div>
                                 </div>
 
@@ -405,7 +420,7 @@ const Dashboard: React.FC = () => {
                 size="lg"
                 floating
                 className="fab-mobile d-lg-none"
-                onClick={toggleNewReportModal}
+                onClick={() => navigate('/submit-report')}
             >
                 <MDBIcon fas icon="plus" size="2x" />
             </MDBBtn>

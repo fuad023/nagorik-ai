@@ -1,0 +1,116 @@
+.location-picker-container {
+  overflow: hidden;
+}
+
+.map-background {
+  background-color: #e5e3df; /* Classic Google Maps minimal gray/tan */
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px);
+  background-size: 100px 100px;
+  background-position: center;
+  transition: background-color 0.3s ease;
+}
+
+.search-box-container {
+  max-width: 450px;
+  width: 100%;
+}
+
+.map-search-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.info-box {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.main-marker {
+  transition: transform 0.1s ease;
+}
+
+.main-marker.dragging {
+  transform: translate(-50%, -120%) !important;
+  cursor: grabbing !important;
+}
+
+.main-marker.dragging .marker-pin {
+  transform: scale(1.1);
+  filter: drop-shadow(0px 15px 10px rgba(0,0,0,0.3)) !important;
+}
+
+.main-marker .marker-pin {
+  transition: all 0.2s ease;
+}
+
+.marker-label {
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.marker-shadow {
+  width: 14px;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(2px);
+  z-index: -1;
+  transition: all 0.2s ease;
+}
+
+.main-marker.dragging .marker-shadow {
+  transform: translate(-50%, 20px) scale(0.5);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dropped.pulse .marker-pin {
+  animation: dropPin 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dropped.pulse .marker-shadow {
+  animation: dropShadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes dropPin {
+  0% { transform: translateY(-50px) scale(1.2); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes dropShadow {
+  0% { transform: translateX(-50%) scale(0.2); opacity: 0.2; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+.hover-effect {
+  transition: all 0.2s ease;
+}
+
+.hover-effect:hover {
+  transform: scale(1.1);
+  background-color: #f8f9fa !important;
+  color: #0288d1 !important;
+}
+
+.btn-primary.hover-effect:hover {
+  background-color: #0277bd !important;
+  color: white !important;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
