@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Report;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ReportService
@@ -15,18 +16,22 @@ class ReportService
     {
         return DB::transaction(function () use ($validated) {
             $report = Report::create($validated);
-            $files = $validated['files'] ?? NULL;
-            $media = [];
+            $mk_files = $validated['mk_files'] ?? NULL;
+            $rm_files = $validated['rm_files'] ?? NULL;
+            $files = [];
 
-            if (!empty($files)) {
-                $media = $this->fileService->uploadFiles($report, $files);
+            if (!empty($mk_files)) {
+                $files = $this->fileService->uploadAllOnReport($report, $mk_files);
+            }
+
+            if (!empty($rm_files)) {
+                # TODO: delete entries from db and cloudinary
             }
 
             return response()->json([
                 'report' => $report,
-                'media'  => $media, // contains two fields: uploaded and failed
-            ], count($media['uploaded']) > 0 ? 207 : 500);
-            // 207 - some may have succeeded, some may have failed
+                'files'  => $files, // contains two fields: uploaded and failed
+            ]);
         });
     }
 }

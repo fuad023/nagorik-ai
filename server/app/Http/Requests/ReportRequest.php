@@ -25,8 +25,12 @@ class ReportRequest extends FormRequest
         return [
             'title'       => 'required|string|max:64',
             'description' => 'string|min:32',
-            'files'       => 'array|max:10',  // limit to 10 files at once
-            'files.*'     => 'file|max:51200' // 50MB per file
+
+            'mk_files'    => 'array|max:10',   // limit to 10 files at once
+            'mk_files.*'  => 'file|max:51200', // 50MB per file
+
+            'rm_files'    => 'array',
+            'rm_files.*'  => 'string'
         ];
     }
 }

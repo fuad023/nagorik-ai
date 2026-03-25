@@ -15,7 +15,7 @@ class CloudinaryService
         $this->cloudinary = new Cloudinary(config('services.cloudinary.url'));
     }
 
-    public function uploadFiles(Report $report, array $files)
+    public function uploadAllOnReport(Report $report, array $files)
     {
         $uploaded = [];
         $failed   = [];
@@ -42,19 +42,17 @@ class CloudinaryService
         ];
     }
 
-    private function uploadToCloudinary($report, $file) {
+    private function uploadToCloudinary($report, $file)
+    {
+        $path = "nagorik-ai/{$report->reporter_id}/{$report->id}";
+
         return $this->cloudinary->uploadApi()->upload(
             $file->getRealPath(),
             [
-                'folder' => $this->getPath($report),
+                'folder' => $path,
                 'resource_type' => 'auto'
             ]
         );
-    }
-
-    private function getPath(Report $report)
-    {
-        return "nagorik-ai/{$report->reporter_id}/{$report->id}";
     }
 
     private function storeMetaDataInDatabase($id, $result, $file) {
@@ -69,4 +67,6 @@ class CloudinaryService
             'mime_type'     => $file->getMimeType(),
         ]);
     }
+
+    public function deleteAnyOnReport() {}
 }
