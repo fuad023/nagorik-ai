@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportRequest;
 use App\Http\Resources\ReportResource;
 use App\Models\Report;
+use App\Services\ReportService;
 use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
@@ -21,16 +22,13 @@ class ReportController extends Controller
         return ReportResource::collection($reports);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(ReportRequest $request)
+    public function store(ReportRequest $request, ReportService $service)
     {
-        $data = $request->validated();
-        $data['reporter_id'] = $request->user()->id;
+        $validated = $request->validated();
+        $validated['reporter_id'] = $request->user()->id;
 
-        $report = Report::create($data);
-        return new ReportResource($report);
+        $report = $service->create($validated);
+        return $report;
     }
 
     /**
