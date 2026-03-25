@@ -1,0 +1,126 @@
+.submit-report-container {
+  background-color: #f8f9fa;
+}
+
+.header-section {
+  background: linear-gradient(135deg, #0288d1 0%, #03a9f4 100%);
+}
+
+.step-indicators {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.step-indicators::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background-color: #e9ecef;
+  z-index: 0;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  position: relative;
+  width: 80px;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #adb5bd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  transition: all 0.4s ease;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.step-item.active .step-circle {
+  background-color: #ff9800;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
+.step-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.step-item.active .step-label {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.image-upload-wrapper {
+  transition: all 0.3s ease;
+  border: 2px dashed #ced4da !important;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.image-upload-wrapper:hover {
+  border-color: #ff9800 !important;
+  background-color: #fff3e0;
+}
+
+.image-upload-wrapper.has-image {
+  border-style: solid !important;
+  border-color: #e9ecef !important;
+  background-color: transparent;
+}
+
+.custom-preview-img {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.action-btn {
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+.review-card {
+  border-left: 4px solid #0288d1 !important;
+  transition: transform 0.2s;
+}
+.review-card:hover {
+  transform: translateY(-2px);
+}

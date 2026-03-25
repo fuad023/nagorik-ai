@@ -1,0 +1,118 @@
+.report-history-container {
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+.report-card {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.card-content-wrapper {
+  position: relative;
+}
+
+.report-thumbnail-wrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: #e9ecef;
+}
+
+@media (min-width: 768px) {
+  .report-thumbnail-wrapper {
+    width: 250px;
+    height: auto;
+    min-height: 180px;
+  }
+}
+
+.report-thumbnail {
+  object-fit: cover;
+  width: 100%;
+  transition: transform 0.5s ease;
+}
+
+.report-card:hover .report-thumbnail {
+  transform: scale(1.05);
+}
+
+.report-title {
+  color: #1a1a1a;
+  transition: color 0.2s ease;
+}
+
+.report-card:hover .report-title {
+  color: #0288d1;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.view-details-btn {
+  transition: transform 0.2s ease;
+}
+
+.view-details-btn:hover {
+  transform: translateX(4px);
+}
+
+.fade-in {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-step {
+  padding-bottom: 2rem;
+}
+
+.timeline-step:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-icon-wrap {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-step:hover .timeline-icon-wrap.bg-primary {
+  transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(2, 136, 209, 0.4) !important;
+}
+
+.timeline-step:hover .timeline-icon-wrap.bg-success {
+  transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.4) !important;
+}
+
+.action-btn {
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
