@@ -39,6 +39,9 @@ class ReportController extends Controller
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
 
         $validated = $request->validated();
+
+        # TODO: update actual files on cloudinary
+
         $report->update($validated);
         return new ReportResource($report->load('files'));
     }
@@ -46,6 +49,8 @@ class ReportController extends Controller
     public function destroy(Report $report)
     {
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
+
+        # TODO: delete actual files from cloudinary
 
         $report->delete();
         return response()->noContent();

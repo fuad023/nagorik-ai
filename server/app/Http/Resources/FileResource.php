@@ -10,8 +10,9 @@ class FileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'type' => $this->type,
-            'url' => $this->url
+            'public_id' => $this->public_id,
+            'url'       => $this->url,
+            'mime_type' => $this->mime_type,
         ];
     }
 }

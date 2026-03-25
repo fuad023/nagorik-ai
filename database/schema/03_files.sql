@@ -14,6 +14,6 @@ CREATE TABLE files (
     CONSTRAINT PK_files PRIMARY KEY (public_id),
     CONSTRAINT FK_files_reports FOREIGN KEY (report_id)
         REFERENCES reports(id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
