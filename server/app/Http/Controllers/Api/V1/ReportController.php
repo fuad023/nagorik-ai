@@ -11,15 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $user = request()->user();
-        $reports = $user->reports()->paginate();
-        
-        return ReportResource::collection($reports);
+        $reports = $user->reports()->paginate(10);        
+
+        return ReportResource::collection($reports->load('files'));
     }
 
     public function store(ReportRequest $request, ReportService $service)
@@ -31,35 +28,21 @@ class ReportController extends Controller
         return $report;
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Report $report)
     {
-        // $user = request()->user();
-        // if ($user->id != $report->author->id) {
-        //     abort(403, 'Access forbidden!');
-        // }
-
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
-        return new ReportResource($report);
+        return new ReportResource($report->load('files'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ReportRequest $request, Report $report)
     {
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
 
-        $data = $request->validated();
-        $report->update($data);
-        return new ReportResource($report);
+        $validated = $request->validated();
+        $report->update($validated);
+        return new ReportResource($report->load('files'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Report $report)
     {
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
