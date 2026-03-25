@@ -24,7 +24,7 @@ class CloudinaryService
             try {
                 $result = $this->uploadToCloudinary($report, $file);
 
-                $file_created = $this->storeMetaDataInDatabase($result, $file);
+                $file_created = $this->storeMetaDataInDatabase($report['id'], $result, $file);
 
                 $uploaded[] = $file_created;
 
@@ -57,8 +57,10 @@ class CloudinaryService
         return "nagorik-ai/{$report->reporter_id}/{$report->id}";
     }
 
-    private function storeMetaDataInDatabase($result, $file) {
+    private function storeMetaDataInDatabase($id, $result, $file) {
         return File::create([
+            'report_id'     => $id,
+
             'original_name' => $file->getClientOriginalName(),
             'public_id'     => $result['public_id'],
             'url'           => $result['secure_url'],
