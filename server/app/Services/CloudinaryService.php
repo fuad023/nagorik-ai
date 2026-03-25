@@ -51,9 +51,22 @@ class CloudinaryService
             $file->getRealPath(),
             [
                 'folder' => $path,
-                'resource_type' => 'auto'
+                'resource_type' => $this->getResourceType($file->getMimeType()),
             ]
         );
+    }
+
+    private function getResourceType(string $mimeType): string
+    {
+        if (str_starts_with($mimeType, 'image/')) {
+            return 'image';
+        }
+
+        if (str_starts_with($mimeType, 'video/') || str_starts_with($mimeType, 'audio/')) {
+            return 'video';
+        }
+
+        return 'raw'; // PDFs, docs, zip, etc.
     }
 
     private function storeMetaDataInDatabase($id, $result, $file) {
@@ -74,12 +87,16 @@ class CloudinaryService
     public function deleteAllOnReport(string $folderPath) {
         try {
             // deletes resources in the path
-            $this->cloudinary->adminApi()->deleteAssetsByPrefix($folderPath);
+            foreach (['image', 'video', 'raw'] as $type) {
+                $this->cloudinary->adminApi()->deleteAssetsByPrefix($folderPath, [
+                    'resource_type' => $type,
+                ]);
+            }
 
             // delete folder itself
             $this->cloudinary->adminApi()->deleteFolder($folderPath);
         } catch (\Exception $e) {
-            Log::channel('stderr')->error('Error at CloudinaryService.deleteAll. ' . $e->getMessage());
+            Log::channel('stderr')->error('Error at CloudinaryService.deleteAllOnReport. ' . $e->getMessage());
         }
     }
 }

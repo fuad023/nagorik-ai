@@ -12,11 +12,15 @@ class ReportService
         protected CloudinaryService $fileService
     ) {}
 
-    public function create($validated)
+    public function create($validated, $report_id = NULL)
     {
-        return DB::transaction(function () use ($validated) {
+        return DB::transaction(function () use ($validated, $report_id) {
             $validated['reporter_id'] = Auth::id();
-            $report = Report::create($validated);
+            $report = Report::updateOrCreate(
+                ['id' => $report_id],
+                $validated
+            );
+
             $mk_files = $validated['mk_files'] ?? NULL;
             $rm_files = $validated['rm_files'] ?? NULL;
             $files = [];
