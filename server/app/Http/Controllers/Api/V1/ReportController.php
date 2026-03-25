@@ -31,16 +31,13 @@ class ReportController extends Controller
         return new ReportResource($report->load('files'));
     }
 
-    public function update(ReportRequest $request, Report $report)
+    public function update(ReportRequest $request, Report $report, ReportService $service)
     {
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
 
         $validated = $request->validated();
-
-        # TODO: update actual files on cloudinary
-
-        $report->update($validated);
-        return new ReportResource($report->load('files'));
+        $report = $service->create($validated, $report->id);
+        return $report;
     }
 
     public function destroy(Report $report, ReportService $service)

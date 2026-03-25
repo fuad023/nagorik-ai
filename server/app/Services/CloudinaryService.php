@@ -82,7 +82,15 @@ class CloudinaryService
         ]);
     }
 
-    public function deleteAnyOnReport() {}
+    public function deleteAnyOnReport($files) {
+        try {
+            foreach ($files as $file) {
+                $this->cloudinary->uploadApi()->destroy($file['public_id'], ['resource_type' => $file['type']]);
+            }
+        } catch (\Exception $e) {
+            Log::channel('stderr')->error('Error at CloudinaryService.deleteAll. ' . $e->getMessage());
+        }
+    }
 
     public function deleteAllOnReport(string $folderPath) {
         try {

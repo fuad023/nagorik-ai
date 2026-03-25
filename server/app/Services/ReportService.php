@@ -25,12 +25,18 @@ class ReportService
             $rm_files = $validated['rm_files'] ?? NULL;
             $files = [];
 
+            $rm_ids = [];
+            foreach ($rm_files as $file) {
+                $rm_ids[] = $file['public_id'];
+            }
+
             if (!empty($mk_files)) {
                 $files = $this->fileService->uploadAllOnReport($report, $mk_files);
             }
 
             if (!empty($rm_files)) {
-                # TODO: delete entries from db and cloudinary
+                $this->fileService->deleteAnyOnReport($rm_files);
+                $report->files()->whereIn('public_id', $rm_ids)->delete();
             }
 
             return response()->json([
