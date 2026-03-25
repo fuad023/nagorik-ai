@@ -13,10 +13,10 @@ class ReportResource extends JsonResource
             'id'          => $this->id,
             'title'       => $this->title,
             'description' => $this->description,
-            'created_at'  => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at'  => $this->updated_at->format('Y-m-d H:i:s'),
+            'created_at'  => $this->created_at,
+            'updated_at'  => $this->updated_at,
 
-            'files'       => new FileResource($this->whenLoaded('files')),
+            'files'       => FileResource::collection($this->whenLoaded('files')),
             'reporter'    => new UserResource($this->whenLoaded('reporter')),
         ];
     }
