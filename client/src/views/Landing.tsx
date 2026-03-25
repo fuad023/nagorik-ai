@@ -28,6 +28,10 @@ const Landing: React.FC = () => {
         navigate('/registration');
     };
 
+    const handleReport = () => {
+        navigate('/report');
+    };
+
     return (
         <div className="landing-page">
             {/* Navigation */}
@@ -71,7 +75,7 @@ const Landing: React.FC = () => {
                                         color="primary"
                                         size="lg"
                                         className="me-3 mb-3 pulse-animation"
-                                        onClick={handleRegister}
+                                        onClick={handleReport}
                                     >
                                         <MDBIcon fas icon="flag" className="me-2" />
                                         Report an Issue

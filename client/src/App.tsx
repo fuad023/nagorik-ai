@@ -12,6 +12,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
+import ReportForm from './views/ReportForm';
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
+
+        <Route path='/report' element = {<ReportForm/>}/>
 
       </Routes>
       <Toaster
