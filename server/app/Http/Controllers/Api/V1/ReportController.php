@@ -15,15 +15,12 @@ class ReportController extends Controller
     {
         $user = request()->user();
         $reports = $user->reports()->paginate(10);        
-
         return ReportResource::collection($reports->load('files'));
     }
 
     public function store(ReportRequest $request, ReportService $service)
     {
         $validated = $request->validated();
-        $validated['reporter_id'] = $request->user()->id;
-
         $report = $service->create($validated);
         return $report;
     }
@@ -49,7 +46,6 @@ class ReportController extends Controller
     public function destroy(Report $report, ReportService $service)
     {
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
-
         $service->delete($report);
         return response()->noContent();
     }

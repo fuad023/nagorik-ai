@@ -15,6 +15,7 @@ class ReportService
     public function create($validated)
     {
         return DB::transaction(function () use ($validated) {
+            $validated['reporter_id'] = Auth::id();
             $report = Report::create($validated);
             $mk_files = $validated['mk_files'] ?? NULL;
             $rm_files = $validated['rm_files'] ?? NULL;
