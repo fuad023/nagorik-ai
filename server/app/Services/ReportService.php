@@ -34,4 +34,15 @@ class ReportService
             ]);
         });
     }
+
+    public function delete($report)
+    {
+        return DB::transaction(function () use ($report) {
+            $path = 'nagorik-ai' . '/' . Auth::id() . '/' . $report->id;
+
+            $this->fileService->deleteAllOnReport($path);
+
+            $report->delete();
+        });
+    }
 }

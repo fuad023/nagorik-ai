@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\File;
 use App\Models\Report;
 use Cloudinary\Cloudinary;
+use Illuminate\Support\Facades\Log;
 
 class CloudinaryService
 {
@@ -69,4 +70,16 @@ class CloudinaryService
     }
 
     public function deleteAnyOnReport() {}
+
+    public function deleteAllOnReport(string $folderPath) {
+        try {
+            // deletes resources in the path
+            $this->cloudinary->adminApi()->deleteAssetsByPrefix($folderPath);
+
+            // delete folder itself
+            $this->cloudinary->adminApi()->deleteFolder($folderPath);
+        } catch (\Exception $e) {
+            Log::channel('stderr')->error('Error at CloudinaryService.deleteAll. ' . $e->getMessage());
+        }
+    }
 }

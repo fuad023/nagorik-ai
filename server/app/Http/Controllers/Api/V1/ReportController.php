@@ -46,13 +46,11 @@ class ReportController extends Controller
         return new ReportResource($report->load('files'));
     }
 
-    public function destroy(Report $report)
+    public function destroy(Report $report, ReportService $service)
     {
         abort_if(Auth::id() != $report->reporter_id, 403, 'Access Forbidden!');
 
-        # TODO: delete actual files from cloudinary
-
-        $report->delete();
+        $service->delete($report);
         return response()->noContent();
     }
 }
