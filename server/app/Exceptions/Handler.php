@@ -39,6 +39,42 @@ class Handler extends ExceptionHandler
         });
     }
 
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Throwable $exception
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function render($request, Throwable $exception)
+    {
+        $message = $this->getMessage($exception);
 
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+        ], 200);
+    }
+
+
+
+    /**
+     * Get the error message from the exception.
+     *
+     * @param \Throwable $exception
+     * @return string
+     */
+    protected function getMessage(Throwable $exception): string
+    {
+        if ($exception instanceof ValidationException) {
+            return 'Validation failed.';
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            return 'Resource not found.';
+        }
+
+        return $exception->getMessage() ?: 'An unexpected error occurred.';
+    }
 
 }
