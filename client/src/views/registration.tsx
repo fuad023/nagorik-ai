@@ -20,8 +20,11 @@ export default function Registration() {
         }
 
         try {
-            await ApiClient.register(firstName, lastName, email, password, passwordConfirmation);
-            navigate("/login");
+            const data = await ApiClient.register(firstName, lastName, email, password, passwordConfirmation);
+            if (data && data.user) {
+                navigate("/login");
+            }
+            // If no user returned, ApiClient.register will have shown a toast
         } catch (error) {
             // Error handled in ApiClient
             console.error(error);

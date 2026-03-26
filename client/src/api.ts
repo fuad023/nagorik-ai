@@ -26,18 +26,23 @@ class ApiClient {
 
   async login(email: string, password: string) {
     try {
-      // Get CSRF cookie for Sanctum first, though it's optional for basic token auth 
-      // await this.client.get('/sanctum/csrf-cookie');
-      
       const response = await this.client.post('/api/login', { email, password });
       
       if (response.data && response.data.token) {
         localStorage.setItem('auth_token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        return response.data;
       }
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
+
+      // Server returned 2xx but no token — treat as failed auth
+      const msg = response.data?.message || 'Invalid credentials';
+      toast.error(msg);
+      throw new Error(msg);
+    } catch (error: any) {
+      // Only call handleError for real HTTP/network errors (not our own thrown errors)
+      if (error.response || error.request) {
+        this.handleError(error);
+      }
       throw error;
     }
   }
@@ -51,9 +56,20 @@ class ApiClient {
         password,
         password_confirmation 
       });
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
+
+      if (response.data && response.data.user) {
+        return response.data;
+      }
+
+      // Server returned 2xx but no user — likely a duplicate account or server issue
+      const msg = response.data?.message || 'This account already exists.';
+      toast.error(msg);
+      throw new Error(msg);
+    } catch (error: any) {
+      // Only call handleError for real HTTP/network errors (not our own thrown errors)
+      if (error.response || error.request) {
+        this.handleError(error);
+      }
       throw error;
     }
   }

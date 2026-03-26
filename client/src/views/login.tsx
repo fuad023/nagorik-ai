@@ -12,8 +12,11 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            await ApiClient.login(email, password);
-            navigate("/dashboard");
+            const data = await ApiClient.login(email, password);
+            if (data && data.token) {
+                navigate("/dashboard");
+            }
+            // If no token returned, ApiClient.login will have shown a toast
         } catch (error) {
             // error is handled in ApiClient via toast
             console.error("Login failed", error);
