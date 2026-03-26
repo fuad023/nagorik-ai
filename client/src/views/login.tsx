@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import "../styles/login.css";
 import { Link, useNavigate } from "react-router-dom";
+import ApiClient from "../api";
 
 export default function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function onSubmit(e: { preventDefault: () => void; }) {
+    async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
 
-        // TODO: connect your API here
-        // demo behavior:
-        alert(`Logged in as: ${email}`);
-
-        // example redirect after login:
-        navigate("/dashboard");
+        try {
+            await ApiClient.login(email, password);
+            navigate("/dashboard");
+        } catch (error) {
+            // error is handled in ApiClient via toast
+            console.error("Login failed", error);
+        }
     }
 
     return (

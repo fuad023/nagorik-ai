@@ -1,21 +1,31 @@
 import React, { useState } from "react";
 import "../styles/registration.css";
 import { Link, useNavigate } from "react-router-dom";
+import ApiClient from "../api";
 
 export default function Registration() {
     const navigate = useNavigate();
-    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-    function onSubmit(e: { preventDefault: () => void; }) {
+    async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
 
-        // TODO: connect your API here
-        alert(`Account created for: ${name} (${email})`);
+        if (password !== passwordConfirmation) {
+            import("react-hot-toast").then((toast) => toast.default.error("Passwords do not match"));
+            return;
+        }
 
-        // after successful signup, go to login:
-        navigate("/login");
+        try {
+            await ApiClient.register(firstName, lastName, email, password, passwordConfirmation);
+            navigate("/login");
+        } catch (error) {
+            // Error handled in ApiClient
+            console.error(error);
+        }
     }
 
     return (
@@ -67,9 +77,20 @@ export default function Registration() {
                             <span className="iconR">👤</span>
                             <input
                                 type="text"
-                                placeholder="Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                placeholder="First Name"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                required
+                            />
+                        </label>
+
+                        <label className="fieldR">
+                            <span className="iconR">👤</span>
+                            <input
+                                type="text"
+                                placeholder="Last Name"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
                                 required
                             />
                         </label>
@@ -92,6 +113,17 @@ export default function Registration() {
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </label>
+                        
+                        <label className="fieldR">
+                            <span className="iconR">🔒</span>
+                            <input
+                                type="password"
+                                placeholder="Confirm Password"
+                                value={passwordConfirmation}
+                                onChange={(e) => setPasswordConfirmation(e.target.value)}
                                 required
                             />
                         </label>
