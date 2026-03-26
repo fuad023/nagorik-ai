@@ -23,8 +23,10 @@ class CloudinaryService
 
         foreach ($files as $file) {
             try {
+                Log::channel('stderr')->info('File: ' . $file->getClientOriginalName());
                 $result = $this->uploadToCloudinary($report, $file);
 
+                Log::channel('stderr')->info('Storing metadata into DB!');
                 $file_created = $this->storeMetaDataInDatabase($report['id'], $result, $file);
 
                 $uploaded[] = $file_created;
@@ -82,11 +84,15 @@ class CloudinaryService
         ]);
     }
 
-    public function deleteAnyOnReport($files) {
+    public function deleteAnyOnReport($report, $files) {
         try {
+            $ids = [];
             foreach ($files as $file) {
+                $ids[] = $file['public_id'];
                 $this->cloudinary->uploadApi()->destroy($file['public_id'], ['resource_type' => $file['type']]);
             }
+
+            $report->files()->whereIn('public_id', $ids)->delete();
         } catch (\Exception $e) {
             Log::channel('stderr')->error('Error at CloudinaryService.deleteAll. ' . $e->getMessage());
         }

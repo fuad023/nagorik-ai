@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReportService
 {
@@ -15,6 +16,8 @@ class ReportService
     public function create($validated, $report_id = NULL)
     {
         return DB::transaction(function () use ($validated, $report_id) {
+            Log::channel('stderr')->info('Transaction started!');
+
             $validated['reporter_id'] = Auth::id();
             $report = Report::updateOrCreate(
                 ['id' => $report_id],
@@ -25,18 +28,14 @@ class ReportService
             $rm_files = $validated['rm_files'] ?? NULL;
             $files = [];
 
-            $rm_ids = [];
-            foreach ($rm_files as $file) {
-                $rm_ids[] = $file['public_id'];
-            }
-
             if (!empty($mk_files)) {
+                Log::channel('stderr')->info('Uploading Files!');
                 $files = $this->fileService->uploadAllOnReport($report, $mk_files);
             }
 
             if (!empty($rm_files)) {
-                $this->fileService->deleteAnyOnReport($rm_files);
-                $report->files()->whereIn('public_id', $rm_ids)->delete();
+                Log::channel('stderr')->info('Removing Files!');
+                $this->fileService->deleteAnyOnReport($report, $rm_files);
             }
 
             return response()->json([
