@@ -19,6 +19,7 @@ interface FormData {
     description: string;
 }
 import '../styles/ReportForm.css';
+import api from '../api';
 
 export default function ReportForm() {
     /* ── State ── */
@@ -102,21 +103,25 @@ export default function ReportForm() {
         setIsSubmitting(true)
 
         // submission
-        await new Promise((res) => setTimeout(res, 2200))
-
-        setIsSubmitting(false)
-        setSubmitted(true)
-
-        //success banner
-        setTimeout(() => {
-            setFormData({ location: '', description: '' })
-            setImageFile(null)
-            setPreviewSrc(null)
-            setSubmitted(false)
-            setValidated(false)
-            setFileError(false)
-            if (fileInputRef.current) fileInputRef.current.value = ''
-        }, 4000)
+        try {
+            await api.submitReport(formData.location, formData.description, imageFile)
+            setSubmitted(true)
+            
+            //success banner
+            setTimeout(() => {
+                setFormData({ location: '', description: '' })
+                setImageFile(null)
+                setPreviewSrc(null)
+                setSubmitted(false)
+                setValidated(false)
+                setFileError(false)
+                if (fileInputRef.current) fileInputRef.current.value = ''
+            }, 4000)
+        } catch (error) {
+            // error is handled by the API client via toast
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     const descLen = formData.description.length
@@ -160,11 +165,11 @@ export default function ReportForm() {
                                 <i className="fas fa-map-marked-alt" />
                                 Location Details
                             </p>
-                            <MDBValidationItem
-                                invalid
-                                feedback="Please enter a location."
-                            >
-                                <div className="input-icon-wrapper">
+                            <div className="input-icon-wrapper">
+                                <MDBValidationItem
+                                    invalid
+                                    feedback="Please enter a location."
+                                >
                                     <MDBInput
                                         name="location"
                                         value={formData.location}
@@ -174,8 +179,8 @@ export default function ReportForm() {
                                         required
                                         style={{ paddingLeft: '2.4rem' }}
                                     />
-                                </div>
-                            </MDBValidationItem>
+                                </MDBValidationItem>
+                            </div>
                             <p className="location-hint">
                                 <i className="fas fa-info-circle" />
                                 Enter a street address, landmark, or neighbourhood name.
@@ -188,11 +193,11 @@ export default function ReportForm() {
                                 <i className="fas fa-file-alt" />
                                 Issue Description
                             </p>
-                            <MDBValidationItem
-                                invalid
-                                feedback="Please describe the issue."
-                            >
-                                <div className="input-icon-wrapper textarea-wrapper">
+                            <div className="input-icon-wrapper textarea-wrapper">
+                                <MDBValidationItem
+                                    invalid
+                                    feedback="Please describe the issue (minimum 32 characters)."
+                                >
                                     <MDBTextArea
                                         name="description"
                                         value={formData.description}
@@ -201,10 +206,11 @@ export default function ReportForm() {
                                         placeholder="Describe what happened, when you noticed it, and any other relevant details…"
                                         rows={5}
                                         required
+                                        minLength={32}
                                         style={{ paddingLeft: '2.4rem' }}
                                     />
-                                </div>
-                            </MDBValidationItem>
+                                </MDBValidationItem>
+                            </div>
                             <p className={`char-counter${descLen > MAX_DESC * 0.9 ? descLen >= MAX_DESC ? ' limit' : ' warn' : ''}`}>
                                 {descLen} / {MAX_DESC}
                             </p>
@@ -259,7 +265,6 @@ export default function ReportForm() {
                                 accept="image/*"
                                 onChange={handleFileChange}
                                 style={{ display: 'none' }}
-                                required
                             />
 
                             {fileError && (

@@ -74,6 +74,44 @@ class ApiClient {
     }
   }
 
+  async submitReport(location: string, description: string, imageFile: File) {
+    try {
+      const formData = new FormData();
+      formData.append('title', location);
+      formData.append('description', description);
+      formData.append('mk_files[]', imageFile);
+
+      const token = localStorage.getItem('auth_token');
+      const endpoint = `${secrets.backendEndpoint || 'http://localhost:8000'}/api/v1/reports`;
+      
+      const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/json'
+          },
+          body: formData
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success !== false && !data.error) {
+        return data;
+      }
+
+      const msg = data.message || data.error || 'Failed to submit report.';
+      toast.error(msg);
+      throw new Error(msg);
+    } catch (error: any) {
+      if (error.response || error.request) {
+        this.handleError(error);
+      } else {
+        toast.error(error.message || 'Network error');
+      }
+      throw error;
+    }
+  }
+
   async logout() {
     try {
       await this.client.post('/api/logout');

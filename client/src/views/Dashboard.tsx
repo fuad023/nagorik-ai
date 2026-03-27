@@ -48,33 +48,45 @@ const Dashboard: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
 
-    // Mock data - replace with actual API calls
-    const [reports] = useState<Report[]>([
-        {
-            id: 1,
-            title: 'Broken Street Light',
-            category: 'Infrastructure',
-            status: 'in-progress',
-            lastUpdated: '2 hours ago',
-            description: 'Street light on Main St is not working',
-        },
-        {
-            id: 2,
-            title: 'Pothole on Highway',
-            category: 'Roads',
-            status: 'pending',
-            lastUpdated: '1 day ago',
-            description: 'Large pothole causing traffic issues',
-        },
-        {
-            id: 3,
-            title: 'Garbage Not Collected',
-            category: 'Sanitation',
-            status: 'resolved',
-            lastUpdated: '3 days ago',
-            description: 'Garbage collection missed for a week',
-        },
-    ]);
+    const [reports, setReports] = useState<Report[]>([]);
+    
+    // Fetch reports from backend
+    React.useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                // Fetch using our api client wrapper or raw Axios
+                // Since api.ts doesn't export getReports yet, we can use fetch or import axios here, 
+                // but let's assume we can add it to api.ts or use the client directly.
+                const token = localStorage.getItem('auth_token');
+                if (!token) return;
+                
+                const response = await fetch('http://localhost:8000/api/v1/reports', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.data) {
+                        const parsedReports = data.data.map((r: any) => ({
+                            id: r.id,
+                            title: r.title,
+                            category: r.category || 'General',
+                            status: r.status || 'pending',
+                            lastUpdated: new Date(r.updated_at).toLocaleString(),
+                            description: r.description
+                        }));
+                        setReports(parsedReports);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch reports", error);
+            }
+        };
+        fetchReports();
+    }, []);
 
     const [nearbyIssues] = useState<NearbyIssue[]>([
         { id: 1, title: 'Water Leakage', distance: '0.5 km', category: 'Water Supply' },

@@ -12,57 +12,24 @@ import {
 } from 'mdb-react-ui-kit';
 import '../styles/report-history.css';
 
-// Mock Data
-const reports = [
-  {
-    id: 'RPT-1004',
-    title: 'Large Pothole on Main St',
-    category: 'Roads & Streets',
-    date: 'Oct 24, 2026',
-    status: 'Pending',
-    description: 'A massive pothole has opened up near the intersection, causing traffic delays and vehicle damage.',
-    location: '123 Main St, Springfield',
-    image: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=400',
-    timeline: [
-      { status: 'Submitted', date: 'Oct 24, 2026, 10:30 AM', icon: 'clock', completed: true },
-      { status: 'Assigned', date: 'Pending', icon: 'user-tie', completed: false },
-      { status: 'In Progress', date: 'Pending', icon: 'tools', completed: false },
-      { status: 'Resolved', date: 'Pending', icon: 'check-circle', completed: false }
-    ]
-  },
-  {
-    id: 'RPT-1003',
-    title: 'Broken Streetlight',
-    category: 'Public Safety',
-    date: 'Oct 20, 2026',
-    status: 'In Progress',
-    description: 'The streetlight outside my house has been flickering and is now completely dark.',
-    location: '45 Elm Street, Springfield',
-    image: 'https://images.unsplash.com/photo-1588613470123-289b4fde4684?auto=format&fit=crop&q=80&w=400',
-    timeline: [
-      { status: 'Submitted', date: 'Oct 20, 2026, 08:15 PM', icon: 'clock', completed: true },
-      { status: 'Assigned', date: 'Oct 21, 2026, 09:00 AM', icon: 'user-tie', completed: true },
-      { status: 'In Progress', date: 'Oct 22, 2026, 02:30 PM', icon: 'tools', completed: true },
-      { status: 'Resolved', date: 'Pending', icon: 'check-circle', completed: false }
-    ]
-  },
-  {
-    id: 'RPT-1001',
-    title: 'Water Leak near Park',
-    category: 'Water Supply',
-    date: 'Oct 15, 2026',
-    status: 'Resolved',
-    description: 'Continuous water flow from a broken pipe near the entrance of Centennial Park.',
-    location: 'Centennial Park South Entrance',
-    image: 'https://images.unsplash.com/photo-1548243407-3a131b74d47d?auto=format&fit=crop&q=80&w=400',
-    timeline: [
-      { status: 'Submitted', date: 'Oct 15, 2026, 07:45 AM', icon: 'clock', completed: true },
-      { status: 'Assigned', date: 'Oct 15, 2026, 11:30 AM', icon: 'user-tie', completed: true },
-      { status: 'In Progress', date: 'Oct 16, 2026, 09:00 AM', icon: 'tools', completed: true },
-      { status: 'Resolved', date: 'Oct 17, 2026, 04:20 PM', icon: 'check-circle', completed: true }
-    ]
-  }
-];
+interface TimelineStep {
+  status: string;
+  date: string;
+  icon: string;
+  completed: boolean;
+}
+
+interface Report {
+  id: string | number;
+  title: string;
+  category: string;
+  date: string;
+  status: string;
+  description: string;
+  location: string;
+  image: string;
+  timeline: TimelineStep[];
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -75,13 +42,59 @@ const getStatusColor = (status: string) => {
 
 const ReportHistory: React.FC = () => {
   const [filter, setFilter] = useState('All');
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | number | null>(null);
+  const [reports, setReports] = useState<Report[]>([]);
+
+  React.useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const token = localStorage.getItem('auth_token');
+        if (!token) return;
+        const response = await fetch('http://localhost:8000/api/v1/reports', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.data) {
+            const parsedReports: Report[] = data.data.map((r: any) => {
+              // Convert status from 'pending' to 'Pending' etc to match UI expectations
+              const formattedStatus = r.status ? r.status.charAt(0).toUpperCase() + r.status.slice(1).replace('-', ' ') : 'Pending';
+              
+              return {
+                id: r.id,
+                title: r.title,
+                category: r.category || 'General',
+                date: new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                status: formattedStatus,
+                description: r.description,
+                location: r.title, // In backend, 'title' currently stores the location string
+                image: (r.files && r.files.length > 0) ? r.files[0].url : 'https://images.unsplash.com/photo-1548243407-3a131b74d47d?auto=format&fit=crop&q=80&w=400',
+                timeline: [
+                  { status: 'Submitted', date: new Date(r.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }), icon: 'clock', completed: true },
+                  { status: 'Assigned', date: 'Pending', icon: 'user-tie', completed: formattedStatus !== 'Pending' },
+                  { status: 'In Progress', date: 'Pending', icon: 'tools', completed: formattedStatus === 'In Progress' || formattedStatus === 'Resolved' },
+                  { status: 'Resolved', date: 'Pending', icon: 'check-circle', completed: formattedStatus === 'Resolved' }
+                ]
+              };
+            });
+            setReports(parsedReports);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch reports", error);
+      }
+    };
+    fetchReports();
+  }, []);
 
   const filteredReports = filter === 'All' 
     ? reports 
     : reports.filter(r => filter === 'Open' ? r.status !== 'Resolved' : r.status === 'Resolved');
 
-  const toggleExpand = (id: string) => {
+  const toggleExpand = (id: string | number) => {
     setExpandedId(expandedId === id ? null : id);
   };
 
