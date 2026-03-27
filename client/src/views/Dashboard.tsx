@@ -47,20 +47,22 @@ const Dashboard: React.FC = () => {
     const [showNewReportModal, setShowNewReportModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [reportTab, setReportTab] = useState<'mine' | 'all'>('mine');
 
     const [reports, setReports] = useState<Report[]>([]);
     
-    // Fetch reports from backend
+    // Fetch reports from backend (re-runs whenever tab changes)
     React.useEffect(() => {
         const fetchReports = async () => {
             try {
-                // Fetch using our api client wrapper or raw Axios
-                // Since api.ts doesn't export getReports yet, we can use fetch or import axios here, 
-                // but let's assume we can add it to api.ts or use the client directly.
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
+
+                const url = reportTab === 'mine'
+                    ? 'http://localhost:8000/api/v1/reports?mine=true'
+                    : 'http://localhost:8000/api/v1/reports';
                 
-                const response = await fetch('http://localhost:8000/api/v1/reports', {
+                const response = await fetch(url, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json'
@@ -86,7 +88,7 @@ const Dashboard: React.FC = () => {
             }
         };
         fetchReports();
-    }, []);
+    }, [reportTab]);
 
     const [nearbyIssues] = useState<NearbyIssue[]>([
         { id: 1, title: 'Water Leakage', distance: '0.5 km', category: 'Water Supply' },
@@ -198,11 +200,29 @@ const Dashboard: React.FC = () => {
                                 <div className="d-flex justify-content-between align-items-center mb-4">
                                     <MDBTypography tag="h5" className="fw-bold mb-0">
                                         <MDBIcon fas icon="file-alt" className="me-2 text-primary" />
-                                        My Reports
+                                        {reportTab === 'mine' ? 'My Reports' : 'All Reports'}
                                     </MDBTypography>
-                                    <MDBBtn color="link" size="sm" onClick={() => navigate('/history')}>
-                                        View All
-                                    </MDBBtn>
+                                    <div className="d-flex align-items-center gap-2">
+                                        <div className="btn-group btn-group-sm" role="group">
+                                            <button
+                                                type="button"
+                                                className={`btn ${reportTab === 'mine' ? 'btn-primary' : 'btn-outline-primary'}`}
+                                                onClick={() => setReportTab('mine')}
+                                            >
+                                                <MDBIcon fas icon="user" className="me-1" />My Reports
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`btn ${reportTab === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
+                                                onClick={() => setReportTab('all')}
+                                            >
+                                                <MDBIcon fas icon="globe" className="me-1" />All Reports
+                                            </button>
+                                        </div>
+                                        <MDBBtn color="link" size="sm" onClick={() => navigate('/history')}>
+                                            View All
+                                        </MDBBtn>
+                                    </div>
                                 </div>
 
                                 {/* Search and Filter */}
