@@ -47,34 +47,48 @@ const Dashboard: React.FC = () => {
     const [showNewReportModal, setShowNewReportModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [reportTab, setReportTab] = useState<'mine' | 'all'>('mine');
 
-    // Mock data - replace with actual API calls
-    const [reports] = useState<Report[]>([
-        {
-            id: 1,
-            title: 'Broken Street Light',
-            category: 'Infrastructure',
-            status: 'in-progress',
-            lastUpdated: '2 hours ago',
-            description: 'Street light on Main St is not working',
-        },
-        {
-            id: 2,
-            title: 'Pothole on Highway',
-            category: 'Roads',
-            status: 'pending',
-            lastUpdated: '1 day ago',
-            description: 'Large pothole causing traffic issues',
-        },
-        {
-            id: 3,
-            title: 'Garbage Not Collected',
-            category: 'Sanitation',
-            status: 'resolved',
-            lastUpdated: '3 days ago',
-            description: 'Garbage collection missed for a week',
-        },
-    ]);
+    const [reports, setReports] = useState<Report[]>([]);
+    
+    // Fetch reports from backend (re-runs whenever tab changes)
+    React.useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                const token = localStorage.getItem('auth_token');
+                if (!token) return;
+
+                const url = reportTab === 'mine'
+                    ? 'http://localhost:8000/api/v1/reports?mine=true'
+                    : 'http://localhost:8000/api/v1/reports';
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.data) {
+                        const parsedReports = data.data.map((r: any) => ({
+                            id: r.id,
+                            title: r.title,
+                            category: r.category || 'General',
+                            status: r.status || 'pending',
+                            lastUpdated: new Date(r.updated_at).toLocaleString(),
+                            description: r.description
+                        }));
+                        setReports(parsedReports);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch reports", error);
+            }
+        };
+        fetchReports();
+    }, [reportTab]);
 
     const [nearbyIssues] = useState<NearbyIssue[]>([
         { id: 1, title: 'Water Leakage', distance: '0.5 km', category: 'Water Supply' },
@@ -186,11 +200,29 @@ const Dashboard: React.FC = () => {
                                 <div className="d-flex justify-content-between align-items-center mb-4">
                                     <MDBTypography tag="h5" className="fw-bold mb-0">
                                         <MDBIcon fas icon="file-alt" className="me-2 text-primary" />
-                                        My Reports
+                                        {reportTab === 'mine' ? 'My Reports' : 'All Reports'}
                                     </MDBTypography>
-                                    <MDBBtn color="link" size="sm" onClick={() => navigate('/history')}>
-                                        View All
-                                    </MDBBtn>
+                                    <div className="d-flex align-items-center gap-2">
+                                        <div className="btn-group btn-group-sm" role="group">
+                                            <button
+                                                type="button"
+                                                className={`btn ${reportTab === 'mine' ? 'btn-primary' : 'btn-outline-primary'}`}
+                                                onClick={() => setReportTab('mine')}
+                                            >
+                                                <MDBIcon fas icon="user" className="me-1" />My Reports
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`btn ${reportTab === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
+                                                onClick={() => setReportTab('all')}
+                                            >
+                                                <MDBIcon fas icon="globe" className="me-1" />All Reports
+                                            </button>
+                                        </div>
+                                        <MDBBtn color="link" size="sm" onClick={() => navigate('/history')}>
+                                            View All
+                                        </MDBBtn>
+                                    </div>
                                 </div>
 
                                 {/* Search and Filter */}

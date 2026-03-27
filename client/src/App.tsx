@@ -4,7 +4,7 @@ import Dashboard from './views/Dashboard';
 import Login from './views/login';
 import Registration from './views/registration';
 import Profile from './views/Profile';
-import SubmitReport from './views/SubmitReport';
+
 import ReportHistory from './views/ReportHistory';
 import LocationPicker from './views/LocationPicker';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
@@ -29,7 +29,7 @@ function App() {
 
         {/* New Pages */}
         <Route path="/profile" element={<Profile />} />
-        <Route path="/submit-report" element={<SubmitReport />} />
+        <Route path="/submit-report" element={<ReportForm />} />
         <Route path="/history" element={<ReportHistory />} />
         <Route path="/location-picker" element={<LocationPicker />} />
 

@@ -29,7 +29,7 @@ const Landing: React.FC = () => {
     };
 
     const handleReport = () => {
-        navigate('/report');
+        navigate('/login');
     };
 
     return (

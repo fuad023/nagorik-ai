@@ -13,9 +13,14 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $user = request()->user();
-        $reports = $user->reports()->paginate(10);        
-        return ReportResource::collection($reports->load('files'));
+        $query = Report::with('files')->latest();
+
+        if (request()->boolean('mine')) {
+            $query->where('reporter_id', request()->user()->id);
+        }
+
+        $reports = $query->paginate(10);        
+        return ReportResource::collection($reports);
     }
 
     public function store(ReportRequest $request, ReportService $service)
