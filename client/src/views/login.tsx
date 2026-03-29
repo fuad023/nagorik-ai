@@ -8,25 +8,25 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    // async function onSubmit(e: React.FormEvent) {
-    //     e.preventDefault();
-
-    //     try {
-    //         const data = await ApiClient.login(email, password);
-    //         if (data && data.token) {
-    //             navigate("/dashboard");
-    //         }
-    //         // If no token returned, ApiClient.login will have shown a toast
-    //     } catch (error) {
-    //         // error is handled in ApiClient via toast
-    //         console.error("Login failed", error);
-    //     }
-    // }
-
-    async function onSubmit(e : React.FormEvent) {
+    async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
-        navigate("/dashboard");
+
+        try {
+            const data = await ApiClient.login(email, password);
+            if (data && data.token) {
+                navigate("/dashboard");
+            }
+            // If no token returned, ApiClient.login will have shown a toast
+        } catch (error) {
+            // error is handled in ApiClient via toast
+            console.error("Login failed", error);
+        }
     }
+
+    // async function onSubmit(e : React.FormEvent) {
+    //     e.preventDefault();
+    //     navigate("/dashboard");
+    // }
 
     return (
         <div className="authPage">
