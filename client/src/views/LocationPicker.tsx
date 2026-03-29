@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface LatLng {
   lat: number;
@@ -20,7 +19,6 @@ interface LocationPickerProps {
   placeholder?: string;
 }
 
-// ─── Loaders ─────────────────────────────────────────────────────────────────
 
 function loadCSS(href: string) {
   if (document.querySelector(`link[href="${href}"]`)) return;
@@ -45,7 +43,6 @@ function loadLeaflet(): Promise<any> {
   return leafletPromise;
 }
 
-// ─── Nominatim helpers (OpenStreetMap — 100% free) ───────────────────────────
 
 async function reverseGeocode(lat: number, lng: number) {
   try {
@@ -78,7 +75,6 @@ async function searchPlaces(query: string): Promise<NominatimResult[]> {
   } catch { return []; }
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LocationPicker({
   onLocationSelect,
@@ -100,7 +96,6 @@ export default function LocationPicker({
   const [searchLoading, setSearchLoading] = useState(false);
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ── Place marker + reverse geocode ─────────────────────────────────────
   const placeMarker = useCallback(async (lat: number, lng: number) => {
     if (!mapInstance.current || !markerInstance.current) return;
     setIsGeocoding(true);
@@ -113,7 +108,6 @@ export default function LocationPicker({
     setIsGeocoding(false);
   }, []);
 
-  // ── Init map ────────────────────────────────────────────────────────────
   useEffect(() => {
     let isMounted = true;
     loadLeaflet()
@@ -133,7 +127,6 @@ export default function LocationPicker({
           zoomControl: false,
         });
 
-        // CartoDB dark tiles — free, no API key
         L.tileLayer(
           "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
           {
@@ -185,7 +178,6 @@ export default function LocationPicker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Search ──────────────────────────────────────────────────────────────
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setQuery(val);
@@ -211,7 +203,6 @@ export default function LocationPicker({
     placeMarker(lat, lng);
   };
 
-  // ── GPS ─────────────────────────────────────────────────────────────────
   const locateMe = () => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
