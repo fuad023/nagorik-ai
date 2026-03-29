@@ -140,6 +140,16 @@
   border-color: rgba(31,42,46,.22);
 }
 
+.field.fieldError {
+  border-color: #e74c3c;
+  background: rgba(231, 76, 60, 0.05);
+}
+
+.field.fieldSuccess {
+  border-color: #2ecc71;
+  background: rgba(46, 204, 113, 0.05);
+}
+
 .mutedText{
   color: var(--muted);
   font-size: 13px;
@@ -170,9 +180,29 @@
   border:none;
   outline:none;
   background: transparent;
-  width: 100%;
+  flex: 1;
   font-size: 14px;
   color: var(--text);
+  padding-right: 8px;
+}
+
+.togglePasswordBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+.togglePasswordBtn:hover {
+  opacity: 1;
 }
 
 .primaryBtn{
