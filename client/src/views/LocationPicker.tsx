@@ -1,45 +1,260 @@
-import React, { useState } from 'react';
-import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBIcon } from 'mdb-react-ui-kit';
+import React, { useEffect, useRef, useState } from 'react';
+import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import '../styles/location-picker.css';
+import { secrets } from '../secrets';
 
-// Note: In a real implementation, you would use @react-google-maps/api or similar library.
-// This is a UI mockup demonstrating the required design and interactions.
-const LocationPicker: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [address, setAddress] = useState('123 Civic Center Plaza, Springfield');
-  const [coordinates, setCoordinates] = useState('40.7128° N, 74.0060° W');
-  const [isDragging, setIsDragging] = useState(false);
-  const [markerDropped, setMarkerDropped] = useState(true);
+interface LocationPickerProps {
+  onLocationSelect?: (location: { address: string; lat: number; lng: number }) => void;
+  defaultLocation?: { lat: number; lng: number };
+}
 
-  // Mock handlers
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+declare global {
+  interface Window {
+    google: any;
+    initMapCallback?: () => void;
+  }
+}
+
+const LocationPicker: React.FC<LocationPickerProps> = ({ 
+  onLocationSelect, 
+  defaultLocation = { lat: 40.7128, lng: -74.0060 } 
+}) => {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const markerRef = useRef<any>(null);
+  const searchBoxRef = useRef<any>(null);
+  
+  const [address, setAddress] = useState('');
+  const [coordinates, setCoordinates] = useState(`${defaultLocation.lat}°, ${defaultLocation.lng}°`);
+  const [markerLocation, setMarkerLocation] = useState(defaultLocation);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load Google Maps API script
+  useEffect(() => {
+    if (!secrets.googleMapsApiKey) {
+      setError('⚠️ Google Maps API key not configured. Add VITE_GOOGLE_MAPS_API_KEY to your .env file');
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if Google Maps is already loaded
+    if (window.google && window.google.maps) {
+      initializeMap();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${secrets.googleMapsApiKey}&libraries=places&language=en`;
+    script.async = true;
+    script.defer = true;
+    
+    script.onload = () => {
+      if (window.google && window.google.maps) {
+        initializeMap();
+      }
+    };
+    
+    script.onerror = () => {
+      setError('Failed to load Google Maps. Check your API key.');
+      setIsLoading(false);
+    };
+    
+    document.head.appendChild(script);
+    
+    return () => {
+      // Cleanup if needed
+    };
+  }, []);
+
+  const initializeMap = () => {
+    if (!mapRef.current || !window.google) return;
+
+    try {
+      const map = new window.google.maps.Map(mapRef.current, {
+        zoom: 15,
+        center: defaultLocation,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        streetViewControl: false,
+      });
+
+      mapInstanceRef.current = map;
+
+      // Create marker
+      const marker = new window.google.maps.Marker({
+        position: defaultLocation,
+        map: map,
+        draggable: true,
+        title: 'Drag to move or click map',
+      });
+
+      markerRef.current = marker;
+
+      // Update location when marker is dragged
+      marker.addListener('dragend', () => {
+        const lat = marker.getPosition().lat();
+        const lng = marker.getPosition().lng();
+        updateLocation(lat, lng);
+      });
+
+      // Update location when map is clicked
+      map.addListener('click', (event: any) => {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        marker.setPosition({ lat, lng });
+        updateLocation(lat, lng);
+      });
+
+      // Setup search box
+      const searchInput = document.getElementById('location-search') as HTMLInputElement;
+      if (searchInput && window.google.maps.places) {
+        searchBoxRef.current = new window.google.maps.places.SearchBox(searchInput);
+        
+        searchBoxRef.current.addListener('places_changed', () => {
+          const places = searchBoxRef.current.getPlaces();
+          if (places.length === 0) return;
+
+          const place = places[0];
+          if (!place.geometry || !place.geometry.location) return;
+
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+
+          marker.setPosition({ lat, lng });
+          map.panTo({ lat, lng });
+          updateLocation(lat, lng);
+        });
+      }
+
+      setIsLoading(false);
+      // Get initial address
+      getAddressFromCoordinates(defaultLocation.lat, defaultLocation.lng);
+    } catch (err) {
+      setError('Error initializing map');
+      setIsLoading(false);
+    }
   };
 
-  const handleMapClick = () => {
-    setMarkerDropped(false);
-    setTimeout(() => setMarkerDropped(true), 100);
-    // In real app, update coordinates based on click event
-    setCoordinates('40.7135° N, 74.0075° W');
-    setAddress('Dropped Pin Location');
+  const getAddressFromCoordinates = (lat: number, lng: number) => {
+    if (!window.google || !window.google.maps) return;
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: { lat, lng } }, (results: any[], status: string) => {
+      if (status === 'OK' && results[0]) {
+        setAddress(results[0].formatted_address);
+      }
+    });
+  };
+
+  const updateLocation = (lat: number, lng: number) => {
+    setMarkerLocation({ lat, lng });
+    setCoordinates(`${lat.toFixed(4)}°, ${lng.toFixed(4)}°`);
+    getAddressFromCoordinates(lat, lng);
+  };
+
+  const handleConfirmLocation = () => {
+    if (address && markerLocation && onLocationSelect) {
+      onLocationSelect({
+        address,
+        lat: markerLocation.lat,
+        lng: markerLocation.lng,
+      });
+    }
   };
 
   return (
-    <MDBContainer fluid className="px-0 location-picker-container bg-light h-100">
-      <MDBRow className="m-0 position-relative" style={{ minHeight: '600px', height: '100%' }}>
-        {/* Search Box Overlay */}
-        <MDBCol md="6" lg="4" className="position-absolute search-box-container z-2 mt-4 ms-md-4 px-3 px-md-0">
-          <MDBCard className="shadow-lg border-0 rounded-4">
-            <MDBCardBody className="p-2 p-md-3 d-flex align-items-center bg-white rounded-4">
-              <MDBIcon fas icon="search" className="text-muted ms-2 me-3" size="lg" />
-              <input
-                type="text"
-                className="form-control border-0 shadow-none bg-transparent flex-grow-1 map-search-input"
-                placeholder="Search location..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-                style={{ fontSize: '1.1rem', outline: 'none' }}
-              />
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Search Bar */}
+      <div style={{ padding: '16px', backgroundColor: '#fff', borderBottom: '1px solid #e0e0e0' }}>
+        <div style={{ position: 'relative' }}>
+          <MDBIcon fas icon="search" style={{ position: 'absolute', left: '12px', top: '12px', color: '#999' }} />
+          <input
+            id="location-search"
+            type="text"
+            placeholder="Search location..."
+            style={{
+              width: '100%',
+              padding: '10px 10px 10px 40px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              fontSize: '14px',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Map Container */}
+      {isLoading && (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div className="spinner-border text-primary" role="status" style={{ marginBottom: '10px' }}>
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p style={{ color: '#666' }}>Loading map...</p>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffebee' }}>
+          <div style={{ textAlign: 'center', color: '#c62828', padding: '20px' }}>
+            <p style={{ marginBottom: '10px' }}>{error}</p>
+            <small>For testing, you can add a dummy key or use the mock map.</small>
+          </div>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <>
+          <div 
+            ref={mapRef} 
+            style={{ flex: 1, width: '100%', minHeight: '300px' }}
+          />
+
+          {/* Info Bar */}
+          {address && (
+            <div style={{ padding: '16px', backgroundColor: '#fff', borderTop: '1px solid #e0e0e0' }}>
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <MDBIcon fas icon="map-marker-alt" style={{ color: '#1976d2', fontSize: '20px', marginTop: '2px' }} />
+                  <div style={{ flex: 1 }}>
+                    <h6 style={{ margin: '0 0 4px 0', fontWeight: 'bold', color: '#333' }}>Selected Location</h6>
+                    <p style={{ margin: '0 0 4px 0', color: '#666', fontSize: '14px' }}>{address}</p>
+                    <small style={{ color: '#999' }}>📍 {coordinates}</small>
+                  </div>
+                </div>
+              </div>
+              <MDBBtn 
+                onClick={handleConfirmLocation}
+                color="primary"
+                size="sm"
+                style={{ width: '100%' }}
+              >
+                <MDBIcon fas icon="check" className="me-2" /> Confirm Location
+              </MDBBtn>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export default LocationPicker;
+                onPlacesChanged={handlePlacesChanged}
+              >
+                <input
+                  type="text"
+                  className="form-control border-0 shadow-none bg-transparent flex-grow-1 map-search-input"
+                  placeholder="Search location..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ fontSize: '1.1rem', outline: 'none' }}
+                />
+              </StandaloneSearchBox>
               {searchQuery && (
                 <MDBIcon 
                   fas 
@@ -53,63 +268,48 @@ const LocationPicker: React.FC = () => {
           </MDBCard>
 
           {/* Location Info Box */}
-          <MDBCard className="shadow-sm border-0 rounded-4 mt-3 info-box fade-in bg-white">
-            <MDBCardBody className="p-3">
-              <div className="d-flex align-items-start">
-                <div className="marker-icon-bg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 mt-1" style={{ width: '40px', height: '40px', minWidth: '40px' }}>
-                  <MDBIcon fas icon="map-marker-alt" size="lg" />
+          {address || coordinates ? (
+            <MDBCard className="shadow-sm border-0 rounded-4 mt-3 info-box fade-in bg-white">
+              <MDBCardBody className="p-3">
+                <div className="d-flex align-items-start">
+                  <div className="marker-icon-bg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 mt-1" style={{ width: '40px', height: '40px', minWidth: '40px' }}>
+                    <MDBIcon fas icon="map-marker-alt" size="lg" />
+                  </div>
+                  <div className="flex-grow-1">
+                    <h6 className="fw-bold mb-1 text-dark">Selected Location</h6>
+                    <p className="text-muted small mb-1">{address || 'Click on map to set location'}</p>
+                    <p className="text-primary small fw-500 mb-2"><MDBIcon fas icon="crosshairs" className="me-1"/> {coordinates}</p>
+                    <MDBBtn 
+                      size="sm" 
+                      color="primary"
+                      onClick={handleLocationSubmit}
+                      className="py-1"
+                    >
+                      <MDBIcon fas icon="check" className="me-1" /> Confirm Location
+                    </MDBBtn>
+                  </div>
                 </div>
-                <div>
-                  <h6 className="fw-bold mb-1 text-dark">Selected Location</h6>
-                  <p className="text-muted small mb-1">{address}</p>
-                  <p className="text-primary small fw-500 mb-0"><MDBIcon fas icon="crosshairs" className="me-1"/> {coordinates}</p>
-                </div>
-              </div>
-            </MDBCardBody>
-          </MDBCard>
+              </MDBCardBody>
+            </MDBCard>
+          ) : null}
         </MDBCol>
 
-        {/* Map Area Mockup */}
-        <div className="w-100 h-100 position-absolute top-0 start-0 z-1 map-background p-0 m-0" onClick={handleMapClick}>
-          {/* Faint background markers for context */}
-          <div className="position-absolute faint-marker" style={{ top: '30%', left: '40%' }}>
-            <MDBIcon fas icon="map-marker" size="2x" style={{ color: 'rgba(2, 136, 209, 0.3)' }} />
-          </div>
-          <div className="position-absolute faint-marker" style={{ top: '60%', left: '70%' }}>
-            <MDBIcon fas icon="map-marker" size="2x" style={{ color: 'rgba(255, 152, 0, 0.3)' }} />
-          </div>
-          
-          {/* Main Interactive Marker */}
-          <div 
-            className={`position-absolute main-marker d-flex flex-column align-items-center 
-              ${isDragging ? 'dragging' : ''} ${markerDropped ? 'dropped pulse' : ''}`}
-            style={{ top: '50%', left: '50%', transform: 'translate(-50%, -100%)', cursor: 'grab', zIndex: 10 }}
-            onMouseDown={() => setIsDragging(true)}
-            onMouseUp={() => { setIsDragging(false); setMarkerDropped(true); }}
-            onMouseLeave={() => setIsDragging(false)}
+        {/* Google Map */}
+        <div style={mapContainerStyle} className="position-absolute top-0 start-0 z-1 p-0 m-0 map-background">
+          <GoogleMap
+            ref={mapRef}
+            mapContainerStyle={mapContainerStyle}
+            center={defaultCenter}
+            zoom={14}
+            onClick={handleMapClick}
+            options={{
+              zoomControl: true,
+              fullscreenControl: true,
+              streetViewControl: false,
+            }}
           >
-            <div className="marker-label bg-white px-2 py-1 rounded shadow-sm mb-1 small fw-bold text-dark w-100 text-center text-nowrap" style={{ opacity: isDragging ? 1 : 0.8 }}>
-              {isDragging ? 'Drop to set' : 'Drag me'}
-            </div>
-            <div className="marker-pin">
-               <MDBIcon fas icon="map-marker-alt" size="3x" className="text-warning" style={{ color: '#ff9800', filter: 'drop-shadow(0px 5px 3px rgba(0,0,0,0.4))' }} />
-            </div>
-            {/* Shadow underneath marker */}
-            {!isDragging && <div className="marker-shadow"></div>}
-          </div>
-          
-          {/* Map Controls Mockup */}
-          <div className="position-absolute bottom-0 end-0 m-4 z-2 d-flex flex-column gap-2 map-controls">
-            <button className="btn btn-light bg-white border-0 shadow-sm p-2 rounded-circle hover-effect d-flex align-items-center justify-content-center" style={{ width: '45px', height: '45px' }}>
-              <MDBIcon fas icon="plus" size="lg" className="text-secondary" />
-            </button>
-            <button className="btn btn-light bg-white border-0 shadow-sm p-2 rounded-circle hover-effect d-flex align-items-center justify-content-center" style={{ width: '45px', height: '45px' }}>
-              <MDBIcon fas icon="minus" size="lg" className="text-secondary" />
-            </button>
-            <button className="btn btn-primary shadow p-2 rounded-circle mt-2 hover-effect d-flex align-items-center justify-content-center" style={{ width: '45px', height: '45px' }}>
-              <MDBIcon fas icon="location-arrow" size="lg" />
-            </button>
-          </div>
+            <Marker position={markerLocation} />
+          </GoogleMap>
         </div>
       </MDBRow>
     </MDBContainer>

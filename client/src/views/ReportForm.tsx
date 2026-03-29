@@ -10,7 +10,11 @@ import {
     MDBTextArea,
     MDBBtn,
     MDBSpinner,
+    MDBModal,
+    MDBModalBody,
+    MDBModalHeader,
 } from 'mdb-react-ui-kit'
+import LocationPicker from './LocationPicker'
 
 const MAX_DESC = 500
 
@@ -18,12 +22,19 @@ interface FormData {
     location: string;
     description: string;
 }
+interface LocationData {
+    address: string;
+    lat: number;
+    lng: number;
+}
 import '../styles/ReportForm.css';
 import api from '../api';
 
 export default function ReportForm() {
     /* ── State ── */
     const [formData, setFormData] = useState<FormData>({ location: '', description: '' })
+    const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null)
+    const [showLocationPicker, setShowLocationPicker] = useState<boolean>(false)
     const [imageFile, setImageFile] = useState<File | null>(null)
     const [previewSrc, setPreviewSrc] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
@@ -35,6 +46,17 @@ export default function ReportForm() {
     
     const formRef = useRef<HTMLFormElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const handleLocationSelect = (location: LocationData) => {
+        setSelectedLocation(location)
+        setFormData((prev) => ({ ...prev, location: location.address }))
+        setShowLocationPicker(false)
+    }
+
+    const clearLocation = () => {
+        setSelectedLocation(null)
+        setFormData((prev) => ({ ...prev, location: '' }))
+    }
 
     const handleInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
@@ -165,10 +187,54 @@ export default function ReportForm() {
                                 <i className="fas fa-map-marked-alt" />
                                 Location Details
                             </p>
+                            
+                            {selectedLocation ? (
+                                <MDBCard className="mb-3 border-0 bg-light">
+                                    <MDBCardBody className="p-3">
+                                        <div className="d-flex align-items-start justify-content-between">
+                                            <div className="d-flex align-items-start flex-grow-1">
+                                                <div className="text-primary me-3" style={{ fontSize: '1.5rem' }}>
+                                                    <i className="fas fa-map-marker-alt" />
+                                                </div>
+                                                <div>
+                                                    <h6 className="mb-1 fw-bold">{selectedLocation.address}</h6>
+                                                    <small className="text-muted">
+                                                        📍 {selectedLocation.lat.toFixed(4)}°, {selectedLocation.lng.toFixed(4)}°
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <MDBBtn
+                                                type="button"
+                                                onClick={clearLocation}
+                                                size="sm"
+                                                color="danger"
+                                                outline
+                                                className="ms-2"
+                                            >
+                                                <i className="fas fa-times" />
+                                            </MDBBtn>
+                                        </div>
+                                    </MDBCardBody>
+                                </MDBCard>
+                            ) : null}
+
+                            <div className="d-flex gap-2 mb-3">
+                                <MDBBtn
+                                    type="button"
+                                    onClick={() => setShowLocationPicker(true)}
+                                    color="primary"
+                                    outline
+                                    className="flex-grow-1"
+                                >
+                                    <i className="fas fa-map me-2" />
+                                    {selectedLocation ? 'Change Location' : 'Pick on Map'}
+                                </MDBBtn>
+                            </div>
+
                             <div className="input-icon-wrapper">
                                 <MDBValidationItem
                                     invalid
-                                    feedback="Please enter a location."
+                                    feedback="Please enter or select a location."
                                 >
                                     <MDBInput
                                         name="location"
@@ -183,7 +249,7 @@ export default function ReportForm() {
                             </div>
                             <p className="location-hint">
                                 <i className="fas fa-info-circle" />
-                                Enter a street address, landmark, or neighbourhood name.
+                                Enter a street address, landmark, or use the map to select a location.
                             </p>
                         </MDBCol>
 
@@ -309,6 +375,31 @@ export default function ReportForm() {
                     </MDBValidation>
                 </MDBCardBody>
             </MDBCard>
+
+            {/* Location Picker Modal */}
+            <MDBModal 
+                show={showLocationPicker} 
+                onHide={() => setShowLocationPicker(false)} 
+                size="lg" 
+                centered
+                fullscreen="md"
+            >
+                <MDBModalHeader>
+                    <h5 className="mb-0">📍 Pick Location on Map</h5>
+                    <MDBBtn 
+                        type="button" 
+                        close 
+                        aria-label="Close"
+                        onClick={() => setShowLocationPicker(false)}
+                    />
+                </MDBModalHeader>
+                <MDBModalBody style={{ padding: 0, maxHeight: '80vh', overflow: 'auto' }}>
+                    <LocationPicker 
+                        onLocationSelect={handleLocationSelect}
+                        defaultLocation={selectedLocation ? { lat: selectedLocation.lat, lng: selectedLocation.lng } : undefined}
+                    />
+                </MDBModalBody>
+            </MDBModal>
         </MDBContainer>
         </div>
         
