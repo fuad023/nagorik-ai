@@ -384,13 +384,13 @@ export default function ReportForm() {
                 centered
                 fullscreen="md"
             >
-                <MDBModalHeader>
+                <MDBModalHeader className="d-flex justify-content-between align-items-center border-bottom">
                     <h5 className="mb-0">📍 Pick Location on Map</h5>
-                    <MDBBtn 
+                    <button 
                         type="button" 
-                        close 
-                        aria-label="Close"
+                        className="btn-close"
                         onClick={() => setShowLocationPicker(false)}
+                        aria-label="Close"
                     />
                 </MDBModalHeader>
                 <MDBModalBody style={{ padding: 0, maxHeight: '80vh', overflow: 'auto' }}>
