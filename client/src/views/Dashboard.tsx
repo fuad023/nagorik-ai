@@ -114,6 +114,11 @@ const Dashboard: React.FC = () => {
         );
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('auth_token');
+        navigate('/landing');
+    };
+
     const filteredReports = reports.filter((report) => {
         const matchesSearch =
             report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -158,7 +163,7 @@ const Dashboard: React.FC = () => {
                             <MDBBtn
                                 color="link"
                                 className="text-muted"
-                                onClick={() => navigate('/landing')}
+                                onClick={handleLogout}
                             >
                                 <MDBIcon fas icon="sign-out-alt" className="me-1" />
                                 Logout
