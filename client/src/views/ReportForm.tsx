@@ -15,7 +15,6 @@ import LocationPicker, { LocationResult } from './LocationPicker'
 import '../styles/ReportForm.css'
 import api from '../api'
 
-const MAX_DESC = 500
 
 interface FormData {
     location: string
@@ -80,7 +79,6 @@ export default function ReportForm() {
 
     const handleInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
-        if (name === 'description' && value.length > MAX_DESC) return
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
@@ -161,7 +159,6 @@ export default function ReportForm() {
         }
     }
 
-    const descLen = formData.description.length
 
     return (
         <div className="app-wrapper">
@@ -258,6 +255,7 @@ export default function ReportForm() {
                                             label={<>Location <span className="req">*</span></>}
                                             placeholder="e.g. 42 Elm Street, Downtown"
                                             required
+                                            maxLength={255}
                                             style={{ paddingLeft: '2.4rem' }}
                                         />
                                     </MDBValidationItem>
@@ -275,7 +273,7 @@ export default function ReportForm() {
                                     Issue Description
                                 </p>
                                 <div className="input-icon-wrapper textarea-wrapper">
-                                    <MDBValidationItem invalid feedback="Please describe the issue (minimum 32 characters).">
+                                    <MDBValidationItem invalid feedback="Please describe the issue.">
                                         <MDBTextArea
                                             name="description"
                                             value={formData.description}
@@ -284,13 +282,12 @@ export default function ReportForm() {
                                             placeholder="Describe what happened, when you noticed it, and any other relevant details…"
                                             rows={5}
                                             required
-                                            minLength={32}
                                             style={{ paddingLeft: '2.4rem' }}
                                         />
                                     </MDBValidationItem>
                                 </div>
-                                <p className={`char-counter${descLen > MAX_DESC * 0.9 ? descLen >= MAX_DESC ? ' limit' : ' warn' : ''}`}>
-                                    {descLen} / {MAX_DESC}
+                                <p className="char-counter">
+                                    {formData.description.length} {formData.description.length === 1 ? 'character' : 'characters'}
                                 </p>
                             </MDBCol>
 

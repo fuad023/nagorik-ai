@@ -23,8 +23,8 @@ class ReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|max:64',
-            'description' => 'string|min:32',
+            'title'       => 'required|string',
+            'description' => 'required|string',
 
             'mk_files'    => 'array|max:10',   // limit to 10 files at once
             'mk_files.*'  => 'file|max:51200', // 50MB per file
