@@ -234,8 +234,8 @@ export default function LocationPicker({
           box-shadow: 0 12px 48px rgba(0,0,0,0.4);
           font-family: 'Mulish', sans-serif;
         }
-        .lp-map { width:100%; height:420px; z-index:1; }
-        .leaflet-container { background:#0c0e14 !important; }
+        .lp-map { width:100%; height:420px; z-index:1; cursor: crosshair; }
+        .leaflet-container { background:#0c0e14 !important; cursor: crosshair; }
         .leaflet-control-attribution {
           background:rgba(12,14,20,0.7)!important; color:rgba(255,255,255,0.22)!important;
           font-size:9px!important; border-radius:6px 0 0 0!important;
