@@ -10,9 +10,6 @@ import {
     MDBTextArea,
     MDBBtn,
     MDBSpinner,
-    MDBModal,
-    MDBModalBody,
-    MDBModalHeader,
 } from 'mdb-react-ui-kit'
 import LocationPicker, { LocationResult } from './LocationPicker'
 import '../styles/ReportForm.css'
@@ -390,46 +387,90 @@ export default function ReportForm() {
                     </MDBCardBody>
                 </MDBCard>
 
-                {/* ── Location Picker Modal ── */}
-                <MDBModal
-                    show={showLocationPicker}
-                    onHide={() => {
-                        console.log("Modal close requested");
-                        setShowLocationPicker(false);
-                    }}
-                    size="lg"
-                    centered
-                    backdrop
-                    keyboard
-                    scrollable
-                >
-                    <MDBModalHeader className="d-flex justify-content-between align-items-center border-bottom">
-                        <h5 className="mb-0">📍 Pick Location on Map</h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={() => {
-                                console.log("Close button clicked");
-                                setShowLocationPicker(false);
+                {/* ── Location Picker Modal (Custom Implementation) ── */}
+                {showLocationPicker && (
+                    <>
+                        {/* Backdrop */}
+                        <div
+                            style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                zIndex: 1040,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
-                            aria-label="Close"
-                        />
-                    </MDBModalHeader>
-                    <MDBModalBody style={{ padding: 0, maxHeight: '80vh', overflow: 'auto' }}>
-                        {/* Only render LocationPicker when modal is open
-                            so Leaflet always gets a visible container to measure */}
-                        {showLocationPicker && (
-                            <LocationPicker
-                                onLocationSelect={handleLocationSelect}
-                                defaultCenter={
-                                    selectedLocation
-                                        ? { lat: selectedLocation.lat, lng: selectedLocation.lng }
-                                        : undefined
-                                }
-                            />
-                        )}
-                    </MDBModalBody>
-                </MDBModal>
+                            onClick={() => setShowLocationPicker(false)}
+                        >
+                            {/* Modal Dialog */}
+                            <div
+                                style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: '0.375rem',
+                                    maxWidth: '900px',
+                                    width: '90%',
+                                    maxHeight: '90vh',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.15)',
+                                    zIndex: 1050,
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {/* Header */}
+                                <div
+                                    style={{
+                                        padding: '1rem 1.5rem',
+                                        borderBottom: '1px solid #dee2e6',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <h5 style={{ margin: 0, fontSize: '1.25rem' }}>📍 Pick Location on Map</h5>
+                                    <button
+                                        type="button"
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            fontSize: '1.5rem',
+                                            cursor: 'pointer',
+                                            padding: 0,
+                                            color: '#6c757d',
+                                        }}
+                                        onClick={() => setShowLocationPicker(false)}
+                                        aria-label="Close"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+
+                                {/* Body */}
+                                <div
+                                    style={{
+                                        padding: 0,
+                                        maxHeight: 'calc(90vh - 70px)',
+                                        overflowY: 'auto',
+                                        flex: 1,
+                                    }}
+                                >
+                                    <LocationPicker
+                                        onLocationSelect={handleLocationSelect}
+                                        defaultCenter={
+                                            selectedLocation
+                                                ? { lat: selectedLocation.lat, lng: selectedLocation.lng }
+                                                : undefined
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
 
             </MDBContainer>
         </div>
