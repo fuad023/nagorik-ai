@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ReportForm from './views/ReportForm';
+import AdminDashboard from './views/AdminDashboard';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/registration" element={<Registration />} />
 
         <Route path='/report' element = {<ReportForm/>}/>
+        <Route path = '/admin' element = {<AdminDashboard/>}/>
 
       </Routes>
       <Toaster

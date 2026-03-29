@@ -114,6 +114,11 @@ const Dashboard: React.FC = () => {
         );
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('auth_token');
+        navigate('/landing');
+    };
+
     const filteredReports = reports.filter((report) => {
         const matchesSearch =
             report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -146,11 +151,19 @@ const Dashboard: React.FC = () => {
                                 <MDBIcon fas icon="user" />
                             </div>
                         </MDBNavbarItem>
+                        <MDBNavbarItem className="me-3">
+                            <div 
+                                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
+                                onClick={() => navigate('/admin')}
+                            >
+                                <MDBIcon fas icon="fa-lock" /> 
+                            </div>
+                        </MDBNavbarItem>
                         <MDBNavbarItem>
                             <MDBBtn
                                 color="link"
                                 className="text-muted"
-                                onClick={() => navigate('/landing')}
+                                onClick={handleLogout}
                             >
                                 <MDBIcon fas icon="sign-out-alt" className="me-1" />
                                 Logout

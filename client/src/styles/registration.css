@@ -147,6 +147,16 @@
   border-color: rgba(31,42,46,.22);
 }
 
+.fieldR.fieldErrorR {
+  border-color: #e74c3c;
+  background: rgba(231, 76, 60, 0.05);
+}
+
+.fieldR.fieldSuccessR {
+  border-color: #2ecc71;
+  background: rgba(46, 204, 113, 0.05);
+}
+
 .mutedTextR{
   color: var(--muted);
   font-size: 13px;
@@ -177,9 +187,78 @@
   border:none;
   outline:none;
   background: transparent;
-  width: 100%;
+  flex: 1;
   font-size: 14px;
   color: var(--text);
+  padding-right: 8px;
+}
+
+.togglePasswordBtnR {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+.togglePasswordBtnR:hover {
+  opacity: 1;
+}
+
+/* Checklist Styles */
+.checklistR {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  padding: 12px;
+  background: rgba(31, 42, 46, 0.03);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.checkItemR {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  transition: color 0.3s ease;
+}
+
+.checkItemR.met {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.checkIconR {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 9px;
+  transition: all 0.3s ease;
+}
+
+.checkItemR.met .checkIconR {
+  background: #27ae60;
+  border-color: #27ae60;
+  color: #fff;
+}
+
+.strengthBarWrapperR {
+  margin-top: 10px;
+  width: 100%;
 }
 
 .primaryBtnR{
