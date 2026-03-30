@@ -117,7 +117,8 @@ const Dashboard: React.FC = () => {
     const handleLogout = () => {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
-        navigate('/landing');
+        localStorage.removeItem('avatar_5');
+        navigate('/landing', { replace: true });
     };
 
     const filteredReports = reports.filter((report) => {
