@@ -200,16 +200,6 @@ const Profile: React.FC = () => {
                 <MDBIcon fas icon="fa-lock" />
               </div>
             </MDBNavbarItem>
-            <MDBNavbarItem>
-              <MDBBtn
-                color="link"
-                className="text-muted"
-                onClick={handleLogout}
-              >
-                <MDBIcon fas icon="sign-out-alt" className="me-1" />
-                Logout
-              </MDBBtn>
-            </MDBNavbarItem>
           </MDBNavbarNav>
         </MDBContainer>
       </MDBNavbar>
@@ -217,163 +207,163 @@ const Profile: React.FC = () => {
       <MDBContainer className="py-5 h-100 profile-container">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="10" xl="8">
-          <MDBCard className="profile-card">
-            {/* Header */}
-            <div className="profile-header text-white d-flex flex-row" style={{ backgroundColor: '#0288d1', height: '220px', borderRadius: '15px 15px 0 0' }}>
-              <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
-                {/* Clickable avatar */}
-                <div
-                  className="avatar-wrapper position-relative"
-                  style={{ cursor: 'pointer' }}
-                  onClick={handleAvatarClick}
-                  title="Click to change photo"
-                >
-                  {avatarSrc ? (
-                    <img
-                      src={avatarSrc}
-                      alt="Profile"
-                      className="img-thumbnail mt-4 mb-2 profile-avatar"
-                      style={{ width: '150px', height: '150px', objectFit: 'cover', zIndex: 1, borderRadius: '50%' }}
-                    />
-                  ) : (
-                    <div
-                      className="img-thumbnail mt-4 mb-2 profile-avatar d-flex align-items-center justify-content-center bg-white text-primary fw-bold"
-                      style={{ width: '150px', height: '150px', zIndex: 1, borderRadius: '50%', fontSize: '2.5rem' }}
-                    >
-                      {initials}
-                    </div>
-                  )}
-                  {/* Camera overlay */}
+            <MDBCard className="profile-card">
+              {/* Header */}
+              <div className="profile-header text-white d-flex flex-row" style={{ backgroundColor: '#0288d1', height: '220px', borderRadius: '15px 15px 0 0' }}>
+                <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
+                  {/* Clickable avatar */}
                   <div
-                    className="position-absolute d-flex align-items-center justify-content-center rounded-circle"
-                    style={{ bottom: 8, right: 0, width: 36, height: 36, backgroundColor: '#ff9800', zIndex: 2, boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}
+                    className="avatar-wrapper position-relative"
+                    style={{ cursor: 'pointer' }}
+                    onClick={handleAvatarClick}
+                    title="Click to change photo"
                   >
-                    <MDBIcon fas icon="camera" style={{ color: '#fff', fontSize: '0.85rem' }} />
+                    {avatarSrc ? (
+                      <img
+                        src={avatarSrc}
+                        alt="Profile"
+                        className="img-thumbnail mt-4 mb-2 profile-avatar"
+                        style={{ width: '150px', height: '150px', objectFit: 'cover', zIndex: 1, borderRadius: '50%' }}
+                      />
+                    ) : (
+                      <div
+                        className="img-thumbnail mt-4 mb-2 profile-avatar d-flex align-items-center justify-content-center bg-white text-primary fw-bold"
+                        style={{ width: '150px', height: '150px', zIndex: 1, borderRadius: '50%', fontSize: '2.5rem' }}
+                      >
+                        {initials}
+                      </div>
+                    )}
+                    {/* Camera overlay */}
+                    <div
+                      className="position-absolute d-flex align-items-center justify-content-center rounded-circle"
+                      style={{ bottom: 8, right: 0, width: 36, height: 36, backgroundColor: '#ff9800', zIndex: 2, boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}
+                    >
+                      <MDBIcon fas icon="camera" style={{ color: '#fff', fontSize: '0.85rem' }} />
+                    </div>
+                    {/* Hidden file input */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={handleFileChange}
+                    />
                   </div>
-                  {/* Hidden file input */}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
+                </div>
+                <div className="ms-3" style={{ marginTop: '130px' }}>
+                  <MDBTypography tag="h3" className="mb-0 fw-bold user-name">{fullName}</MDBTypography>
+                  <MDBCardText className="text-white-50">{user?.email ?? ''}</MDBCardText>
+                </div>
+              </div>
+
+              <MDBCardBody className="text-black p-4">
+                {/* Stats */}
+                <div className="d-flex justify-content-end text-center py-1 stats-section">
+                  <div className="stat-card px-3">
+                    <MDBCardText className="mb-2 h5 fw-bold stat-number text-primary">{stats.total}</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="flag" className="me-1 text-warning" />Reports Submitted</MDBCardText>
+                  </div>
+                  <div className="stat-card px-3">
+                    <MDBCardText className="mb-2 h5 fw-bold stat-number text-success">{stats.resolved}</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="check-circle" className="me-1 text-success" />Issues Resolved</MDBCardText>
+                  </div>
+                  <div className="stat-card px-3">
+                    <MDBCardText className="mb-2 h5 fw-bold stat-number text-info">{stats.pending}</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="spinner" className="me-1 text-info" />Pending</MDBCardText>
+                  </div>
+                </div>
+
+                {/* Personal Details */}
+                <div className="mb-5 mt-4">
+                  <MDBTypography tag="h5" className="section-title mb-4 pb-2 border-bottom fw-bold text-dark">
+                    <MDBIcon fas icon="user-circle" className="me-2 text-primary" /> Personal Details
+                  </MDBTypography>
+                  <MDBRow className="gx-4 gy-4">
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2" />First Name</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.first_name ?? '—'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2" />Last Name</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.last_name ?? '—'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="12">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="envelope" className="me-2" />Email</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.email ?? '—'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                  </MDBRow>
+                </div>
+
+                {/* Actions */}
+                <div className="d-flex justify-content-between align-items-center pt-3 mt-4 border-top">
+                  <MDBBtn outline color="primary" className="action-btn px-4 shadow-sm" rounded onClick={() => setShowPasswordModal(true)}>
+                    <MDBIcon fas icon="key" className="me-2" />Change Password
+                  </MDBBtn>
+                  <MDBBtn outline color="danger" className="action-btn px-4 shadow-sm" rounded onClick={handleLogout}>
+                    <MDBIcon fas icon="sign-out-alt" className="me-2" />Logout
+                  </MDBBtn>
+                </div>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+        </MDBRow>
+
+        {/* Change Password Modal */}
+        <MDBModal open={showPasswordModal} onClose={() => setShowPasswordModal(false)} tabIndex="-1">
+          <MDBModalDialog>
+            <MDBModalContent>
+              <MDBModalHeader>
+                <MDBModalTitle><MDBIcon fas icon="key" className="me-2 text-primary" />Change Password</MDBModalTitle>
+                <MDBBtn className="btn-close" color="none" onClick={() => setShowPasswordModal(false)} />
+              </MDBModalHeader>
+              <MDBModalBody>
+                <div className="mb-3">
+                  <MDBInput
+                    label="Current Password"
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
                   />
                 </div>
-              </div>
-              <div className="ms-3" style={{ marginTop: '130px' }}>
-                <MDBTypography tag="h3" className="mb-0 fw-bold user-name">{fullName}</MDBTypography>
-                <MDBCardText className="text-white-50">{user?.email ?? ''}</MDBCardText>
-              </div>
-            </div>
-
-            <MDBCardBody className="text-black p-4">
-              {/* Stats */}
-              <div className="d-flex justify-content-end text-center py-1 stats-section">
-                <div className="stat-card px-3">
-                  <MDBCardText className="mb-2 h5 fw-bold stat-number text-primary">{stats.total}</MDBCardText>
-                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="flag" className="me-1 text-warning" />Reports Submitted</MDBCardText>
+                <div className="mb-3">
+                  <MDBInput
+                    label="New Password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
                 </div>
-                <div className="stat-card px-3">
-                  <MDBCardText className="mb-2 h5 fw-bold stat-number text-success">{stats.resolved}</MDBCardText>
-                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="check-circle" className="me-1 text-success" />Issues Resolved</MDBCardText>
+                <div className="mb-3">
+                  <MDBInput
+                    label="Confirm New Password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
                 </div>
-                <div className="stat-card px-3">
-                  <MDBCardText className="mb-2 h5 fw-bold stat-number text-info">{stats.pending}</MDBCardText>
-                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="spinner" className="me-1 text-info" />Pending</MDBCardText>
-                </div>
-              </div>
-
-              {/* Personal Details */}
-              <div className="mb-5 mt-4">
-                <MDBTypography tag="h5" className="section-title mb-4 pb-2 border-bottom fw-bold text-dark">
-                  <MDBIcon fas icon="user-circle" className="me-2 text-primary" /> Personal Details
-                </MDBTypography>
-                <MDBRow className="gx-4 gy-4">
-                  <MDBCol md="6">
-                    <MDBCard className="info-card h-100 shadow-0 border bg-light">
-                      <MDBCardBody className="p-3">
-                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2" />First Name</span>
-                        <MDBCardText className="mb-0 fw-500 mt-2">{user?.first_name ?? '—'}</MDBCardText>
-                      </MDBCardBody>
-                    </MDBCard>
-                  </MDBCol>
-                  <MDBCol md="6">
-                    <MDBCard className="info-card h-100 shadow-0 border bg-light">
-                      <MDBCardBody className="p-3">
-                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2" />Last Name</span>
-                        <MDBCardText className="mb-0 fw-500 mt-2">{user?.last_name ?? '—'}</MDBCardText>
-                      </MDBCardBody>
-                    </MDBCard>
-                  </MDBCol>
-                  <MDBCol md="12">
-                    <MDBCard className="info-card h-100 shadow-0 border bg-light">
-                      <MDBCardBody className="p-3">
-                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="envelope" className="me-2" />Email</span>
-                        <MDBCardText className="mb-0 fw-500 mt-2">{user?.email ?? '—'}</MDBCardText>
-                      </MDBCardBody>
-                    </MDBCard>
-                  </MDBCol>
-                </MDBRow>
-              </div>
-
-              {/* Actions */}
-              <div className="d-flex justify-content-between align-items-center pt-3 mt-4 border-top">
-                <MDBBtn outline color="primary" className="action-btn px-4 shadow-sm" rounded onClick={() => setShowPasswordModal(true)}>
-                  <MDBIcon fas icon="key" className="me-2" />Change Password
+              </MDBModalBody>
+              <MDBModalFooter>
+                <MDBBtn color="secondary" onClick={() => setShowPasswordModal(false)}>Cancel</MDBBtn>
+                <MDBBtn color="primary" onClick={handleChangePassword} disabled={passwordLoading}>
+                  {passwordLoading ? <><MDBIcon fas icon="spinner" className="me-2 fa-spin" />Saving...</> : <><MDBIcon fas icon="check" className="me-2" />Update Password</>}
                 </MDBBtn>
-                <MDBBtn outline color="danger" className="action-btn px-4 shadow-sm" rounded onClick={handleLogout}>
-                  <MDBIcon fas icon="sign-out-alt" className="me-2" />Logout
-                </MDBBtn>
-              </div>
-            </MDBCardBody>
-          </MDBCard>
-        </MDBCol>
-      </MDBRow>
-
-      {/* Change Password Modal */}
-      <MDBModal open={showPasswordModal} onClose={() => setShowPasswordModal(false)} tabIndex="-1">
-        <MDBModalDialog>
-          <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle><MDBIcon fas icon="key" className="me-2 text-primary" />Change Password</MDBModalTitle>
-              <MDBBtn className="btn-close" color="none" onClick={() => setShowPasswordModal(false)} />
-            </MDBModalHeader>
-            <MDBModalBody>
-              <div className="mb-3">
-                <MDBInput
-                  label="Current Password"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  label="New Password"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  label="Confirm New Password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-            </MDBModalBody>
-            <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={() => setShowPasswordModal(false)}>Cancel</MDBBtn>
-              <MDBBtn color="primary" onClick={handleChangePassword} disabled={passwordLoading}>
-                {passwordLoading ? <><MDBIcon fas icon="spinner" className="me-2 fa-spin" />Saving...</> : <><MDBIcon fas icon="check" className="me-2" />Update Password</>}
-              </MDBBtn>
-            </MDBModalFooter>
-          </MDBModalContent>
-        </MDBModalDialog>
-      </MDBModal>
-    </MDBContainer>
+              </MDBModalFooter>
+            </MDBModalContent>
+          </MDBModalDialog>
+        </MDBModal>
+      </MDBContainer>
     </div>
   );
 };
