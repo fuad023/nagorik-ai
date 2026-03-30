@@ -152,7 +152,7 @@ const Dashboard: React.FC = () => {
                                 <MDBIcon fas icon="user" />
                             </div>
                         </MDBNavbarItem>
-                        <MDBNavbarItem className="me-3">
+                        <MDBNavbarItem className="me-4">
                             <div
                                 className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
                                 onClick={() => navigate('/admin')}

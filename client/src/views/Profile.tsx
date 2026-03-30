@@ -17,6 +17,11 @@ import {
   MDBModalBody,
   MDBModalFooter,
   MDBInput,
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarNav,
+  MDBNavbarItem,
+  MDBBadge,
 } from 'mdb-react-ui-kit';
 import '../styles/profile.css';
 import { useNavigate } from 'react-router-dom';
@@ -164,9 +169,54 @@ const Profile: React.FC = () => {
   const initials = user ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase() : '?';
 
   return (
-    <MDBContainer className="py-5 h-100 profile-container">
-      <MDBRow className="justify-content-center align-items-center h-100">
-        <MDBCol lg="10" xl="8">
+    <div className="profile-page bg-light min-vh-100">
+      {/* Top Navigation */}
+      <MDBNavbar expand="lg" light bgColor="white" className="shadow-sm sticky-top">
+        <MDBContainer fluid>
+          <MDBNavbarBrand href="#" onClick={() => navigate('/landing')}>
+            <MDBIcon fas icon="city" size="2x" className="text-primary me-2" />
+            <span className="fw-bold text-primary">Nagorik-AI</span>
+          </MDBNavbarBrand>
+          <MDBNavbarNav className="ms-auto d-flex flex-row align-items-center">
+            <MDBNavbarItem className="me-3 position-relative">
+              <MDBIcon fas icon="bell" size="lg" className="text-muted cursor-pointer" />
+              <MDBBadge color="danger" notification pill className="notification-badge">
+                3
+              </MDBBadge>
+            </MDBNavbarItem>
+            <MDBNavbarItem className="me-3">
+              <div
+                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
+                onClick={() => navigate('/dashboard')}
+              >
+                <MDBIcon fas icon="home" />
+              </div>
+            </MDBNavbarItem>
+            <MDBNavbarItem className="me-4">
+              <div
+                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
+                onClick={() => navigate('/admin')}
+              >
+                <MDBIcon fas icon="fa-lock" />
+              </div>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBBtn
+                color="link"
+                className="text-muted"
+                onClick={handleLogout}
+              >
+                <MDBIcon fas icon="sign-out-alt" className="me-1" />
+                Logout
+              </MDBBtn>
+            </MDBNavbarItem>
+          </MDBNavbarNav>
+        </MDBContainer>
+      </MDBNavbar>
+
+      <MDBContainer className="py-5 h-100 profile-container">
+        <MDBRow className="justify-content-center align-items-center h-100">
+          <MDBCol lg="10" xl="8">
           <MDBCard className="profile-card">
             {/* Header */}
             <div className="profile-header text-white d-flex flex-row" style={{ backgroundColor: '#0288d1', height: '220px', borderRadius: '15px 15px 0 0' }}>
@@ -221,15 +271,15 @@ const Profile: React.FC = () => {
               <div className="d-flex justify-content-end text-center py-1 stats-section">
                 <div className="stat-card px-3">
                   <MDBCardText className="mb-2 h5 fw-bold stat-number text-primary">{stats.total}</MDBCardText>
-                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="flag" className="me-1 text-warning"/>Reports Submitted</MDBCardText>
+                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="flag" className="me-1 text-warning" />Reports Submitted</MDBCardText>
                 </div>
                 <div className="stat-card px-3">
                   <MDBCardText className="mb-2 h5 fw-bold stat-number text-success">{stats.resolved}</MDBCardText>
-                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="check-circle" className="me-1 text-success"/>Issues Resolved</MDBCardText>
+                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="check-circle" className="me-1 text-success" />Issues Resolved</MDBCardText>
                 </div>
                 <div className="stat-card px-3">
                   <MDBCardText className="mb-2 h5 fw-bold stat-number text-info">{stats.pending}</MDBCardText>
-                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="spinner" className="me-1 text-info"/>Pending</MDBCardText>
+                  <MDBCardText className="small text-muted mb-0 stat-label"><MDBIcon fas icon="spinner" className="me-1 text-info" />Pending</MDBCardText>
                 </div>
               </div>
 
@@ -242,7 +292,7 @@ const Profile: React.FC = () => {
                   <MDBCol md="6">
                     <MDBCard className="info-card h-100 shadow-0 border bg-light">
                       <MDBCardBody className="p-3">
-                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2"/>First Name</span>
+                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2" />First Name</span>
                         <MDBCardText className="mb-0 fw-500 mt-2">{user?.first_name ?? '—'}</MDBCardText>
                       </MDBCardBody>
                     </MDBCard>
@@ -250,7 +300,7 @@ const Profile: React.FC = () => {
                   <MDBCol md="6">
                     <MDBCard className="info-card h-100 shadow-0 border bg-light">
                       <MDBCardBody className="p-3">
-                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2"/>Last Name</span>
+                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user" className="me-2" />Last Name</span>
                         <MDBCardText className="mb-0 fw-500 mt-2">{user?.last_name ?? '—'}</MDBCardText>
                       </MDBCardBody>
                     </MDBCard>
@@ -258,7 +308,7 @@ const Profile: React.FC = () => {
                   <MDBCol md="12">
                     <MDBCard className="info-card h-100 shadow-0 border bg-light">
                       <MDBCardBody className="p-3">
-                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="envelope" className="me-2"/>Email</span>
+                        <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="envelope" className="me-2" />Email</span>
                         <MDBCardText className="mb-0 fw-500 mt-2">{user?.email ?? '—'}</MDBCardText>
                       </MDBCardBody>
                     </MDBCard>
@@ -269,10 +319,10 @@ const Profile: React.FC = () => {
               {/* Actions */}
               <div className="d-flex justify-content-between align-items-center pt-3 mt-4 border-top">
                 <MDBBtn outline color="primary" className="action-btn px-4 shadow-sm" rounded onClick={() => setShowPasswordModal(true)}>
-                  <MDBIcon fas icon="key" className="me-2"/>Change Password
+                  <MDBIcon fas icon="key" className="me-2" />Change Password
                 </MDBBtn>
                 <MDBBtn outline color="danger" className="action-btn px-4 shadow-sm" rounded onClick={handleLogout}>
-                  <MDBIcon fas icon="sign-out-alt" className="me-2"/>Logout
+                  <MDBIcon fas icon="sign-out-alt" className="me-2" />Logout
                 </MDBBtn>
               </div>
             </MDBCardBody>
@@ -285,7 +335,7 @@ const Profile: React.FC = () => {
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
-              <MDBModalTitle><MDBIcon fas icon="key" className="me-2 text-primary"/>Change Password</MDBModalTitle>
+              <MDBModalTitle><MDBIcon fas icon="key" className="me-2 text-primary" />Change Password</MDBModalTitle>
               <MDBBtn className="btn-close" color="none" onClick={() => setShowPasswordModal(false)} />
             </MDBModalHeader>
             <MDBModalBody>
@@ -317,13 +367,14 @@ const Profile: React.FC = () => {
             <MDBModalFooter>
               <MDBBtn color="secondary" onClick={() => setShowPasswordModal(false)}>Cancel</MDBBtn>
               <MDBBtn color="primary" onClick={handleChangePassword} disabled={passwordLoading}>
-                {passwordLoading ? <><MDBIcon fas icon="spinner" className="me-2 fa-spin"/>Saving...</> : <><MDBIcon fas icon="check" className="me-2"/>Update Password</>}
+                {passwordLoading ? <><MDBIcon fas icon="spinner" className="me-2 fa-spin" />Saving...</> : <><MDBIcon fas icon="check" className="me-2" />Update Password</>}
               </MDBBtn>
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
     </MDBContainer>
+    </div>
   );
 };
 
