@@ -5,6 +5,8 @@ CREATE TABLE reports (
 
     title             VARCHAR(255)    NOT NULL,
     description       TEXT                NULL,
+    status            ENUM('pending', 'assigned', 'in_progress', 'resolved')
+        NOT NULL DEFAULT 'pending',
 
     created_at        TIMESTAMP           NULL DEFAULT NULL,
     updated_at        TIMESTAMP           NULL DEFAULT NULL,
