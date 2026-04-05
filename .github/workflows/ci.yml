@@ -141,6 +141,8 @@ jobs:
         run: |
           echo "Validating SQL files in /database..."
           FAILED=0
+
+          # database/schema/*.sql
           for file in database/schema/*.sql; do
             echo "  Checking: $file"
             if ! mysql -h 127.0.0.1 -uroot -proot ci_db < "$file" 2>&1; then
@@ -150,6 +152,18 @@ jobs:
               echo "  OK: $file"
             fi
           done
+
+          # database/seed/*.sql
+          for file in database/seed/*.sql; do
+            echo "  Checking: $file"
+            if ! mysql -h 127.0.0.1 -uroot -proot ci_db < "$file" 2>&1; then
+              echo "  FAILED: $file"
+              FAILED=1
+            else
+              echo "  OK: $file"
+            fi
+          done
+
           if [ "$FAILED" -eq 1 ]; then
             echo "One or more SQL files failed validation."
             exit 1
