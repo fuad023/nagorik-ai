@@ -20,8 +20,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('v1')->group(function () {
-    Route::apiResource('/admin/reports', AdminReportController::class);
-    Route::apiResource('/admin/users',   AdminUserController::class);
+    Route::group(['as' => 'admin.'], function () {
+        Route::apiResource('/admin/reports', AdminReportController::class);
+        Route::apiResource('/admin/users',   AdminUserController::class);
+    });
 });
 
 require __DIR__.'/auth.php';
