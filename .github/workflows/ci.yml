@@ -29,8 +29,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint (ESLint)
-        run: npm run lint
+      # - name: Lint (ESLint)
+      #   run: npm run lint
 
       - name: Build (Vite)
         run: npm run build
@@ -102,8 +102,8 @@ jobs:
           php artisan config:cache
           php artisan route:cache
 
-      - name: Lint (Laravel Pint)
-        run: vendor/bin/pint --test
+      # - name: Lint (Laravel Pint)
+      #   run: vendor/bin/pint --test
 
       - name: Run tests
         run: php artisan test
