@@ -27,7 +27,7 @@ class ApiClient {
   async login(email: string, password: string) {
     try {
       const response = await this.client.post('/api/login', { email, password });
-      
+
       if (response.data && response.data.token) {
         localStorage.setItem('auth_token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -49,12 +49,12 @@ class ApiClient {
 
   async register(first_name: string, last_name: string, email: string, password: string, password_confirmation: string) {
     try {
-      const response = await this.client.post('/api/register', { 
-        first_name, 
-        last_name, 
-        email, 
+      const response = await this.client.post('/api/register', {
+        first_name,
+        last_name,
+        email,
         password,
-        password_confirmation 
+        password_confirmation
       });
 
       if (response.data && response.data.user) {
@@ -83,14 +83,14 @@ class ApiClient {
 
       const token = localStorage.getItem('auth_token');
       const endpoint = `${secrets.backendEndpoint || 'http://localhost:8000'}/api/v1/reports`;
-      
+
       const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-              'Authorization': `Bearer ${token}`,
-              'Accept': 'application/json'
-          },
-          body: formData
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
+        body: formData
       });
 
       const data = await response.json();
@@ -116,7 +116,7 @@ class ApiClient {
     try {
       await this.client.post('/api/logout');
     } catch (error) {
-       console.error(error);
+      console.error(error);
     } finally {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user');
@@ -130,9 +130,9 @@ class ApiClient {
         // Form validation errors
         const errors = error.response.data.errors;
         if (errors) {
-            const firstErrorNode = Object.values(errors)[0] as string[];
-            toast.error(firstErrorNode[0]);
-            return;
+          const firstErrorNode = Object.values(errors)[0] as string[];
+          toast.error(firstErrorNode[0]);
+          return;
         }
       }
       const msg = error.response.data.message || 'Server Error';
