@@ -80,7 +80,7 @@ const Landing: React.FC = () => {
                                         <MDBIcon fas icon="flag" className="me-2" />
                                         Report an Issue
                                     </MDBBtn>
-                                    <MDBBtn outline color="primary" size="lg" className="mb-3">
+                                    <MDBBtn outline color="primary" size="lg" className="mb-3" href="#features">
                                         Learn More
                                     </MDBBtn>
                                 </div>
