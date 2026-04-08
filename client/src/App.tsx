@@ -14,6 +14,7 @@ import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ReportForm from './views/ReportForm';
 import AdminDashboard from './views/AdminDashboard';
+import ChatBot from './components/ChatBot/ChatBot';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
           },
         }}
       />
+      <ChatBot />
     </>
   );
 }
