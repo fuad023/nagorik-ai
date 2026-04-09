@@ -242,6 +242,85 @@
     }
 }
 
+/* Digital Clock */
+.digital-clock {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px 20px;
+    border-radius: 12px;
+    width: fit-content;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.digital-clock i {
+    font-size: 1.25rem;
+}
+
+/* Report Card Image */
+.report-card-img-wrapper {
+    height: 80px;
+    background-color: #f0f0f0;
+    border: 1px solid #eee;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/* Recent Media Gallery */
+.recent-media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.media-thumb-wrapper {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.media-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.media-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(102, 126, 234, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.media-thumb-wrapper:hover .media-overlay {
+    opacity: 1;
+}
+
+.media-thumb-wrapper:hover .media-thumb {
+    transform: scale(1.2);
+}
+
+.media-thumb-wrapper:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Animations */
 .animate-in {
     animation: slideUp 0.5s ease-out;

@@ -33,6 +33,7 @@ interface Report {
     status: 'pending' | 'in-progress' | 'resolved';
     lastUpdated: string;
     description: string;
+    imageUrl?: string;
 }
 
 interface NearbyIssue {
@@ -50,6 +51,15 @@ const Dashboard: React.FC = () => {
     const [reportTab, setReportTab] = useState<'mine' | 'all'>('mine');
 
     const [reports, setReports] = useState<Report[]>([]);
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    // Clock effect
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
 
     // Fetch reports from backend (re-runs whenever tab changes)
     React.useEffect(() => {
@@ -78,7 +88,8 @@ const Dashboard: React.FC = () => {
                             category: r.category || 'General',
                             status: r.status || 'pending',
                             lastUpdated: new Date(r.updated_at).toLocaleString(),
-                            description: r.description
+                            description: r.description,
+                            imageUrl: (r.files && r.files.length > 0) ? r.files[0].url : 'https://images.unsplash.com/photo-1548243407-3a131b74d47d?auto=format&fit=crop&q=80&w=400'
                         }));
                         setReports(parsedReports);
                     }
@@ -186,6 +197,11 @@ const Dashboard: React.FC = () => {
                                     <MDBTypography tag="h3" className="fw-bold mb-2">
                                         Welcome back, Citizen!
                                     </MDBTypography>
+                                    <div className="digital-clock mb-3">
+                                        <MDBIcon far icon="clock" className="me-2" />
+                                        <span>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                                        <span className="ms-2 opacity-75 small">{currentTime.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}</span>
+                                    </div>
                                     <MDBTypography tag="p" className="mb-0 opacity-90">
                                         You have {reports.filter((r) => r.status !== 'resolved').length} active
                                         reports and {nearbyIssues.length} nearby issues
@@ -275,7 +291,17 @@ const Dashboard: React.FC = () => {
                                             <MDBCard key={report.id} className="report-card mb-3 border-0 shadow-sm">
                                                 <MDBCardBody>
                                                     <MDBRow className="align-items-center">
-                                                        <MDBCol md="8">
+                                                        <MDBCol md="2" className="d-none d-md-block">
+                                                            <div className="report-card-img-wrapper rounded overflow-hidden">
+                                                                <img 
+                                                                    src={report.imageUrl} 
+                                                                    alt={report.title} 
+                                                                    className="img-fluid w-100 h-100 object-fit-cover"
+                                                                    style={{ minHeight: '80px' }}
+                                                                />
+                                                            </div>
+                                                        </MDBCol>
+                                                        <MDBCol md="6">
                                                             <MDBTypography tag="h6" className="fw-bold mb-2">
                                                                 {report.title}
                                                             </MDBTypography>
@@ -357,7 +383,7 @@ const Dashboard: React.FC = () => {
                         </MDBCard>
 
                         {/* Quick Stats */}
-                        <MDBCard className="border-0 shadow-sm">
+                        <MDBCard className="border-0 shadow-sm mb-4">
                             <MDBCardBody>
                                 <MDBTypography tag="h5" className="fw-bold mb-4">
                                     <MDBIcon fas icon="chart-bar" className="me-2 text-success" />
@@ -387,6 +413,37 @@ const Dashboard: React.FC = () => {
                                             {reports.filter((r) => r.status !== 'resolved').length}
                                         </span>
                                     </div>
+                                </div>
+                            </MDBCardBody>
+                        </MDBCard>
+
+                        {/* Recent Media (Picture Cart) */}
+                        <MDBCard className="border-0 shadow-sm recent-media-card">
+                            <MDBCardBody>
+                                <div className="d-flex justify-content-between align-items-center mb-4">
+                                    <MDBTypography tag="h5" className="fw-bold mb-0">
+                                        <MDBIcon fas icon="images" className="me-2 text-info" />
+                                        Recent Media
+                                    </MDBTypography>
+                                    <MDBBtn color="link" size="sm" onClick={() => navigate('/history')}>
+                                        View All
+                                    </MDBBtn>
+                                </div>
+                                <div className="recent-media-grid">
+                                    {reports.filter(r => r.imageUrl).slice(0, 6).map((report, idx) => (
+                                        <div key={idx} className="media-thumb-wrapper" onClick={() => navigate('/history')}>
+                                            <img src={report.imageUrl} alt="Recent" className="media-thumb" />
+                                            <div className="media-overlay">
+                                                <MDBIcon fas icon="eye" />
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {reports.filter(r => r.imageUrl).length === 0 && (
+                                        <div className="text-center py-4 text-muted w-100">
+                                            <MDBIcon fas icon="image" size="2x" className="mb-2 opacity-50" />
+                                            <p className="small mb-0">No media found</p>
+                                        </div>
+                                    )}
                                 </div>
                             </MDBCardBody>
                         </MDBCard>
