@@ -128,7 +128,7 @@ export default function LocationPicker({
         });
 
         L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
           {
             attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://openstreetmap.org/copyright">OSM</a>',
             subdomains: "abcd",
@@ -221,17 +221,17 @@ export default function LocationPicker({
 
         .lp-root {
           position: relative; width: 100%; border-radius: 20px; overflow: hidden;
-          background: #0c0e14; border: 1px solid rgba(255,255,255,0.07);
-          box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+          background: #ffffff; border: 1px solid rgba(0,0,0,0.07);
+          box-shadow: 0 12px 48px rgba(0,0,0,0.1);
           font-family: 'Mulish', sans-serif;
         }
-        .lp-map { width:100%; height:420px; z-index:1; cursor: crosshair; }
-        .leaflet-container { background:#0c0e14 !important; cursor: crosshair; }
+        .lp-map { width:100%; height:550px; z-index:1; cursor: crosshair; }
+        .leaflet-container { background:#ffffff !important; cursor: crosshair; }
         .leaflet-control-attribution {
-          background:rgba(12,14,20,0.7)!important; color:rgba(255,255,255,0.22)!important;
+          background:rgba(255,255,255,0.7)!important; color:rgba(0,0,0,0.5)!important;
           font-size:9px!important; border-radius:6px 0 0 0!important;
         }
-        .leaflet-control-attribution a { color:rgba(255,255,255,0.32)!important; }
+        .leaflet-control-attribution a { color:rgba(0,0,0,0.7)!important; }
 
         /* Search */
         .lp-search-wrap {
@@ -240,31 +240,33 @@ export default function LocationPicker({
         }
         .lp-search-bar {
           display:flex; align-items:center; gap:9px;
-          background:rgba(12,14,20,0.94); backdrop-filter:blur(16px);
-          border:1px solid rgba(255,255,255,0.1); border-radius:14px;
+          background:rgba(255,255,255,0.94); backdrop-filter:blur(16px);
+          border:1px solid rgba(0,0,0,0.1); border-radius:14px;
           padding:11px 14px; transition:border-color .2s;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .lp-search-bar:focus-within { border-color:#f97316; }
         .lp-search-bar input {
           flex:1; background:none; border:none; outline:none;
-          color:#f0f0f0; font-family:'Mulish',sans-serif; font-size:13.5px; font-weight:500;
+          color:#333; font-family:'Mulish',sans-serif; font-size:13.5px; font-weight:500;
         }
-        .lp-search-bar input::placeholder { color:rgba(255,255,255,0.3); }
+        .lp-search-bar input::placeholder { color:#888; }
 
         /* Suggestions */
         .lp-suggestions {
-          margin-top:6px; background:rgba(16,18,28,0.97); backdrop-filter:blur(16px);
-          border:1px solid rgba(255,255,255,0.08); border-radius:13px; overflow:hidden;
+          margin-top:6px; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px);
+          border:1px solid rgba(0,0,0,0.08); border-radius:13px; overflow:hidden;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
         .lp-sug-item {
           padding:10px 14px; cursor:pointer;
-          border-bottom:1px solid rgba(255,255,255,0.05); transition:background .15s;
+          border-bottom:1px solid rgba(0,0,0,0.05); transition:background .15s;
         }
         .lp-sug-item:last-child { border-bottom:none; }
         .lp-sug-item:hover { background:rgba(249,115,22,0.1); }
-        .lp-sug-name { font-size:13px; font-weight:600; color:#f0f0f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .lp-sug-addr { font-size:11px; color:rgba(255,255,255,0.35); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; }
-        .lp-no-results { padding:14px; text-align:center; font-size:13px; color:rgba(255,255,255,0.28); font-style:italic; }
+        .lp-sug-name { font-size:13px; font-weight:600; color:#222; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .lp-sug-addr { font-size:11px; color:#555; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; }
+        .lp-no-results { padding:14px; text-align:center; font-size:13px; color:#888; font-style:italic; }
 
         /* Geocoding pill */
         .lp-pill {
@@ -283,10 +285,11 @@ export default function LocationPicker({
         }
         .lp-ctrl {
           width:38px; height:38px; border-radius:11px;
-          background:rgba(12,14,20,0.92); backdrop-filter:blur(12px);
-          border:1px solid rgba(255,255,255,0.09); color:#ccc;
+          background:rgba(255,255,255,0.92); backdrop-filter:blur(12px);
+          border:1px solid rgba(0,0,0,0.09); color:#555;
           display:flex; align-items:center; justify-content:center;
           cursor:pointer; transition:background .18s, border-color .18s, color .18s;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .lp-ctrl:hover { background:#f97316; border-color:#f97316; color:#fff; }
 
@@ -294,15 +297,15 @@ export default function LocationPicker({
         .lp-badge {
           position:absolute; top:14px; right:14px; z-index:999;
           background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.22);
-          color:#4ade80; font-size:10px; font-weight:700; letter-spacing:.08em;
+          color:#2ea043; font-size:10px; font-weight:700; letter-spacing:.08em;
           text-transform:uppercase; padding:4px 10px; border-radius:999px;
         }
 
         /* Bottom panel */
         .lp-panel {
           position:absolute; bottom:0; left:0; right:0; z-index:999;
-          background:rgba(12,14,20,0.97); backdrop-filter:blur(20px);
-          border-top:1px solid rgba(255,255,255,0.07);
+          background:rgba(255,255,255,0.97); backdrop-filter:blur(20px);
+          border-top:1px solid rgba(0,0,0,0.07);
           padding:15px 18px 18px; display:flex; align-items:center; gap:14px;
         }
         .lp-panel-icon {
@@ -313,11 +316,11 @@ export default function LocationPicker({
         .lp-panel-info { flex:1; min-width:0; }
         .lp-panel-label { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#f97316; margin-bottom:3px; }
         .lp-panel-name {
-          font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#f0f0f0;
+          font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#222;
           white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
         }
-        .lp-panel-addr { font-size:11.5px; color:rgba(255,255,255,0.35); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; }
-        .lp-panel-hint { font-size:12.5px; color:rgba(255,255,255,0.28); font-style:italic; }
+        .lp-panel-addr { font-size:11.5px; color:#555; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; }
+        .lp-panel-hint { font-size:12.5px; color:#777; font-style:italic; }
         .lp-confirm {
           flex-shrink:0; padding:10px 20px; border-radius:12px;
           background:#f97316; border:none; color:#fff;
@@ -330,7 +333,7 @@ export default function LocationPicker({
 
         /* Overlay */
         .lp-overlay {
-          position:absolute; inset:0; z-index:1000; background:rgba(12,14,20,0.95); backdrop-filter:blur(2px);
+          position:absolute; inset:0; z-index:1000; background:rgba(255,255,255,0.95); backdrop-filter:blur(2px);
           display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
           border-radius: 20px;
         }
@@ -340,7 +343,7 @@ export default function LocationPicker({
           animation:lp-spin .7s linear infinite;
         }
         @keyframes lp-spin { to { transform:rotate(360deg); } }
-        .lp-loading-txt { color:rgba(255,255,255,0.65); font-size:14px; font-weight:500; letter-spacing:0.3px; }
+        .lp-loading-txt { color:#444; font-size:14px; font-weight:500; letter-spacing:0.3px; }
         .lp-error-txt { color:#f87171; font-size:13px; text-align:center; padding:0 24px; }
       `}</style>
 
