@@ -50,7 +50,7 @@ const Dashboard: React.FC = () => {
     const [reportTab, setReportTab] = useState<'mine' | 'all'>('mine');
 
     const [reports, setReports] = useState<Report[]>([]);
-    
+
     // Fetch reports from backend (re-runs whenever tab changes)
     React.useEffect(() => {
         const fetchReports = async () => {
@@ -61,14 +61,14 @@ const Dashboard: React.FC = () => {
                 const url = reportTab === 'mine'
                     ? 'http://localhost:8000/api/v1/reports?mine=true'
                     : 'http://localhost:8000/api/v1/reports';
-                
+
                 const response = await fetch(url, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json'
                     }
                 });
-                
+
                 if (response.ok) {
                     const data = await response.json();
                     if (data.data) {
@@ -116,7 +116,9 @@ const Dashboard: React.FC = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('auth_token');
-        navigate('/landing');
+        localStorage.removeItem('user');
+        localStorage.removeItem('avatar_5');
+        navigate('/landing', { replace: true });
     };
 
     const filteredReports = reports.filter((report) => {
@@ -144,19 +146,19 @@ const Dashboard: React.FC = () => {
                             </MDBBadge>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="me-3">
-                            <div 
+                            <div
                                 className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
                                 onClick={() => navigate('/profile')}
                             >
                                 <MDBIcon fas icon="user" />
                             </div>
                         </MDBNavbarItem>
-                        <MDBNavbarItem className="me-3">
-                            <div 
+                        <MDBNavbarItem className="me-4">
+                            <div
                                 className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
                                 onClick={() => navigate('/admin')}
                             >
-                                <MDBIcon fas icon="fa-lock" /> 
+                                <MDBIcon fas icon="fa-lock" />
                             </div>
                         </MDBNavbarItem>
                         <MDBNavbarItem>
@@ -288,9 +290,9 @@ const Dashboard: React.FC = () => {
                                                         <MDBCol md="4" className="text-md-end">
                                                             {getStatusBadge(report.status)}
                                                             <div className="mt-2">
-                                                                <MDBBtn 
-                                                                    color="link" 
-                                                                    size="sm" 
+                                                                <MDBBtn
+                                                                    color="link"
+                                                                    size="sm"
                                                                     className="text-primary"
                                                                     onClick={() => navigate('/history')}
                                                                 >
@@ -318,7 +320,7 @@ const Dashboard: React.FC = () => {
                                 </MDBTypography>
 
                                 {/* Map Placeholder */}
-                                <div 
+                                <div
                                     className="map-placeholder bg-light rounded mb-3 d-flex align-items-center justify-content-center"
                                     style={{ cursor: 'pointer' }}
                                     onClick={() => navigate('/location-picker')}

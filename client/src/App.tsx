@@ -16,6 +16,22 @@ import ReportForm from './views/ReportForm';
 import AdminDashboard from './views/AdminDashboard';
 import ChatBot from './components/ChatBot/ChatBot';
 
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+const GuestRoute = ({ children }: { children: JSX.Element }) => {
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
+
 function App() {
   return (
     <>
@@ -23,24 +39,22 @@ function App() {
         {/* Redirect root to Landing Page */}
         <Route path="/" element={<Navigate to="/landing" replace />} />
 
-        {/* Public Landing Page */}
-        <Route path="/landing" element={<Landing />} />
+        {/* Public Landing/Auth Routes (Only for Guests) */}
+        <Route path="/landing" element={<GuestRoute><Landing /></GuestRoute>} />
+        <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+        <Route path="/registration" element={<GuestRoute><Registration /></GuestRoute>} />
 
         {/* Dashboard Route */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
         {/* New Pages */}
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/submit-report" element={<ReportForm />} />
-        <Route path="/history" element={<ReportHistory />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/submit-report" element={<ProtectedRoute><ReportForm /></ProtectedRoute>} />
+        <Route path="/history" element={<ProtectedRoute><ReportHistory /></ProtectedRoute>} />
         <Route path="/location-picker" element={<LocationPicker />} />
 
-        {/* Authentication Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/registration" element={<Registration />} />
-
-        <Route path='/report' element = {<ReportForm/>}/>
-        <Route path = '/admin' element = {<AdminDashboard/>}/>
+        <Route path='/report' element={<ProtectedRoute><ReportForm /></ProtectedRoute>} />
+        <Route path='/admin' element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
 
       </Routes>
       <Toaster
