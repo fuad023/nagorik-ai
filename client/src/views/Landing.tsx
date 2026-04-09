@@ -80,7 +80,7 @@ const Landing: React.FC = () => {
                                         <MDBIcon fas icon="flag" className="me-2" />
                                         Report an Issue
                                     </MDBBtn>
-                                    <MDBBtn outline color="primary" size="lg" className="mb-3">
+                                    <MDBBtn outline color="primary" size="lg" className="mb-3" href="#features">
                                         Learn More
                                     </MDBBtn>
                                 </div>
@@ -96,88 +96,182 @@ const Landing: React.FC = () => {
             </section>
 
             {/* Feature Highlights */}
-            <section id="features" className="features-section py-5 bg-light">
+            <section id="features" className="features-section py-5 bg-light pb-5">
                 <MDBContainer>
-                    <div className="text-center mb-5">
+                    <div className="text-center mb-5 animate-fade-in">
                         <MDBTypography tag="h2" className="display-5 fw-bold mb-3">
-                            How Nagorik-AI Helps You
+                            Smart Civic Solutions
                         </MDBTypography>
-                        <MDBTypography tag="p" className="text-muted fs-5">
-                            Cutting-edge features designed to streamline civic engagement
+                        <MDBTypography tag="p" className="text-muted fs-5 max-w-700 mx-auto">
+                            Powerful, AI-driven tools that bridge the gap between citizens and sustainable urban development.
                         </MDBTypography>
                     </div>
 
                     <MDBRow className="g-4">
                         {/* Feature 1 */}
-                        <MDBCol md="6" lg="3">
-                            <MDBCard className="feature-card h-100 border-0 shadow-hover">
-                                <MDBCardBody className="text-center p-4">
-                                    <div className="feature-icon mb-3">
+                        <MDBCol md="6" lg="4">
+                            <MDBCard className="feature-card h-100 border-0 shadow-sm glass-hover">
+                                <MDBCardBody className="text-center p-5">
+                                    <div className="feature-icon-wrapper mb-4 bg-primary-soft rounded-circle mx-auto">
                                         <MDBIcon fas icon="brain" size="3x" className="text-primary" />
                                     </div>
                                     <MDBTypography tag="h5" className="fw-bold mb-3">
-                                        AI-Powered Categorization
+                                        AI-Powered Analysis
                                     </MDBTypography>
                                     <MDBTypography tag="p" className="text-muted">
-                                        Our smart AI automatically categorizes your reports and routes them to the
-                                        right authorities instantly.
+                                        Our sophisticated AI algorithms automatically prioritize and categorize reports, ensuring urgent issues get the attention they deserve.
                                     </MDBTypography>
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
 
                         {/* Feature 2 */}
-                        <MDBCol md="6" lg="3">
-                            <MDBCard className="feature-card h-100 border-0 shadow-hover">
-                                <MDBCardBody className="text-center p-4">
-                                    <div className="feature-icon mb-3">
-                                        <MDBIcon fas icon="comments" size="3x" className="text-success" />
+                        <MDBCol md="6" lg="4">
+                            <MDBCard className="feature-card h-100 border-0 shadow-sm glass-hover">
+                                <MDBCardBody className="text-center p-5">
+                                    <div className="feature-icon-wrapper mb-4 bg-success-soft rounded-circle mx-auto">
+                                        <MDBIcon fas icon="shield-alt" size="3x" className="text-success" />
                                     </div>
                                     <MDBTypography tag="h5" className="fw-bold mb-3">
-                                        24/7 Chatbot Assistance
+                                        Verified Transparency
                                     </MDBTypography>
                                     <MDBTypography tag="p" className="text-muted">
-                                        Get instant answers to your questions anytime with our intelligent chatbot
-                                        assistant.
+                                        Track every report with verifiable blockchain-inspired records. Direct accountability from submission to resolution.
                                     </MDBTypography>
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
 
                         {/* Feature 3 */}
-                        <MDBCol md="6" lg="3">
-                            <MDBCard className="feature-card h-100 border-0 shadow-hover">
-                                <MDBCardBody className="text-center p-4">
-                                    <div className="feature-icon mb-3">
+                        <MDBCol md="6" lg="4">
+                            <MDBCard className="feature-card h-100 border-0 shadow-sm glass-hover">
+                                <MDBCardBody className="text-center p-5">
+                                    <div className="feature-icon-wrapper mb-4 bg-warning-soft rounded-circle mx-auto">
                                         <MDBIcon fas icon="chart-line" size="3x" className="text-warning" />
                                     </div>
                                     <MDBTypography tag="h5" className="fw-bold mb-3">
-                                        Real-Time Issue Tracking
+                                        Real-Time Insights
                                     </MDBTypography>
                                     <MDBTypography tag="p" className="text-muted">
-                                        Track the status of your reports in real-time and receive updates at every
-                                        step.
+                                        Dive into data-driven city analytics. See how your neighborhood is improving with live heatmaps and trend analysis.
                                     </MDBTypography>
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
 
                         {/* Feature 4 */}
-                        <MDBCol md="6" lg="3">
-                            <MDBCard className="feature-card h-100 border-0 shadow-hover">
-                                <MDBCardBody className="text-center p-4">
-                                    <div className="feature-icon mb-3">
-                                        <MDBIcon fas icon="map-marked-alt" size="3x" className="text-danger" />
+                        <MDBCol md="6" lg="4">
+                            <MDBCard className="feature-card h-100 border-0 shadow-sm glass-hover">
+                                <MDBCardBody className="text-center p-5">
+                                    <div className="feature-icon-wrapper mb-4 bg-info-soft rounded-circle mx-auto">
+                                        <MDBIcon fas icon="comments" size="3x" className="text-info" />
                                     </div>
                                     <MDBTypography tag="h5" className="fw-bold mb-3">
-                                        Local Alerts
+                                        Community Hub
                                     </MDBTypography>
                                     <MDBTypography tag="p" className="text-muted">
-                                        Stay informed about issues in your neighborhood with location-based alerts and
-                                        updates.
+                                        Engage with other citizens, vote on proposed city improvements, and participate in local governance discussions.
                                     </MDBTypography>
                                 </MDBCardBody>
                             </MDBCard>
+                        </MDBCol>
+
+                        {/* Feature 5 */}
+                        <MDBCol md="6" lg="4">
+                            <MDBCard className="feature-card h-100 border-0 shadow-sm glass-hover">
+                                <MDBCardBody className="text-center p-5">
+                                    <div className="feature-icon-wrapper mb-4 bg-danger-soft rounded-circle mx-auto">
+                                        <MDBIcon fas icon="mobile-alt" size="3x" className="text-danger" />
+                                    </div>
+                                    <MDBTypography tag="h5" className="fw-bold mb-3">
+                                        Mobile First
+                                    </MDBTypography>
+                                    <MDBTypography tag="p" className="text-muted">
+                                        Report issues on the go. Attach photos, GPS locations, and voice notes directly from your smartphone for instant reporting.
+                                    </MDBTypography>
+                                </MDBCardBody>
+                            </MDBCard>
+                        </MDBCol>
+
+                        {/* Feature 6 */}
+                        <MDBCol md="6" lg="4">
+                            <MDBCard className="feature-card h-100 border-0 shadow-sm glass-hover">
+                                <MDBCardBody className="text-center p-5">
+                                    <div className="feature-icon-wrapper mb-4 bg-secondary-soft rounded-circle mx-auto">
+                                        <MDBIcon fas icon="hands-helping" size="3x" className="text-secondary" />
+                                    </div>
+                                    <MDBTypography tag="h5" className="fw-bold mb-3">
+                                        Volunteer Network
+                                    </MDBTypography>
+                                    <MDBTypography tag="p" className="text-muted">
+                                        Connect with local volunteer groups and participate in community cleanup or improvement programs directly.
+                                    </MDBTypography>
+                                </MDBCardBody>
+                            </MDBCard>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
+            </section>
+
+            {/* About Section */}
+            <section id="about" className="about-section py-5">
+                <MDBContainer>
+                    <MDBRow className="align-items-center py-5">
+                        <MDBCol lg="6" className="mb-4 mb-lg-0 animate-fade-in">
+                            <div className="about-image-container position-relative">
+                                <div className="about-image rounded shadow-lg p-5 bg-primary text-white text-center">
+                                    <MDBIcon fas icon="lightbulb" size="10x" className="opacity-25" />
+                                    <div className="about-overlay">
+                                        <MDBTypography tag="h3" className="fw-bold">Innovation For All</MDBTypography>
+                                    </div>
+                                </div>
+                                <div className="about-floating-card shadow-lg p-3 bg-white rounded position-absolute bottom-0 end-0 m-4 animate-bounce">
+                                    <div className="d-flex align-items-center">
+                                        <MDBIcon fas icon="award" size="2x" className="text-warning me-2" />
+                                        <span className="fw-bold">Top Civic Tech 2026</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </MDBCol>
+                        <MDBCol lg="6" className="ps-lg-5">
+                            <MDBTypography tag="h5" className="text-primary fw-bold text-uppercase mb-3">
+                                About Nagorik-AI
+                            </MDBTypography>
+                            <MDBTypography tag="h2" className="display-6 fw-bold mb-4">
+                                Pioneering the Future of Digital Civic Engagement
+                            </MDBTypography>
+                            <MDBTypography tag="p" className="text-muted fs-5 mb-4">
+                                At Nagorik-AI, we believe that the technology should empower citizens, not isolate them. Founded in 2026, our mission is to create a seamless interface between city dwellers and the infrastructure that supports them.
+                            </MDBTypography>
+                            <MDBRow className="g-3 mb-4">
+                                <MDBCol sm="6">
+                                    <div className="d-flex align-items-center mb-2">
+                                        <MDBIcon fas icon="check-circle" className="text-primary me-2" />
+                                        <span className="fw-semibold">Community-Led Mission</span>
+                                    </div>
+                                </MDBCol>
+                                <MDBCol sm="6">
+                                    <div className="d-flex align-items-center mb-2">
+                                        <MDBIcon fas icon="check-circle" className="text-primary me-2" />
+                                        <span className="fw-semibold">AI For Social Good</span>
+                                    </div>
+                                </MDBCol>
+                                <MDBCol sm="6">
+                                    <div className="d-flex align-items-center mb-2">
+                                        <MDBIcon fas icon="check-circle" className="text-primary me-2" />
+                                        <span className="fw-semibold">Transparent Operations</span>
+                                    </div>
+                                </MDBCol>
+                                <MDBCol sm="6">
+                                    <div className="d-flex align-items-center mb-2">
+                                        <MDBIcon fas icon="check-circle" className="text-primary me-2" />
+                                        <span className="fw-semibold">Sustainable Growth</span>
+                                    </div>
+                                </MDBCol>
+                            </MDBRow>
+                            <MDBBtn outline color="primary" size="lg" className="rounded-pill">
+                                Read Our Story
+                            </MDBBtn>
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>

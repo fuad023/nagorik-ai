@@ -14,6 +14,7 @@ import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ReportForm from './views/ReportForm';
 import AdminDashboard from './views/AdminDashboard';
+import ChatBot from './components/ChatBot/ChatBot';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const token = localStorage.getItem('auth_token');
@@ -64,6 +65,7 @@ function App() {
           },
         }}
       />
+      <ChatBot />
     </>
   );
 }

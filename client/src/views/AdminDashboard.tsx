@@ -31,7 +31,7 @@ const stats = [
   { title: "Dust Reports", value: 22, accent: "#3cb878" },
   { title: "Narrow Road", value: 18, accent: "#f2a423" },
   { title: "Pending Reports", value: 24, accent: "#e65b5b" },
-  
+
 ];
 
 const alerts = [
@@ -259,10 +259,10 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, accent }) => {
 };
 
 const AdminDashboard: React.FC = () => {
-const [selectedType, setSelectedType] = useState("All");
-const [selectedStatus, setSelectedStatus] = useState("All");
-const [showAdminMenu, setShowAdminMenu] = useState(false);
-const [activePage, setActivePage] = useState("Dashboard");
+  const [selectedType, setSelectedType] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const [activePage, setActivePage] = useState("Dashboard");
 
   const adminMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -299,8 +299,9 @@ const [activePage, setActivePage] = useState("Dashboard");
               <select
                 id="typeSelect"
                 value={selectedType}
-                onChange={(e) =>{setSelectedType(e.target.value);
-                                       //Dashboard=>Status
+                onChange={(e) => {
+                  setSelectedType(e.target.value);
+                  //Dashboard=>Status
                 }}
               >
                 {typeOptions.map((type) => (
@@ -320,9 +321,10 @@ const [activePage, setActivePage] = useState("Dashboard");
                 id="statusSelect"
                 value={selectedStatus}
                 onChange={
-                    (e) => {setSelectedStatus(e.target.value);
-                                   //Dashboard=>Status
-                    }
+                  (e) => {
+                    setSelectedStatus(e.target.value);
+                    //Dashboard=>Status
+                  }
                 }
               >
                 {statusOptions.map((status) => (
@@ -335,7 +337,7 @@ const [activePage, setActivePage] = useState("Dashboard");
             </div>
           </div>
 
-          
+
         </div>
 
         <div className="stats-row">
@@ -348,7 +350,7 @@ const [activePage, setActivePage] = useState("Dashboard");
             />
           ))}
 
-          
+
         </div>
 
         <div className="cards-only-section">
@@ -361,7 +363,7 @@ const [activePage, setActivePage] = useState("Dashboard");
               {alerts.map((alert, index) => (
                 <div key={index} className="list-item">
                   <span className={`bullet ${alert.color}`} />
-                  <span>{alert.text} </span>                 
+                  <span>{alert.text} </span>
                 </div>
               ))}
             </div>
@@ -376,7 +378,7 @@ const [activePage, setActivePage] = useState("Dashboard");
               {recentReports.map((report, index) => (
                 <div key={index} className="list-item">
                   <span className="bullet blue" />
-                  <span>{report}</span>                 
+                  <span>{report}</span>
                 </div>
               ))}
             </div>
@@ -386,203 +388,203 @@ const [activePage, setActivePage] = useState("Dashboard");
     );
   };
 
-const renderVerificationPage = () => {
-  return (
-    <section className="dashboard-wrapper">
-      <div className="verification-top-row">
-        <h1 className="verification-title">Verification</h1>
-      </div>
-
-      <div className="verification-grid">
-        <div className="verification-card request-card verification-scroll-card">
-          <h3 className="verification-card-title">Verification Requests</h3>
-
-          <div className="verification-request-list verification-scroll-body">
-            {verificationRequests.map((item, index) => (
-              <div className="verification-request-row" key={index}>
-                <div className="verification-request-text">
-                  <h4>{item.title}</h4>
-                  <p>{item.meta}</p>
-                </div>
-
-                <div className="verification-request-right">
-                  <span
-                    className={`verification-status-text ${item.status.toLowerCase()}`}
-                  >
-                    {item.status}
-                  </span>
-
-                  <button
-                    className={`verification-action-btn ${item.actionClass}`}
-                  >
-                    {item.action}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+  const renderVerificationPage = () => {
+    return (
+      <section className="dashboard-wrapper">
+        <div className="verification-top-row">
+          <h1 className="verification-title">Verification</h1>
         </div>
 
-        <div className="verification-card status-card">
-          <h3 className="verification-card-title">Verification Status</h3>
+        <div className="verification-grid">
+          <div className="verification-card request-card verification-scroll-card">
+            <h3 className="verification-card-title">Verification Requests</h3>
 
-          <div className="verification-status-list">
-            <div className="verification-status-row">
-              <span>Pending</span>
-              <strong>54%</strong>
-            </div>
-            <div className="verification-status-row">
-              <span>Reviewed</span>
-              <strong>32%</strong>
-            </div>
-            <div className="verification-status-row">
-              <span>Rejected</span>
-              <strong>14%</strong>
-            </div>
-          </div>
-        </div>
-
-        <div className="verification-card photo-card verification-scroll-card">
-          <h3 className="verification-card-title">Recent Photos</h3>
-
-          <div className="photo-grid two verification-photo-scroll-body">
-            {verificationPhotosRight.map((img, index) => (
-              <div className="photo-thumb" key={index}>
-                <img src={img} alt={`Recent right ${index + 1}`} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const renderTeamsPage = () => {
-  return (
-    <section className="dashboard-wrapper">
-      <div className="teams-page">
-        <div className="teams-main-card teams-team-card">
-          <h2 className="teams-section-title">Our Team</h2>
-
-          <div className="team-members-scroll">
-            <div className="team-members-grid">
-              {teamMembers.map((member, index) => (
-                <div className="team-member-card" key={index}>
-                  <div className="team-member-image">
-                    <img src={member.image} alt={member.name} />
-                  </div>
-                  <h3>{member.name}</h3>
-                  <p>{member.role}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="teams-bottom-grid">
-          <div className="teams-main-card activity-card">
-            <h2 className="teams-section-title">Field Activity</h2>
-
-            <div className="activity-list">
-              {teamActivity.map((item, index) => (
-                <div className="activity-row" key={index}>
-                  <div className="activity-left">
-                    <span className={`activity-icon ${item.colorClass}`}>↗</span>
-                    <span className="activity-label">{item.title}</span>
-                  </div>
-                  <div className="activity-value">{item.value}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-  const renderUsersPage = () => {
-  return (
-    <section className="dashboard-wrapper">
-      <div className="users-page">
-        <h1 className="users-title">Users</h1>
-
-        <div className="users-grid-top">
-          <div className="users-card users-list-card">
-            <h3 className="users-card-title">User List</h3>
-
-            <div className="users-list">
-              {usersList.map((user, index) => (
-                <div className="user-row" key={index}>
-                  <div className="user-row-left">
-                    <div className="user-avatar">
-                      <img src={user.image} alt={user.name} />
-                    </div>
-                    <span className="user-name">{user.name}</span>
+            <div className="verification-request-list verification-scroll-body">
+              {verificationRequests.map((item, index) => (
+                <div className="verification-request-row" key={index}>
+                  <div className="verification-request-text">
+                    <h4>{item.title}</h4>
+                    <p>{item.meta}</p>
                   </div>
 
-                  <div className="user-row-right">
+                  <div className="verification-request-right">
                     <span
-                      className={`user-badge ${user.status
-                        .toLowerCase()
-                        .replace(" ", "-")}`}
+                      className={`verification-status-text ${item.status.toLowerCase()}`}
                     >
-                      {user.status}
+                      {item.status}
                     </span>
 
-                    <button className="user-view-btn">View</button>
+                    <button
+                      className={`verification-action-btn ${item.actionClass}`}
+                    >
+                      {item.action}
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="users-card users-stats-card">
-            <h3 className="users-card-title">User Statistics</h3>
+          <div className="verification-card status-card">
+            <h3 className="verification-card-title">Verification Status</h3>
 
-            <div className="user-stats-list">
-              {userStats.map((item, index) => (
-                <div className="user-stats-row" key={index}>
-                  <span>{item.label}</span>
-                  <strong>{item.value}</strong>
+            <div className="verification-status-list">
+              <div className="verification-status-row">
+                <span>Pending</span>
+                <strong>54%</strong>
+              </div>
+              <div className="verification-status-row">
+                <span>Reviewed</span>
+                <strong>32%</strong>
+              </div>
+              <div className="verification-status-row">
+                <span>Rejected</span>
+                <strong>14%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="verification-card photo-card verification-scroll-card">
+            <h3 className="verification-card-title">Recent Photos</h3>
+
+            <div className="photo-grid two verification-photo-scroll-body">
+              {verificationPhotosRight.map((img, index) => (
+                <div className="photo-thumb" key={index}>
+                  <img src={img} alt={`Recent right ${index + 1}`} />
                 </div>
               ))}
             </div>
           </div>
         </div>
+      </section>
+    );
+  };
 
-        <div className="users-grid-bottom">
-          <div className="users-card">
-            <h3 className="users-card-title">Reports Submitted</h3>
+  const renderTeamsPage = () => {
+    return (
+      <section className="dashboard-wrapper">
+        <div className="teams-page">
+          <div className="teams-main-card teams-team-card">
+            <h2 className="teams-section-title">Our Team</h2>
 
-            <div className="user-stats-list">
-              {reportsSubmittedList.map((item, index) => (
-                <div className="user-stats-row" key={index}>
-                  <span>{item.label}</span>
-                  <strong>{item.value}</strong>
-                </div>
-              ))}
+            <div className="team-members-scroll">
+              <div className="team-members-grid">
+                {teamMembers.map((member, index) => (
+                  <div className="team-member-card" key={index}>
+                    <div className="team-member-image">
+                      <img src={member.image} alt={member.name} />
+                    </div>
+                    <h3>{member.name}</h3>
+                    <p>{member.role}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="users-card users-activity-card">
-            <h3 className="users-card-title">Recent User Activity</h3>
+          <div className="teams-bottom-grid">
+            <div className="teams-main-card activity-card">
+              <h2 className="teams-section-title">Field Activity</h2>
 
-            <div className="user-activity-list">
-              {userActivityList.map((item, index) => (
-                <div className="user-activity-row" key={index}>
-                  <span className="bullet blue" />
-                  <span>{item}</span>
-                </div>
-              ))}
+              <div className="activity-list">
+                {teamActivity.map((item, index) => (
+                  <div className="activity-row" key={index}>
+                    <div className="activity-left">
+                      <span className={`activity-icon ${item.colorClass}`}>↗</span>
+                      <span className="activity-label">{item.title}</span>
+                    </div>
+                    <div className="activity-value">{item.value}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
+    );
+  };
+
+  const renderUsersPage = () => {
+    return (
+      <section className="dashboard-wrapper">
+        <div className="users-page">
+          <h1 className="users-title">Users</h1>
+
+          <div className="users-grid-top">
+            <div className="users-card users-list-card">
+              <h3 className="users-card-title">User List</h3>
+
+              <div className="users-list">
+                {usersList.map((user, index) => (
+                  <div className="user-row" key={index}>
+                    <div className="user-row-left">
+                      <div className="user-avatar">
+                        <img src={user.image} alt={user.name} />
+                      </div>
+                      <span className="user-name">{user.name}</span>
+                    </div>
+
+                    <div className="user-row-right">
+                      <span
+                        className={`user-badge ${user.status
+                          .toLowerCase()
+                          .replace(" ", "-")}`}
+                      >
+                        {user.status}
+                      </span>
+
+                      <button className="user-view-btn">View</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="users-card users-stats-card">
+              <h3 className="users-card-title">User Statistics</h3>
+
+              <div className="user-stats-list">
+                {userStats.map((item, index) => (
+                  <div className="user-stats-row" key={index}>
+                    <span>{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="users-grid-bottom">
+            <div className="users-card">
+              <h3 className="users-card-title">Reports Submitted</h3>
+
+              <div className="user-stats-list">
+                {reportsSubmittedList.map((item, index) => (
+                  <div className="user-stats-row" key={index}>
+                    <span>{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="users-card users-activity-card">
+              <h3 className="users-card-title">Recent User Activity</h3>
+
+              <div className="user-activity-list">
+                {userActivityList.map((item, index) => (
+                  <div className="user-activity-row" key={index}>
+                    <span className="bullet blue" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  };
 
   const renderActivePage = () => {
     if (activePage === "Dashboard") return renderDashboardPage();
@@ -601,9 +603,8 @@ const renderTeamsPage = () => {
           {menuItems.map((item) => (
             <div
               key={item.label}
-              className={`sidebar-item ${
-                activePage === item.label ? "active" : ""
-              }`}
+              className={`sidebar-item ${activePage === item.label ? "active" : ""
+                }`}
               onClick={() => setActivePage(item.label)}
             >
               <span className="sidebar-item-icon">{item.icon}</span>

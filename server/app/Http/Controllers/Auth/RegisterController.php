@@ -34,6 +34,11 @@ class RegisterController extends Controller
 
         event(new Registered($user));
 
-        return response()->noContent();
+        $token = $user->createToken("main")->plainTextToken;
+
+        return [
+            "user" => $user,
+            "token" => $token,
+        ];
     }
 }
