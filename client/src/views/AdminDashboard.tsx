@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import "../styles/AdminDashboard.css";
 import {
-  FiBell,
-  FiMail,
   FiChevronDown,
   FiGrid,
   FiCheckSquare,
@@ -10,10 +9,68 @@ import {
   FiUser,
 } from "react-icons/fi";
 
-type StatCardProps = {
+type AdminUser = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+};
+
+type TeamMember = {
+  id: number;
+  name: string;
+  occupation: string;
+};
+
+type DashboardStatsResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    total_reports: number;
+    flood_reports: number;
+    dust_reports: number;
+    narrow_road_reports: number;
+    pending_reports: number;
+  };
+};
+
+type AdminReport = {
+  id: number;
   title: string;
-  value: number;
-  accent: string;
+  alert: "high" | "medium" | "normal";
+  status: "pending" | "resolved" | "in_progress";
+  report_type: string;
+  created_at: string;
+  reporter: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+};
+
+type UserStatsResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    user_statistics: {
+      total_users: number;
+      active_users: number;
+      new_signups: number;
+    };
+  };
+};
+
+type ReportStatsResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    reports_submitted: {
+      today_submitted: number;
+      this_week: number;
+      this_month: number;
+    };
+  };
 };
 
 const menuItems = [
@@ -23,248 +80,82 @@ const menuItems = [
   { label: "Users", icon: <FiUser /> },
 ];
 
-//Dashboard=====================================================================
-
-const stats = [
-  { title: "Total Reports", value: 128, accent: "#3567a8" },
-  { title: "Flood Reports", value: 34, accent: "#2d8cff" },
-  { title: "Dust Reports", value: 22, accent: "#3cb878" },
-  { title: "Narrow Road", value: 18, accent: "#f2a423" },
-  { title: "Pending Reports", value: 24, accent: "#e65b5b" },
-
-];
-
-const alerts = [
-  { color: "red", text: "High flood report detected in Mirpur 10" },
-  { color: "orange", text: "Multiple dust complaints in Uttara area" },
-  { color: "green", text: "Narrow road risk flagged in Old Dhaka" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-  { color: "blue", text: "Pending reports crossed daily threshold" },
-];
-
-const recentReports = [
-  "New flood report submitted from Badda",
-  "Verification team accepted Dhanmondi case",
-  "Traffic issue updated in Mohammadpur",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-  "Resolved report archived from Farmgate",
-];
-
-const typeOptions = [
-  "All",
-  "Flood",
-  "Dust",
-  "Narrow Road",
-  "Blocked Drain",
-  "Water Logging",
-  "Road Damage",
-];
-
-const statusOptions = [
-  "All",
-  "Pending",
-  "Verified",
-  "In Progress",
-  "Resolved",
-  "Rejected",
-];
-
-//Dashboard end===================================================================================
-
-
-
-//Verification Start================================================================================
-
-const verificationRequests = [
-  {
-    title: "Narrow Street Issue",
-    meta: "Street issue verification | 2:00 pm.",
-    status: "Pending",
-    action: "Review",
-    actionClass: "blue",
-  },
-  {
-    title: "Flooded Area Report",
-    meta: "Flood report verification | 2:00 pm.",
-    status: "Verified",
-    action: "View",
-    actionClass: "green",
-  },
-  {
-    title: "Dusty Road Incident",
-    meta: "Road damage verification | 2:00 pm.",
-    status: "Verified",
-    action: "View",
-    actionClass: "blue",
-  },
-  {
-    title: "Dusty Road Incident",
-    meta: "Road damage verification | 2:00 pm.",
-    status: "Verified",
-    action: "View",
-    actionClass: "blue",
-  },
-  {
-    title: "Dusty Road Incident",
-    meta: "Road damage verification | 2:00 pm.",
-    status: "Verified",
-    action: "View",
-    actionClass: "blue",
-  },
-  {
-    title: "Dusty Road Incident",
-    meta: "Road damage verification | 2:00 pm.",
-    status: "Verified",
-    action: "View",
-    actionClass: "blue",
-  },
-];
-
 const verificationPhotosRight = [
   "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80",
 ];
 
-//Verification end================================================================================
-
-
-//Team start======================================================================================
-
-const teamMembers = [
-  {
-    name: "Amit Sharma",
-    role: "Field Inspector",
-    image: "https://i.pravatar.cc/300?img=12",
-  },
-  {
-    name: "Neha Patel",
-    role: "Data Analyst",
-    image: "https://i.pravatar.cc/300?img=47",
-  },
-  {
-    name: "Rajesh Verma",
-    role: "Surveyor",
-    image: "https://i.pravatar.cc/300?img=15",
-  },
-  {
-    name: "Sara Khan",
-    role: "Team Coordinator",
-    image: "https://i.pravatar.cc/300?img=32",
-  },
-  {
-    name: "Sara Khan",
-    role: "Team Coordinator",
-    image: "https://i.pravatar.cc/300?img=32",
-  },
-  {
-    name: "Sara Khan",
-    role: "Team Coordinator",
-    image: "https://i.pravatar.cc/300?img=32",
-  },
-  {
-    name: "Sara Khan",
-    role: "Team Coordinator",
-    image: "https://i.pravatar.cc/300?img=32",
-  },
-  {
-    name: "Sara Khan",
-    role: "Team Coordinator",
-    image: "https://i.pravatar.cc/300?img=32",
-  },
-];
-
-const teamActivity = [
-  { title: "Reports Filed", value: 230, colorClass: "blue" },
-  { title: "Verifications", value: 185, colorClass: "orange" },
-  { title: "Active Tasks", value: 29, colorClass: "darkblue" },
-];
-
-//Team end======================================================================================
-
-
-
-//User start======================================================================================
-
-const usersList = [
-  {
-    name: "Rahul Gupta",
-    status: "Active",
-    image: "https://i.pravatar.cc/100?img=11",
-  },
-  {
-    name: "Priya Singh",
-    status: "Active",
-    image: "https://i.pravatar.cc/100?img=47",
-  },
-  {
-    name: "Anil Kumar",
-    status: "Pro",
-    image: "https://i.pravatar.cc/100?img=15",
-  },
-  {
-    name: "Sonia Mehta",
-    status: "Basic",
-    image: "https://i.pravatar.cc/100?img=32",
-  },
-];
-
-const userStats = [
-  { label: "Total Users", value: "1,250" },
-  { label: "Active Users", value: "940" },
-  { label: "New Signups", value: "65" },
-];
-
-const reportsSubmittedList = [
-  { label: "Today Submitted", value: "18" },
-  { label: "This Week", value: "74" },
-  { label: "This Month", value: "210" },
-];
-
-const userActivityList = [
-  "Rahul Gupta submitted a flood report",
-  "Priya Singh verified a road condition",
-  "Anil Kumar updated profile details",
-  "Sonia Mehta joined the platform",
-];
-
-//User end======================================================================================
-
-const StatCard: React.FC<StatCardProps> = ({ title, value, accent }) => {
-  return (
-    <div className="stat-card" style={{ ["--accent" as any]: accent }}>
-      <div className="stat-card-title">{title}</div>
-      <div className="stat-card-value" style={{ color: accent }}>
-        {value}
-      </div>
-      <div className="stat-card-bar" />
-    </div>
-  );
-};
+const formatLabel = (value: string) =>
+  value.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
 const AdminDashboard: React.FC = () => {
-  const [selectedType, setSelectedType] = useState("All");
-  const [selectedStatus, setSelectedStatus] = useState("All");
+  const navigate = useNavigate();
+
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [activePage, setActivePage] = useState("Dashboard");
 
+  const [usersList, setUsersList] = useState<AdminUser[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [teamActivity, setTeamActivity] = useState([
+    { title: "Reports Filed", value: 0, colorClass: "blue" },
+    { title: "Verifications", value: 0, colorClass: "orange" },
+    { title: "Active Tasks", value: 0, colorClass: "darkblue" },
+  ]);
+
+  const [userStats, setUserStats] = useState([
+    { label: "Total Users", value: "0" },
+    { label: "Active Users", value: "0" },
+    { label: "New Signups", value: "0" },
+  ]);
+
+  const [reportsSubmittedList, setReportsSubmittedList] = useState([
+    { label: "Today Submitted", value: "0" },
+    { label: "This Week", value: "0" },
+    { label: "This Month", value: "0" },
+  ]);
+
+  const [userActivityList, setUserActivityList] = useState<string[]>([]);
+  const [usersLoading, setUsersLoading] = useState(false);
+
+  const [dashboardStats, setDashboardStats] = useState({
+    total_reports: 0,
+    flood_reports: 0,
+    dust_reports: 0,
+    narrow_road_reports: 0,
+    pending_reports: 0,
+  });
+
+  const [dashboardRecentReports, setDashboardRecentReports] = useState<
+    { title: string; date: string }[]
+  >([]);
+
+  const [dashboardAlerts, setDashboardAlerts] = useState<
+    { color: "red" | "orange" | "green"; text: string }[]
+  >([]);
+
+  const [verificationReports, setVerificationReports] = useState<AdminReport[]>(
+    []
+  );
+
+  const [verificationPercentages, setVerificationPercentages] = useState({
+    pending: 0,
+    resolved: 0,
+    in_progress: 0,
+  });
+
   const adminMenuRef = useRef<HTMLDivElement | null>(null);
+
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem("auth_token");
+
+    return {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -280,107 +171,302 @@ const AdminDashboard: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const fetchPageData = async () => {
+      setUsersLoading(true);
+
+      try {
+        const usersResponse = await fetch(
+          "http://127.0.0.1:8000/api/v1/admin/users",
+          { headers: getAuthHeaders() }
+        );
+
+        const teamMembersResponse = await fetch(
+          "http://127.0.0.1:8000/api/v1/admin/team-members",
+          { headers: getAuthHeaders() }
+        );
+
+        const userStatsResponse = await fetch(
+          "http://127.0.0.1:8000/api/v1/admin/user-stats",
+          { headers: getAuthHeaders() }
+        );
+
+        const reportStatsResponse = await fetch(
+          "http://127.0.0.1:8000/api/v1/admin/report-stats",
+          { headers: getAuthHeaders() }
+        );
+
+        const reportsResponse = await fetch(
+          "http://127.0.0.1:8000/api/v1/admin/reports",
+          { headers: getAuthHeaders() }
+        );
+
+        const dashboardStatsResponse = await fetch(
+          "http://127.0.0.1:8000/api/v1/admin/dashboard-stats",
+          { headers: getAuthHeaders() }
+        );
+
+        const usersJson = await usersResponse.json();
+        const teamMembersJson = await teamMembersResponse.json();
+        const userStatsJson: UserStatsResponse = await userStatsResponse.json();
+        const reportStatsJson: ReportStatsResponse =
+          await reportStatsResponse.json();
+        const reportsJson = await reportsResponse.json();
+        const dashboardStatsJson: DashboardStatsResponse =
+          await dashboardStatsResponse.json();
+
+        setUsersList(usersJson.data || []);
+        setTeamMembers(teamMembersJson.data || []);
+
+        setUserStats([
+          {
+            label: "Total Users",
+            value: String(userStatsJson.data.user_statistics.total_users),
+          },
+          {
+            label: "Active Users",
+            value: String(userStatsJson.data.user_statistics.active_users),
+          },
+          {
+            label: "New Signups",
+            value: String(userStatsJson.data.user_statistics.new_signups),
+          },
+        ]);
+
+        setReportsSubmittedList([
+          {
+            label: "Today Submitted",
+            value: String(
+              reportStatsJson.data.reports_submitted.today_submitted
+            ),
+          },
+          {
+            label: "This Week",
+            value: String(reportStatsJson.data.reports_submitted.this_week),
+          },
+          {
+            label: "This Month",
+            value: String(reportStatsJson.data.reports_submitted.this_month),
+          },
+        ]);
+
+        const reportsData: AdminReport[] = reportsJson.data || [];
+
+        const recentActivity = reportsData.map((report) => {
+          return `${report.reporter.first_name} ${report.reporter.last_name} submitted ${report.report_type} report`;
+        });
+
+        setUserActivityList(recentActivity);
+
+        setDashboardStats(dashboardStatsJson.data);
+
+        const recentReportsData = reportsData.map((report) => ({
+          title: report.title,
+          date: new Date(report.created_at).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+        }));
+
+        setDashboardRecentReports(recentReportsData);
+
+        const alertData = reportsData.map((report) => {
+          let color: "red" | "orange" | "green" = "green";
+
+          if (report.alert === "high") color = "red";
+          else if (report.alert === "medium") color = "orange";
+
+          return {
+            color,
+            text: report.title,
+          };
+        });
+
+        setDashboardAlerts(alertData);
+
+        setVerificationReports(reportsData);
+
+        const totalVerification = reportsData.length || 1;
+        const pendingCount = reportsData.filter(
+          (r) => r.status === "pending"
+        ).length;
+        const resolvedCount = reportsData.filter(
+          (r) => r.status === "resolved"
+        ).length;
+        const inProgressCount = reportsData.filter(
+          (r) => r.status === "in_progress"
+        ).length;
+
+        setVerificationPercentages({
+          pending: Math.round((pendingCount / totalVerification) * 100),
+          resolved: Math.round((resolvedCount / totalVerification) * 100),
+          in_progress: Math.round((inProgressCount / totalVerification) * 100),
+        });
+
+        setTeamActivity([
+          {
+            title: "Reports Filed",
+            value: reportsData.length,
+            colorClass: "blue",
+          },
+          {
+            title: "Verifications",
+            value: resolvedCount,
+            colorClass: "orange",
+          },
+          {
+            title: "Active Tasks",
+            value: inProgressCount,
+            colorClass: "darkblue",
+          },
+        ]);
+      } catch (error) {
+        console.error("Error fetching admin dashboard data:", error);
+      } finally {
+        setUsersLoading(false);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
   const handleLogout = () => {
-    alert("Logout clicked");
+    localStorage.removeItem("auth_token");
     setShowAdminMenu(false);
+    navigate("/login");
   };
 
   const renderDashboardPage = () => {
+    const pieData = [
+      {
+        label: "Flood",
+        value: dashboardStats.flood_reports,
+        color: "#2d8cff",
+      },
+      {
+        label: "Dust",
+        value: dashboardStats.dust_reports,
+        color: "#3cb878",
+      },
+      {
+        label: "Narrow Road",
+        value: dashboardStats.narrow_road_reports,
+        color: "#f2a423",
+      },
+      {
+        label: "Pending",
+        value: dashboardStats.pending_reports,
+        color: "#e65b5b",
+      },
+    ];
+
+    const totalPie = dashboardStats.total_reports || 0;
+    const safeTotal = pieData.reduce((sum, item) => sum + item.value, 0) || 1;
+
+    const conicSegments = pieData
+      .reduce(
+        (acc, item) => {
+          const start = acc.current;
+          const angle = (item.value / safeTotal) * 360;
+          const end = start + angle;
+          acc.parts.push(`${item.color} ${start}deg ${end}deg`);
+          acc.current = end;
+          return acc;
+        },
+        { parts: [] as string[], current: 0 }
+      )
+      .parts.join(", ");
+
     return (
       <section className="dashboard-wrapper">
-        <div className="dashboard-header">
-          <h1>Admin Dashboard</h1>
+        <div className="dashboard-header modern-dashboard-header">
+          <div>
+            <h1>Admin Dashboard</h1>
+            <p className="dashboard-subtitle">
+              Overview of report activity and current city issues.
+            </p>
+          </div>
         </div>
 
-        <div className="filters-row">
-          <div className="filter-group">
-            <label htmlFor="typeSelect">Type:</label>
-            <div className="real-select-box">
-              <select
-                id="typeSelect"
-                value={selectedType}
-                onChange={(e) => {
-                  setSelectedType(e.target.value);
-                  //Dashboard=>Status
-                }}
+        <div className="dashboard-overview-grid">
+          <div className="dashboard-chart-card">
+            <div className="dashboard-card-title-row">
+              <h3>Report Distribution</h3>
+            </div>
+
+            <div className="dashboard-pie-layout">
+              <div
+                className="dashboard-pie-chart"
+                style={{ background: `conic-gradient(${conicSegments})` }}
               >
-                {typeOptions.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
+                <div className="dashboard-pie-center">
+                  <strong>{totalPie}</strong>
+                  <span>Reports</span>
+                </div>
+              </div>
+
+              <div className="dashboard-pie-legend">
+                {pieData.map((item) => (
+                  <div className="dashboard-legend-row" key={item.label}>
+                    <div className="dashboard-legend-left">
+                      <span
+                        className="dashboard-legend-dot"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span>{item.label}</span>
+                    </div>
+                    <strong>{item.value}</strong>
+                  </div>
                 ))}
-              </select>
-              <FiChevronDown className="select-arrow-icon" />
+              </div>
             </div>
           </div>
-
-          <div className="filter-group">
-            <label htmlFor="statusSelect">Status:</label>
-            <div className="real-select-box">
-              <select
-                id="statusSelect"
-                value={selectedStatus}
-                onChange={
-                  (e) => {
-                    setSelectedStatus(e.target.value);
-                    //Dashboard=>Status
-                  }
-                }
-              >
-                {statusOptions.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-              <FiChevronDown className="select-arrow-icon" />
-            </div>
-          </div>
-
-
-        </div>
-
-        <div className="stats-row">
-          {stats.map((stat) => (
-            <StatCard                   //Dashboard=>reports number
-              key={stat.title}
-              title={stat.title}
-              value={stat.value}
-              accent={stat.accent}
-            />
-          ))}
-
-
         </div>
 
         <div className="cards-only-section">
-          <div className="info-card">
+          <div className="info-card dashboard-scroll-card">
             <div className="info-card-header">
               <h3>Alerts</h3>
             </div>
 
-            <div className="info-card-body scrollable-card-body">
-              {alerts.map((alert, index) => (
-                <div key={index} className="list-item">
-                  <span className={`bullet ${alert.color}`} />
-                  <span>{alert.text} </span>
+            <div className="info-card-body dashboard-scroll-body">
+              {dashboardAlerts.length > 0 ? (
+                dashboardAlerts.map((alertItem, index) => (
+                  <div key={index} className="list-item">
+                    <span className={`bullet ${alertItem.color}`} />
+                    <span>{alertItem.text}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="list-item">
+                  <span>No alerts found.</span>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
-          <div className="info-card scrollable-card-body">
+          <div className="info-card dashboard-scroll-card">
             <div className="info-card-header">
               <h3>Recent Reports</h3>
             </div>
 
-            <div className="info-card-body">
-              {recentReports.map((report, index) => (
-                <div key={index} className="list-item">
-                  <span className="bullet blue" />
-                  <span>{report}</span>
+            <div className="info-card-body dashboard-scroll-body">
+              {dashboardRecentReports.length > 0 ? (
+                dashboardRecentReports.map((report, index) => (
+                  <div key={index} className="list-item report-date-row">
+                    <div className="report-date-left">
+                      <span className="bullet blue" />
+                      <span>{report.title}</span>
+                    </div>
+                    <span className="report-date-text">{report.date}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="list-item">
+                  <span>No recent reports found.</span>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -400,28 +486,36 @@ const AdminDashboard: React.FC = () => {
             <h3 className="verification-card-title">Verification Requests</h3>
 
             <div className="verification-request-list verification-scroll-body">
-              {verificationRequests.map((item, index) => (
-                <div className="verification-request-row" key={index}>
-                  <div className="verification-request-text">
-                    <h4>{item.title}</h4>
-                    <p>{item.meta}</p>
+              {verificationReports.length > 0 ? (
+                verificationReports.map((item) => (
+                  <div className="verification-request-row" key={item.id}>
+                    <div className="verification-request-text">
+                      <h4>{item.title}</h4>
+                      <p>
+                        {formatLabel(item.report_type)} |{" "}
+                        {new Date(item.created_at).toLocaleTimeString("en-GB", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+
+                    <div className="verification-request-right">
+                      <span
+                        className={`verification-status-text ${item.status}`}
+                      >
+                        {formatLabel(item.status)}
+                      </span>
+                    </div>
                   </div>
-
-                  <div className="verification-request-right">
-                    <span
-                      className={`verification-status-text ${item.status.toLowerCase()}`}
-                    >
-                      {item.status}
-                    </span>
-
-                    <button
-                      className={`verification-action-btn ${item.actionClass}`}
-                    >
-                      {item.action}
-                    </button>
+                ))
+              ) : (
+                <div className="verification-request-row">
+                  <div className="verification-request-text">
+                    <h4>No verification requests found</h4>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
@@ -431,15 +525,15 @@ const AdminDashboard: React.FC = () => {
             <div className="verification-status-list">
               <div className="verification-status-row">
                 <span>Pending</span>
-                <strong>54%</strong>
+                <strong>{verificationPercentages.pending}%</strong>
               </div>
               <div className="verification-status-row">
-                <span>Reviewed</span>
-                <strong>32%</strong>
+                <span>Resolved</span>
+                <strong>{verificationPercentages.resolved}%</strong>
               </div>
               <div className="verification-status-row">
-                <span>Rejected</span>
-                <strong>14%</strong>
+                <span>In Progress</span>
+                <strong>{verificationPercentages.in_progress}%</strong>
               </div>
             </div>
           </div>
@@ -469,15 +563,31 @@ const AdminDashboard: React.FC = () => {
 
             <div className="team-members-scroll">
               <div className="team-members-grid">
-                {teamMembers.map((member, index) => (
-                  <div className="team-member-card" key={index}>
-                    <div className="team-member-image">
-                      <img src={member.image} alt={member.name} />
+                {teamMembers.length > 0 ? (
+                  teamMembers.map((member) => (
+                    <div className="team-member-card" key={member.id}>
+                      <div className="team-member-image">
+                        <img
+                          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                          alt={member.name}
+                        />
+                      </div>
+                      <h3>{member.name}</h3>
+                      <p>{member.occupation}</p>
                     </div>
-                    <h3>{member.name}</h3>
-                    <p>{member.role}</p>
+                  ))
+                ) : (
+                  <div className="team-member-card">
+                    <div className="team-member-image">
+                      <img
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                        alt="No team members"
+                      />
+                    </div>
+                    <h3>No Team Members</h3>
+                    <p>No occupation available</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>
@@ -490,7 +600,9 @@ const AdminDashboard: React.FC = () => {
                 {teamActivity.map((item, index) => (
                   <div className="activity-row" key={index}>
                     <div className="activity-left">
-                      <span className={`activity-icon ${item.colorClass}`}>↗</span>
+                      <span className={`activity-icon ${item.colorClass}`}>
+                        ↗
+                      </span>
                       <span className="activity-label">{item.title}</span>
                     </div>
                     <div className="activity-value">{item.value}</div>
@@ -515,28 +627,42 @@ const AdminDashboard: React.FC = () => {
               <h3 className="users-card-title">User List</h3>
 
               <div className="users-list">
-                {usersList.map((user, index) => (
-                  <div className="user-row" key={index}>
-                    <div className="user-row-left">
-                      <div className="user-avatar">
-                        <img src={user.image} alt={user.name} />
-                      </div>
-                      <span className="user-name">{user.name}</span>
-                    </div>
-
-                    <div className="user-row-right">
-                      <span
-                        className={`user-badge ${user.status
-                          .toLowerCase()
-                          .replace(" ", "-")}`}
-                      >
-                        {user.status}
-                      </span>
-
-                      <button className="user-view-btn">View</button>
-                    </div>
+                {usersLoading ? (
+                  <div className="user-row">
+                    <span className="user-name">Loading users...</span>
                   </div>
-                ))}
+                ) : usersList.length > 0 ? (
+                  usersList.map((user) => (
+                    <div className="user-row" key={user.id}>
+                      <div className="user-row-left">
+                        <div className="user-avatar">
+                          <img
+                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                            alt={`${user.first_name} ${user.last_name}`}
+                          />
+                        </div>
+                        <span className="user-name">
+                          {user.first_name} {user.last_name}
+                        </span>
+                      </div>
+
+                      <div className="user-row-right">
+                        <button
+                          className="user-view-btn"
+                          onClick={() =>
+                            window.open(`/reports-page?userId=${user.id}`, "_blank")
+                          }
+                        >
+                          View
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="user-row">
+                    <span className="user-name">No users found.</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -572,12 +698,19 @@ const AdminDashboard: React.FC = () => {
               <h3 className="users-card-title">Recent User Activity</h3>
 
               <div className="user-activity-list">
-                {userActivityList.map((item, index) => (
-                  <div className="user-activity-row" key={index}>
+                {userActivityList.length > 0 ? (
+                  userActivityList.map((item, index) => (
+                    <div className="user-activity-row" key={index}>
+                      <span className="bullet blue" />
+                      <span>{item}</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="user-activity-row">
                     <span className="bullet blue" />
-                    <span>{item}</span>
+                    <span>No recent activity found.</span>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>
@@ -597,14 +730,15 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="admin-dashboard-page">
       <aside className="sidebar">
-        <div className="sidebar-top">
-        </div>
+        <div className="sidebar-top"></div>
+
         <nav className="sidebar-menu">
           {menuItems.map((item) => (
             <div
               key={item.label}
-              className={`sidebar-item ${activePage === item.label ? "active" : ""
-                }`}
+              className={`sidebar-item ${
+                activePage === item.label ? "active" : ""
+              }`}
               onClick={() => setActivePage(item.label)}
             >
               <span className="sidebar-item-icon">{item.icon}</span>
@@ -619,22 +753,13 @@ const AdminDashboard: React.FC = () => {
           <div className="topbar-spacer" />
 
           <div className="topbar-actions">
-            <button className="topbar-icon-btn">
-              <FiBell />
-              <span className="notification-badge">3</span>
-            </button>
-
-            <button className="topbar-icon-btn">
-              <FiMail />
-            </button>
-
             <div className="admin-dropdown-wrapper" ref={adminMenuRef}>
               <div
                 className="admin-profile"
                 onClick={() => setShowAdminMenu((prev) => !prev)}
               >
                 <img
-                  src="https://i.pravatar.cc/100?img=12"        //admin Profile picture 
+                  src="https://i.pravatar.cc/100?img=12"
                   alt="Admin"
                   className="admin-avatar"
                 />
@@ -646,7 +771,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="admin-dropdown-menu">
                   <button
                     className="admin-dropdown-item"
-                    onClick={handleLogout}                  //Clicking logout
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>
