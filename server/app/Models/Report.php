@@ -9,20 +9,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Report extends Model
 {
     protected $fillable = [
-        'reporter_id',
-        'report_type',
-        'alert',
-        'status',
-        'title',
-        'description',
+        'reporter_id', 'title', 'description'
     ];
 
-    public function reporter(): BelongsTo
+    public function reporter() : BelongsTo
     {
         return $this->belongsTo(User::class, 'reporter_id');
     }
 
-    public function files(): HasMany
+    public function files() : HasMany
     {
         return $this->hasMany(File::class, 'report_id');
     }
