@@ -262,10 +262,8 @@ export default function ReportForm() {
                                             value={formData.location}
                                             onChange={handleInput}
                                             label={<>Location <span className="req">*</span></>}
-                                            placeholder="e.g. 42 Elm Street, Downtown"
                                             required
                                             maxLength={255}
-                                            style={{ paddingLeft: '2.4rem' }}
                                         />
                                     </MDBValidationItem>
                                 </div>
@@ -288,10 +286,8 @@ export default function ReportForm() {
                                             value={formData.description}
                                             onChange={handleInput}
                                             label={<>Description <span className="req">*</span></>}
-                                            placeholder="Describe what happened, when you noticed it, and any other relevant details…"
                                             rows={5}
                                             required
-                                            style={{ paddingLeft: '2.4rem' }}
                                         />
                                     </MDBValidationItem>
                                 </div>

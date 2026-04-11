@@ -8,10 +8,6 @@ import {
     MDBCardBody,
     MDBIcon,
     MDBTypography,
-    MDBNavbar,
-    MDBNavbarBrand,
-    MDBNavbarNav,
-    MDBNavbarItem,
     MDBBadge,
     MDBInput,
     MDBTextArea,
@@ -26,6 +22,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.css';
 import { secrets } from '../secrets';
+import Chatbot from '../components/Chatbot';
 
 interface Report {
     id: number;
@@ -143,13 +140,13 @@ const Dashboard: React.FC = () => {
             report.category.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = filterStatus === 'all' || report.status === filterStatus;
         const matchesCategory = filterCategory === 'all' || report.category.toLowerCase() === filterCategory.toLowerCase();
-        
+
         let matchesDate = true;
         if (filterDate !== 'all' && report.rawDate) {
             const rDate = new Date(report.rawDate);
             const now = new Date();
             const diffDays = (now.getTime() - rDate.getTime()) / (1000 * 3600 * 24);
-            
+
             if (filterDate === 'today') {
                 matchesDate = rDate.toDateString() === now.toDateString();
             } else if (filterDate === '7days') {
@@ -158,56 +155,12 @@ const Dashboard: React.FC = () => {
                 matchesDate = diffDays <= 30;
             }
         }
-        
+
         return matchesSearch && matchesStatus && matchesCategory && matchesDate;
     });
 
     return (
         <div className="dashboard-page">
-            {/* Top Navigation */}
-            <MDBNavbar expand="lg" light bgColor="white" className="shadow-sm sticky-top">
-                <MDBContainer fluid>
-                    <MDBNavbarBrand href="#" onClick={() => navigate('/landing')}>
-                        <MDBIcon fas icon="city" size="2x" className="text-primary me-2" />
-                        <span className="fw-bold text-primary">Nagorik-AI</span>
-                    </MDBNavbarBrand>
-                    <MDBNavbarNav className="ms-auto d-flex flex-row align-items-center">
-                        <MDBNavbarItem className="me-3 position-relative">
-                            <MDBIcon fas icon="bell" size="lg" className="text-muted cursor-pointer" />
-                            <MDBBadge color="danger" notification pill className="notification-badge">
-                                3
-                            </MDBBadge>
-                        </MDBNavbarItem>
-                        <MDBNavbarItem className="me-3">
-                            <div
-                                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
-                                onClick={() => navigate('/profile')}
-                            >
-                                <MDBIcon fas icon="user" />
-                            </div>
-                        </MDBNavbarItem>
-                        <MDBNavbarItem className="me-4">
-                            <div
-                                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
-                                onClick={() => navigate('/admin')}
-                            >
-                                <MDBIcon fas icon="fa-lock" />
-                            </div>
-                        </MDBNavbarItem>
-                        <MDBNavbarItem>
-                            <MDBBtn
-                                color="link"
-                                className="text-muted"
-                                onClick={handleLogout}
-                            >
-                                <MDBIcon fas icon="sign-out-alt" className="me-1" />
-                                Logout
-                            </MDBBtn>
-                        </MDBNavbarItem>
-                    </MDBNavbarNav>
-                </MDBContainer>
-            </MDBNavbar>
-
             {/* Main Content */}
             <MDBContainer fluid className="py-4">
                 {/* User Greeting */}
@@ -343,9 +296,9 @@ const Dashboard: React.FC = () => {
                                                     <MDBRow className="align-items-center">
                                                         <MDBCol md="2" className="d-none d-md-block">
                                                             <div className="report-card-img-wrapper rounded overflow-hidden">
-                                                                <img 
-                                                                    src={report.imageUrl} 
-                                                                    alt={report.title} 
+                                                                <img
+                                                                    src={report.imageUrl}
+                                                                    alt={report.title}
                                                                     className="img-fluid w-100 h-100 object-fit-cover"
                                                                     style={{ minHeight: '80px' }}
                                                                 />
@@ -578,6 +531,9 @@ const Dashboard: React.FC = () => {
             >
                 <MDBIcon fas icon="plus" size="2x" />
             </MDBBtn>
+
+            {/* Chatbot Component */}
+            <Chatbot />
         </div>
     );
 };

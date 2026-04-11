@@ -234,41 +234,7 @@ const Profile: React.FC = () => {
   const initials = user ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase() : '?';
 
   return (
-    <div className="profile-page bg-light min-vh-100">
-      {/* Top Navigation */}
-      <MDBNavbar expand="lg" light bgColor="white" className="shadow-sm sticky-top">
-        <MDBContainer fluid>
-          <MDBNavbarBrand href="#" onClick={() => navigate('/landing')}>
-            <MDBIcon fas icon="city" size="2x" className="text-primary me-2" />
-            <span className="fw-bold text-primary">Nagorik-AI</span>
-          </MDBNavbarBrand>
-          <MDBNavbarNav className="ms-auto d-flex flex-row align-items-center">
-            <MDBNavbarItem className="me-3 position-relative">
-              <MDBIcon fas icon="bell" size="lg" className="text-muted cursor-pointer" />
-              <MDBBadge color="danger" notification pill className="notification-badge">
-                3
-              </MDBBadge>
-            </MDBNavbarItem>
-            <MDBNavbarItem className="me-3">
-              <div
-                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
-                onClick={() => navigate('/dashboard')}
-              >
-                <MDBIcon fas icon="home" />
-              </div>
-            </MDBNavbarItem>
-            <MDBNavbarItem className="me-4">
-              <div
-                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
-                onClick={() => navigate('/admin')}
-              >
-                <MDBIcon fas icon="fa-lock" />
-              </div>
-            </MDBNavbarItem>
-          </MDBNavbarNav>
-        </MDBContainer>
-      </MDBNavbar>
-
+    <div className="profile-page min-vh-100">
       <MDBContainer className="py-5 h-100 profile-container">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="10" xl="8">

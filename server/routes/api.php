@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AdminReportController;
 use App\Http\Controllers\Api\V1\AdminUserController;
 use App\Http\Controllers\Api\V1\ReportController;
+use App\Http\Controllers\Api\V1\ChatbotController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('v1')->group(function () {
         Route::apiResource('/reports', ReportController::class);
+        Route::post('/chatbot/message', [ChatbotController::class, 'sendMessage']);
     });
 });
 

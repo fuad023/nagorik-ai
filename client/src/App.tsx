@@ -16,14 +16,23 @@ import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ReportForm from './views/ReportForm';
 import AdminDashboard from './views/AdminDashboard';
+import Navbar from './components/Navbar';
+import { Outlet } from 'react-router-dom';
 import { secrets } from './secrets';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const AuthenticatedLayout = () => {
   const token = localStorage.getItem('auth_token');
   if (!token) {
     return <Navigate to="/login" replace />;
   }
-  return children;
+  return (
+    <div className="app-layout">
+      <Navbar />
+      <div className="layout-content">
+        <Outlet />
+      </div>
+    </div>
+  );
 };
 
 const GuestRoute = ({ children }: { children: JSX.Element }) => {
@@ -47,18 +56,17 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
           <Route path="/registration" element={<GuestRoute><Registration /></GuestRoute>} />
-
-          {/* Dashboard Route */}
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-
-          {/* New Pages */}
-          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/submit-report" element={<ProtectedRoute><ReportForm /></ProtectedRoute>} />
-          <Route path="/history" element={<ProtectedRoute><ReportHistory /></ProtectedRoute>} />
           <Route path="/location-picker" element={<LocationPicker />} />
 
-          <Route path='/report' element={<ProtectedRoute><ReportForm /></ProtectedRoute>} />
-          <Route path='/admin' element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          {/* Authenticated Global Layout Routes */}
+          <Route element={<AuthenticatedLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/submit-report" element={<ReportForm />} />
+            <Route path="/history" element={<ReportHistory />} />
+            <Route path="/report" element={<ReportForm />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Route>
 
         </Routes>
         <Toaster
