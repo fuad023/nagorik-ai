@@ -9,7 +9,9 @@ import {
     MDBIcon,
     MDBTypography,
 } from "mdb-react-ui-kit";
+import { GoogleLogin } from "@react-oauth/google";
 import ApiClient from "../api";
+import { secrets } from "../secrets";
 
 interface RegErrors {
     firstName?: string;
@@ -213,6 +215,24 @@ export default function Registration() {
         }
     }
 
+    const handleGoogleSuccess = async (credentialResponse: any) => {
+        setIsSubmitting(true);
+        try {
+            const data = await ApiClient.googleAuth(credentialResponse.credential);
+            if (data && data.token) {
+                navigate("/dashboard");
+            }
+        } catch (error) {
+            console.error("Google authentication failed", error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
+    const handleGoogleError = () => {
+        console.error("Google Sign-In failed");
+    }
+
     return (
         <div className="registration-page d-flex align-items-center bg-light" style={{ minHeight: '100vh', padding: '2rem 0' }}>
             <MDBContainer>
@@ -267,15 +287,14 @@ export default function Registration() {
                                     Create Account
                                 </MDBTypography>
                                 <div className="d-flex justify-content-center gap-3 mb-3">
-                                    <MDBBtn floating color="light" className="text-primary shadow-sm glass-hover">
-                                        <MDBIcon fab icon="facebook-f" />
-                                    </MDBBtn>
-                                    <MDBBtn floating color="light" className="text-danger shadow-sm glass-hover">
-                                        <MDBIcon fab icon="google" />
-                                    </MDBBtn>
-                                    <MDBBtn floating color="light" className="text-info shadow-sm glass-hover">
-                                        <MDBIcon fab icon="linkedin-in" />
-                                    </MDBBtn>
+                                    {secrets.googleClientId && (
+                                        <div className="google-signup-btn">
+                                            <GoogleLogin
+                                                onSuccess={handleGoogleSuccess}
+                                                onError={handleGoogleError}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                                 <span className="text-muted small text-uppercase">or use your email for registration</span>
                             </div>
