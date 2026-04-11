@@ -25,6 +25,7 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.css';
+import { secrets } from '../secrets';
 
 interface Report {
     id: number;
@@ -69,8 +70,8 @@ const Dashboard: React.FC = () => {
                 if (!token) return;
 
                 const url = reportTab === 'mine'
-                    ? 'http://localhost:8000/api/v1/reports?mine=true'
-                    : 'http://localhost:8000/api/v1/reports';
+                    ? `${secrets.backendEndpoint}/api/v1/reports?mine=true`
+                    : `${secrets.backendEndpoint}/api/v1/reports`;
 
                 const response = await fetch(url, {
                     headers: {

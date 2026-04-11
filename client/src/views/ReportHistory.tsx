@@ -11,6 +11,7 @@ import {
   MDBBtn
 } from 'mdb-react-ui-kit';
 import '../styles/report-history.css';
+import { secrets } from '../secrets';
 
 interface TimelineStep {
   status: string;
@@ -50,7 +51,7 @@ const ReportHistory: React.FC = () => {
       try {
         const token = localStorage.getItem('auth_token');
         if (!token) return;
-        const response = await fetch('http://localhost:8000/api/v1/reports', {
+        const response = await fetch(`${secrets.backendEndpoint}/api/v1/reports`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'

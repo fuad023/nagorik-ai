@@ -7,7 +7,7 @@ class ApiClient {
 
   constructor() {
     this.client = axios.create({
-      baseURL: secrets.backendEndpoint || 'http://localhost:8000',
+      baseURL: secrets.backendEndpoint,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -82,7 +82,7 @@ class ApiClient {
       formData.append('mk_files[]', imageFile);
 
       const token = localStorage.getItem('auth_token');
-      const endpoint = `${secrets.backendEndpoint || 'http://localhost:8000'}/api/v1/reports`;
+      const endpoint = `${secrets.backendEndpoint}/api/v1/reports`;
 
       const response = await fetch(endpoint, {
         method: 'POST',
