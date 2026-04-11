@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import "../styles/registration.css";
 import { Link, useNavigate } from "react-router-dom";
+import {
+    MDBContainer,
+    MDBCard,
+    MDBRow,
+    MDBCol,
+    MDBBtn,
+    MDBIcon,
+    MDBTypography,
+} from "mdb-react-ui-kit";
 import ApiClient from "../api";
 
 interface RegErrors {
@@ -60,7 +68,7 @@ function getPasswordStrength(password: string): { level: number; label: string; 
     if (score <= 2) return { level: score, label: "Weak", color: "#e74c3c" };
     if (score === 3) return { level: score, label: "Fair", color: "#f39c12" };
     if (score === 4) return { level: score, label: "Good", color: "#2ecc71" };
-    return { level: score, label: "Strong", color: "#27ae60" };
+    return { level: score, label: "Strong", color: "#198754" };
 }
 
 export default function Registration() {
@@ -176,269 +184,252 @@ export default function Registration() {
     }
 
     return (
-        <div className="authPageR">
-            <div className="authCardR">
-                {/* Left Panel */}
-                <aside className="panelR panelLeftR">
-                    <div className="brandRowR">
-                        <div className="brandLogoR">◻︎</div>
-                        <div className="brandTextR">NagorikAI</div>
-                    </div>
+        <div className="registration-page d-flex align-items-center bg-light" style={{ minHeight: '100vh', padding: '2rem 0' }}>
+            <MDBContainer>
+                <MDBCard className="shadow-lg border-0 rounded-4 overflow-hidden" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                    <MDBRow className="g-0 min-vh-75">
+                        
+                        {/* Left Panel */}
+                        <MDBCol md="5" className="bg-primary text-white d-flex flex-column justify-content-center p-5 position-relative overflow-hidden order-md-1 order-2">
+                            <div className="position-absolute top-0 start-0 w-100 h-100 opacity-10" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0))' }}></div>
+                            
+                            <div className="d-flex align-items-center mb-5 position-relative z-index-1 cursor-pointer" onClick={() => navigate('/landing')}>
+                                <MDBIcon fas icon="city" size="2x" className="me-2" />
+                                <span className="fw-bold fs-4">Nagorik-AI</span>
+                            </div>
 
-                    <div className="panelContentR">
-                        <h2>Hello, Friend!</h2>
-                        <p>Enter your personal details and start your journey with us</p>
+                            <div className="position-relative z-index-1 mb-5">
+                                <MDBTypography tag="h2" className="display-6 fw-bold mb-3">
+                                    Hello, Friend!
+                                </MDBTypography>
+                                <MDBTypography tag="p" className="fs-5 opacity-75">
+                                    Enter your personal details and start your journey with us to improve our city together.
+                                </MDBTypography>
+                            </div>
 
-                        <Link className="panelBtnR" to="/login">
-                            SIGN IN
-                        </Link>
-                    </div>
+                            <div className="position-relative z-index-1 mt-auto">
+                                <MDBTypography tag="p" className="mb-2 opacity-75">Already have an account?</MDBTypography>
+                                <MDBBtn outline color="light" size="lg" className="rounded-pill px-4" onClick={() => navigate('/login')}>
+                                    SIGN IN
+                                </MDBBtn>
+                            </div>
 
-                    <div className="panelShapesR">
-                        <span className="shapeR shape1R" />
-                        <span className="shapeR shape2R" />
-                        <span className="shapeR shape3R" />
-                    </div>
-                </aside>
+                            {/* Decorative Shapes */}
+                            <div className="position-absolute rounded-circle border border-white opacity-20" style={{ width: '150px', height: '150px', bottom: '-50px', left: '-50px' }}></div>
+                            <div className="position-absolute rounded-circle border border-white opacity-20" style={{ width: '60px', height: '60px', top: '10%', right: '10%' }}></div>
+                        </MDBCol>
 
-                {/* Right Form */}
-                <section className="panelR panelRightR">
-                    <h1 className="titleR">Create Account</h1>
-
-                    <div className="socialRowR" aria-label="social signup">
-                        <button className="socialBtnR" type="button" title="Facebook">
-                            f
-                        </button>
-                        <button className="socialBtnR" type="button" title="Google">
-                            G+
-                        </button>
-                        <button className="socialBtnR" type="button" title="LinkedIn">
-                            in
-                        </button>
-                    </div>
-
-                    <div className="mutedTextR">or use your email for registration</div>
-
-                    <form className="formR" onSubmit={onSubmit} noValidate>
-                        {/* First Name */}
-                        <div className="fieldWrapperR">
-                            <label
-                                className={`fieldR ${
-                                    touched.firstName ? (errors.firstName ? "fieldErrorR" : "fieldSuccessR") : ""
-                                }`}
-                            >
-                                <span className="iconR">👤</span>
-                                <input
-                                    type="text"
-                                    placeholder="First Name"
-                                    value={firstName}
-                                    onChange={(e) => {
-                                        setFirstName(e.target.value);
-                                        if (touched.firstName) updateError("firstName", { firstName: e.target.value });
-                                    }}
-                                    onBlur={() => handleBlur("firstName")}
-                                    maxLength={50}
-                                    autoComplete="given-name"
-                                />
-                            </label>
-                            {touched.firstName && errors.firstName && (
-                                <span className="errorMsgR" role="alert">⚠ {errors.firstName}</span>
-                            )}
-                        </div>
-
-                        {/* Last Name */}
-                        <div className="fieldWrapperR">
-                            <label
-                                className={`fieldR ${
-                                    touched.lastName ? (errors.lastName ? "fieldErrorR" : "fieldSuccessR") : ""
-                                }`}
-                            >
-                                <span className="iconR">👤</span>
-                                <input
-                                    type="text"
-                                    placeholder="Last Name"
-                                    value={lastName}
-                                    onChange={(e) => {
-                                        setLastName(e.target.value);
-                                        if (touched.lastName) updateError("lastName", { lastName: e.target.value });
-                                    }}
-                                    onBlur={() => handleBlur("lastName")}
-                                    maxLength={50}
-                                    autoComplete="family-name"
-                                />
-                            </label>
-                            {touched.lastName && errors.lastName && (
-                                <span className="errorMsgR" role="alert">⚠ {errors.lastName}</span>
-                            )}
-                        </div>
-
-                        {/* Email */}
-                        <div className="fieldWrapperR">
-                            <label
-                                className={`fieldR ${
-                                    touched.email ? (errors.email ? "fieldErrorR" : "fieldSuccessR") : ""
-                                }`}
-                            >
-                                <span className="iconR">✉️</span>
-                                <input
-                                    type="email"
-                                    placeholder="Email"
-                                    value={email}
-                                    onChange={(e) => {
-                                        setEmail(e.target.value);
-                                        if (touched.email) updateError("email", { email: e.target.value });
-                                    }}
-                                    onBlur={() => handleBlur("email")}
-                                    maxLength={255}
-                                    autoComplete="email"
-                                />
-                            </label>
-                            {touched.email && errors.email && (
-                                <span className="errorMsgR" role="alert">⚠ {errors.email}</span>
-                            )}
-                        </div>
-
-                        {/* Password */}
-                        <div className="fieldWrapperR">
-                            <label
-                                className={`fieldR ${
-                                    touched.password
-                                        ? errors.password
-                                            ? "fieldErrorR"
-                                            : "fieldSuccessR"
-                                        : ""
-                                }`}
-                            >
-                                <span className="iconR">🔒</span>
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                        if (touched.password) updateError("password", { password: e.target.value });
-                                    }}
-                                    onBlur={() => handleBlur("password")}
-                                    autoComplete="new-password"
-                                />
-                                <button
-                                    type="button"
-                                    className="togglePasswordBtnR"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    aria-label={showPassword ? "Hide password" : "Show password"}
-                                    title={showPassword ? "Hide password" : "Show password"}
-                                >
-                                    {showPassword ? "🙈" : "👁️"}
-                                </button>
-                            </label>
-                            {touched.password && errors.password && (
-                                <span className="errorMsgR" role="alert">⚠ {errors.password}</span>
-                            )}
-
-                            {/* Real-time Checklist */}
-                            {(password || touched.password) && (
-                                <div className="checklistR">
-                                    {passwordRequirements.map((req, idx) => (
-                                        <div key={idx} className={`checkItemR ${req.met ? "met" : ""}`}>
-                                            <span className="checkIconR">{req.met ? "✓" : "×"}</span>
-                                            {req.label}
-                                        </div>
-                                    ))}
+                        {/* Right Panel (Form) */}
+                        <MDBCol md="7" className="p-5 p-md-5 d-flex flex-column justify-content-center bg-white order-md-2 order-1 position-relative">
+                            {/* Back Button */}
+                            <div className="position-absolute top-0 end-0 p-4 d-none d-md-block">
+                                <MDBBtn color="light" size="sm" className="shadow-sm rounded-pill text-primary fw-bold px-3 glass-hover" onClick={() => navigate('/landing')}>
+                                    <MDBIcon fas icon="arrow-left" className="me-1" /> Back
+                                </MDBBtn>
+                            </div>
+                            <div className="d-md-none mb-4 text-start">
+                                <MDBBtn color="light" size="sm" className="shadow-sm rounded-pill text-primary fw-bold px-3 glass-hover" onClick={() => navigate('/landing')}>
+                                    <MDBIcon fas icon="arrow-left" className="me-1" /> Back to Home
+                                </MDBBtn>
+                            </div>
+                            <div className="text-center mb-4">
+                                <MDBTypography tag="h2" className="fw-bold text-primary mb-3">
+                                    Create Account
+                                </MDBTypography>
+                                <div className="d-flex justify-content-center gap-3 mb-3">
+                                    <MDBBtn floating color="light" className="text-primary shadow-sm glass-hover">
+                                        <MDBIcon fab icon="facebook-f" />
+                                    </MDBBtn>
+                                    <MDBBtn floating color="light" className="text-danger shadow-sm glass-hover">
+                                        <MDBIcon fab icon="google" />
+                                    </MDBBtn>
+                                    <MDBBtn floating color="light" className="text-info shadow-sm glass-hover">
+                                        <MDBIcon fab icon="linkedin-in" />
+                                    </MDBBtn>
                                 </div>
-                            )}
+                                <span className="text-muted small text-uppercase">or use your email for registration</span>
+                            </div>
 
-                            {/* Password Strength Bar */}
-                            {password && (
-                                <div className="strengthBarWrapperR">
-                                    <div className="strengthBarR">
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <div
-                                                key={i}
-                                                className="strengthSegmentR"
-                                                style={{
-                                                    backgroundColor:
-                                                        i <= strength.level ? strength.color : "#e0e0e0",
-                                                    transition: "background-color 0.3s ease",
+                            <form onSubmit={onSubmit} noValidate className="w-100" style={{ maxWidth: '450px', margin: '0 auto' }}>
+                                {/* First & Last Name */}
+                                <MDBRow>
+                                    <MDBCol sm="6" className="mb-3">
+                                        <div className={`border rounded-3 p-2 d-flex align-items-center ${touched.firstName ? (errors.firstName ? 'border-danger bg-danger bg-opacity-10' : 'border-success bg-success bg-opacity-10') : 'border-light bg-light'}`}>
+                                            <MDBIcon fas icon="user" className="text-muted ms-2 me-2" />
+                                            <input
+                                                type="text"
+                                                placeholder="First Name"
+                                                className="form-control border-0 bg-transparent shadow-none p-0"
+                                                value={firstName}
+                                                onChange={(e) => {
+                                                    setFirstName(e.target.value);
+                                                    if (touched.firstName) updateError("firstName", { firstName: e.target.value });
                                                 }}
+                                                onBlur={() => handleBlur("firstName")}
+                                                maxLength={50}
+                                                autoComplete="given-name"
                                             />
-                                        ))}
+                                        </div>
+                                        {touched.firstName && errors.firstName && (
+                                            <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.firstName}</span>
+                                        )}
+                                    </MDBCol>
+
+                                    <MDBCol sm="6" className="mb-3">
+                                        <div className={`border rounded-3 p-2 d-flex align-items-center ${touched.lastName ? (errors.lastName ? 'border-danger bg-danger bg-opacity-10' : 'border-success bg-success bg-opacity-10') : 'border-light bg-light'}`}>
+                                            <MDBIcon fas icon="user" className="text-muted ms-2 me-2" />
+                                            <input
+                                                type="text"
+                                                placeholder="Last Name"
+                                                className="form-control border-0 bg-transparent shadow-none p-0"
+                                                value={lastName}
+                                                onChange={(e) => {
+                                                    setLastName(e.target.value);
+                                                    if (touched.lastName) updateError("lastName", { lastName: e.target.value });
+                                                }}
+                                                onBlur={() => handleBlur("lastName")}
+                                                maxLength={50}
+                                                autoComplete="family-name"
+                                            />
+                                        </div>
+                                        {touched.lastName && errors.lastName && (
+                                            <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.lastName}</span>
+                                        )}
+                                    </MDBCol>
+                                </MDBRow>
+
+                                {/* Email */}
+                                <div className="mb-3">
+                                    <div className={`border rounded-3 p-2 d-flex align-items-center ${touched.email ? (errors.email ? 'border-danger bg-danger bg-opacity-10' : 'border-success bg-success bg-opacity-10') : 'border-light bg-light'}`}>
+                                        <MDBIcon fas icon="envelope" className="text-muted ms-2 me-3" />
+                                        <input
+                                            type="email"
+                                            placeholder="Email"
+                                            className="form-control border-0 bg-transparent shadow-none p-0"
+                                            value={email}
+                                            onChange={(e) => {
+                                                setEmail(e.target.value);
+                                                if (touched.email) updateError("email", { email: e.target.value });
+                                            }}
+                                            onBlur={() => handleBlur("email")}
+                                            maxLength={255}
+                                            autoComplete="email"
+                                        />
                                     </div>
-                                    <span className="strengthLabelR" style={{ color: strength.color }}>
-                                        {strength.label}
-                                    </span>
+                                    {touched.email && errors.email && (
+                                        <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.email}</span>
+                                    )}
                                 </div>
-                            )}
-                            {/* Password requirements hint */}
-                            {touched.password && !errors.password && (
-                                <span className="successHintR">✓ Password looks great!</span>
-                            )}
-                            {!touched.password && (
-                                <span className="hintTextR">
-                                    Min 8 chars · Uppercase · Lowercase · Number · Special char
-                                </span>
-                            )}
-                        </div>
 
-                        {/* Confirm Password */}
-                        <div className="fieldWrapperR">
-                            <label
-                                className={`fieldR ${
-                                    touched.passwordConfirmation
-                                        ? errors.passwordConfirmation
-                                            ? "fieldErrorR"
-                                            : passwordConfirmation
-                                            ? "fieldSuccessR"
-                                            : ""
-                                        : ""
-                                }`}
-                            >
-                                <span className="iconR">🔒</span>
-                                <input
-                                    type={showConfirm ? "text" : "password"}
-                                    placeholder="Confirm Password"
-                                    value={passwordConfirmation}
-                                    onChange={(e) => {
-                                        setPasswordConfirmation(e.target.value);
-                                        if (touched.passwordConfirmation)
-                                            updateError("passwordConfirmation", {
-                                                passwordConfirmation: e.target.value,
-                                            });
-                                    }}
-                                    onBlur={() => handleBlur("passwordConfirmation")}
-                                    autoComplete="new-password"
-                                />
-                                <button
-                                    type="button"
-                                    className="togglePasswordBtnR"
-                                    onClick={() => setShowConfirm(!showConfirm)}
-                                    aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
-                                    title={showConfirm ? "Hide" : "Show"}
-                                >
-                                    {showConfirm ? "🙈" : "👁️"}
-                                </button>
-                            </label>
-                            {touched.passwordConfirmation && errors.passwordConfirmation && (
-                                <span className="errorMsgR" role="alert">
-                                    ⚠ {errors.passwordConfirmation}
-                                </span>
-                            )}
-                            {touched.passwordConfirmation &&
-                                !errors.passwordConfirmation &&
-                                passwordConfirmation && (
-                                    <span className="successHintR">✓ Passwords match!</span>
-                                )}
-                        </div>
+                                {/* Password */}
+                                <div className="mb-3">
+                                    <div className={`border rounded-3 p-2 d-flex align-items-center ${touched.password ? (errors.password ? 'border-danger bg-danger bg-opacity-10' : 'border-success bg-success bg-opacity-10') : 'border-light bg-light'}`}>
+                                        <MDBIcon fas icon="lock" className="text-muted ms-2 me-3" />
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Password"
+                                            className="form-control border-0 bg-transparent shadow-none p-0"
+                                            value={password}
+                                            onChange={(e) => {
+                                                setPassword(e.target.value);
+                                                if (touched.password) updateError("password", { password: e.target.value });
+                                            }}
+                                            onBlur={() => handleBlur("password")}
+                                            autoComplete="new-password"
+                                        />
+                                        <MDBIcon 
+                                            fas 
+                                            icon={showPassword ? "eye-slash" : "eye"} 
+                                            className="text-muted mx-2 cursor-pointer" 
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        />
+                                    </div>
+                                    {touched.password && errors.password && (
+                                        <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.password}</span>
+                                    )}
+                                    
+                                    {/* Real-time Checklist & Strength */}
+                                    {(password || touched.password) && (
+                                        <div className="mt-2 bg-light p-3 rounded-3 border border-light">
+                                            <div className="d-flex flex-wrap gap-2 mb-2">
+                                                {passwordRequirements.map((req, idx) => (
+                                                    <span key={idx} className={`badge rounded-pill ${req.met ? 'bg-success' : 'bg-secondary text-light opacity-50'}`}>
+                                                        <MDBIcon fas icon={req.met ? "check" : "times"} className="me-1" />
+                                                        {req.label}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            {password && (
+                                                <div className="d-flex align-items-center mt-2">
+                                                    <div className="d-flex gap-1 flex-grow-1 me-3">
+                                                        {[1, 2, 3, 4, 5].map((i) => (
+                                                            <div 
+                                                                key={i} 
+                                                                className="flex-grow-1 rounded-pill" 
+                                                                style={{ 
+                                                                    height: '6px', 
+                                                                    backgroundColor: i <= strength.level ? strength.color : "#e0e0e0",
+                                                                    transition: 'background-color 0.3s ease'
+                                                                }} 
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                    <span className="small fw-bold" style={{ color: strength.color, width: '50px', textAlign: 'right' }}>
+                                                        {strength.label}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
 
-                        <button className="primaryBtnR" type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "CREATING ACCOUNT..." : "SIGN UP"}
-                        </button>
+                                {/* Confirm Password */}
+                                <div className="mb-4">
+                                    <div className={`border rounded-3 p-2 d-flex align-items-center ${touched.passwordConfirmation ? (errors.passwordConfirmation ? 'border-danger bg-danger bg-opacity-10' : (passwordConfirmation ? 'border-success bg-success bg-opacity-10' : 'border-light bg-light')) : 'border-light bg-light'}`}>
+                                        <MDBIcon fas icon="check-circle" className="text-muted ms-2 me-3" />
+                                        <input
+                                            type={showConfirm ? "text" : "password"}
+                                            placeholder="Confirm Password"
+                                            className="form-control border-0 bg-transparent shadow-none p-0"
+                                            value={passwordConfirmation}
+                                            onChange={(e) => {
+                                                setPasswordConfirmation(e.target.value);
+                                                if (touched.passwordConfirmation) updateError("passwordConfirmation", { passwordConfirmation: e.target.value });
+                                            }}
+                                            onBlur={() => handleBlur("passwordConfirmation")}
+                                            autoComplete="new-password"
+                                        />
+                                        <MDBIcon 
+                                            fas 
+                                            icon={showConfirm ? "eye-slash" : "eye"} 
+                                            className="text-muted mx-2 cursor-pointer" 
+                                            onClick={() => setShowConfirm(!showConfirm)}
+                                        />
+                                    </div>
+                                    {touched.passwordConfirmation && errors.passwordConfirmation && (
+                                        <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.passwordConfirmation}</span>
+                                    )}
+                                </div>
 
-                        <div className="bottomHintR">
-                            Already have an account? <Link to="/login">Sign in</Link>
-                        </div>
-                    </form>
-                </section>
-            </div>
+                                <MDBBtn block size="lg" className="rounded-pill pulse-animation mb-4 shadow-sm" type="submit" disabled={isSubmitting}>
+                                    {isSubmitting ? "CREATING ACCOUNT..." : "SIGN UP"}
+                                </MDBBtn>
+                            </form>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBCard>
+            </MDBContainer>
+            <style>{`
+                .glass-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+                .glass-hover:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+                .cursor-pointer { cursor: pointer; }
+                .form-control:focus { box-shadow: none; border-color: transparent; }
+                input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active{
+                    -webkit-box-shadow: 0 0 0 30px white inset !important;
+                    -webkit-text-fill-color: #4f4f4f !important;
+                    transition: background-color 5000s ease-in-out 0s;
+                }
+            `}</style>
         </div>
     );
 }
