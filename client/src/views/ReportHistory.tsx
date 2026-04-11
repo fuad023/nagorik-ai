@@ -8,11 +8,19 @@ import {
   MDBTypography,
   MDBBadge,
   MDBIcon,
-  MDBBtn
+  MDBBtn,
+  MDBModal,
+  MDBModalDialog,
+  MDBModalContent,
+  MDBModalHeader,
+  MDBModalTitle,
+  MDBModalBody,
+  MDBModalFooter
 } from 'mdb-react-ui-kit';
 import '../styles/report-history.css';
 import { secrets } from '../secrets';
 import { useNavigate } from 'react-router-dom';
+import LocationViewer from '../components/LocationViewer';
 
 interface TimelineStep {
   status: string;
@@ -49,6 +57,7 @@ const ReportHistory: React.FC = () => {
   const [filterCategory, setFilterCategory] = useState('All');
   const [filterDate, setFilterDate] = useState('All');
   const [expandedId, setExpandedId] = useState<string | number | null>(null);
+  const [mapModalLocation, setMapModalLocation] = useState<string | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
 
   React.useEffect(() => {
@@ -258,7 +267,7 @@ const ReportHistory: React.FC = () => {
                     </div>
                     
                     <div className="mt-4 text-end">
-                      <MDBBtn outline color="primary" rounded className="fw-bold px-4 me-2 shadow-sm action-btn">
+                      <MDBBtn outline color="primary" rounded className="fw-bold px-4 me-2 shadow-sm action-btn" onClick={() => setMapModalLocation(report.location)}>
                         <MDBIcon fas icon="map-marked-alt" className="me-2"/> View on Map
                       </MDBBtn>
                       {report.status !== 'Resolved' && (
@@ -281,6 +290,24 @@ const ReportHistory: React.FC = () => {
           )}
         </MDBCol>
       </MDBRow>
+
+      {/* Map Modal */}
+      <MDBModal open={!!mapModalLocation} setOpen={setMapModalLocation as any} tabIndex="-1">
+        <MDBModalDialog size="lg" centered>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle><MDBIcon fas icon="map-marker-alt" className="me-2 text-danger"/> Map Location</MDBModalTitle>
+              <MDBBtn className="btn-close" color="none" onClick={() => setMapModalLocation(null)}></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody style={{ padding: 0, height: '400px' }}>
+              {mapModalLocation && <LocationViewer locationStr={mapModalLocation} />}
+            </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={() => setMapModalLocation(null)}>Close</MDBBtn>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
     </MDBContainer>
   );
 };
