@@ -33,6 +33,7 @@ interface Report {
     category: string;
     status: 'pending' | 'in-progress' | 'resolved';
     lastUpdated: string;
+    rawDate?: string;
     description: string;
     imageUrl?: string;
 }
@@ -50,6 +51,7 @@ const Dashboard: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [filterCategory, setFilterCategory] = useState('all');
+    const [filterDate, setFilterDate] = useState('all');
     const [reportTab, setReportTab] = useState<'mine' | 'all'>('mine');
 
     const [reports, setReports] = useState<Report[]>([]);
@@ -90,6 +92,7 @@ const Dashboard: React.FC = () => {
                             category: r.category || 'General',
                             status: r.status || 'pending',
                             lastUpdated: new Date(r.updated_at).toLocaleString(),
+                            rawDate: r.updated_at,
                             description: r.description,
                             imageUrl: (r.files && r.files.length > 0) ? r.files[0].url : 'https://images.unsplash.com/photo-1548243407-3a131b74d47d?auto=format&fit=crop&q=80&w=400'
                         }));
@@ -140,7 +143,23 @@ const Dashboard: React.FC = () => {
             report.category.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = filterStatus === 'all' || report.status === filterStatus;
         const matchesCategory = filterCategory === 'all' || report.category.toLowerCase() === filterCategory.toLowerCase();
-        return matchesSearch && matchesStatus && matchesCategory;
+        
+        let matchesDate = true;
+        if (filterDate !== 'all' && report.rawDate) {
+            const rDate = new Date(report.rawDate);
+            const now = new Date();
+            const diffDays = (now.getTime() - rDate.getTime()) / (1000 * 3600 * 24);
+            
+            if (filterDate === 'today') {
+                matchesDate = rDate.toDateString() === now.toDateString();
+            } else if (filterDate === '7days') {
+                matchesDate = diffDays <= 7;
+            } else if (filterDate === '30days') {
+                matchesDate = diffDays <= 30;
+            }
+        }
+        
+        return matchesSearch && matchesStatus && matchesCategory && matchesDate;
     });
 
     return (
@@ -261,14 +280,14 @@ const Dashboard: React.FC = () => {
 
                                 {/* Search and Filter */}
                                 <MDBRow className="mb-4">
-                                    <MDBCol md="4" className="mb-2 mb-md-0">
+                                    <MDBCol md="3" className="mb-2 mb-md-0">
                                         <MDBInput
                                             label="Search reports..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                         />
                                     </MDBCol>
-                                    <MDBCol md="4" className="mb-2 mb-md-0">
+                                    <MDBCol md="3" className="mb-2 mb-md-0">
                                         <select
                                             className="form-select"
                                             value={filterCategory}
@@ -284,7 +303,7 @@ const Dashboard: React.FC = () => {
                                             <option value="general">General</option>
                                         </select>
                                     </MDBCol>
-                                    <MDBCol md="4">
+                                    <MDBCol md="3" className="mb-2 mb-md-0">
                                         <select
                                             className="form-select"
                                             value={filterStatus}
@@ -294,6 +313,18 @@ const Dashboard: React.FC = () => {
                                             <option value="pending">Pending</option>
                                             <option value="in-progress">In Progress</option>
                                             <option value="resolved">Resolved</option>
+                                        </select>
+                                    </MDBCol>
+                                    <MDBCol md="3">
+                                        <select
+                                            className="form-select"
+                                            value={filterDate}
+                                            onChange={(e) => setFilterDate(e.target.value)}
+                                        >
+                                            <option value="all">All Time</option>
+                                            <option value="today">Today</option>
+                                            <option value="7days">Last 7 Days</option>
+                                            <option value="30days">Last 30 Days</option>
                                         </select>
                                     </MDBCol>
                                 </MDBRow>
