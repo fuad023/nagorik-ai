@@ -35,63 +35,87 @@ Also, you have access to their current reports. Answer questions about their rep
 Here are the user's current reports:
 " . ($recentReports ?: "User has no recent reports.");
 
-        // Format Payload for Gemini API
-        $partsPayload = [];
-        $partsPayload[] = ['text' => $request->message];
+        // Format Payload for Groq Vision API (OpenAI Compatible)
+        $messages = [];
+        $messages[] = [
+            'role' => 'system',
+            'content' => $systemPrompt
+        ];
+
+        $userContent = [];
+        $userContent[] = ['type' => 'text', 'text' => $request->message];
         
         if ($request->filled('image')) {
-            $imagePartsArr = explode(';base64,', $request->image);
-            if (count($imagePartsArr) == 2) {
-                $mimeType = explode(':', $imagePartsArr[0])[1];
-                $base64Data = $imagePartsArr[1];
-                
-                $partsPayload[] = [
-                    'inlineData' => [
-                        'mimeType' => $mimeType,
-                        'data' => $base64Data
-                    ]
-                ];
-            }
+            // Groq supports base64 data URI natively in image_url just like OpenAI
+            $userContent[] = [
+                'type' => 'image_url',
+                'image_url' => [
+                    'url' => $request->image
+                ]
+            ];
         }
 
-        $apiKey = env('GEMINI_API_KEY');
+        $messages[] = [
+            'role' => 'user',
+            'content' => $userContent
+        ];
+
+        $apiKey = env('GROQ_API_KEY');
         if (empty($apiKey)) {
-            return response()->json(['reply' => "Internal Error: Please add GEMINI_API_KEY to the server's .env file."], 500);
+            return response()->json(['reply' => "Internal Error: Please add GROQ_API_KEY to the server's .env file."], 500);
         }
 
         $payload = [
-            'systemInstruction' => [
-                'parts' => [
-                    ['text' => $systemPrompt]
-                ]
-            ],
-            'contents' => [
-                [
-                    'parts' => $partsPayload
-                ]
-            ],
-            'generationConfig' => [
-                'maxOutputTokens' => 500
-            ]
+            'model' => 'meta-llama/llama-4-scout-17b-16e-instruct',
+            'messages' => $messages,
+            'max_tokens' => 500,
+            'temperature' => 0.7
         ];
 
         try {
-            // Trying Gemini 1.5 Pro
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=" . $apiKey;
+            $url = "https://api.groq.com/openai/v1/chat/completions";
             
-            $response = Http::timeout(30)->post($url, $payload);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json'
+            ])->timeout(30)->post($url, $payload);
 
             if ($response->successful()) {
-                $reply = $response->json()['candidates'][0]['content']['parts'][0]['text'] ?? "No response parsed.";
+                $reply = $response->json()['choices'][0]['message']['content'] ?? "No response parsed.";
                 return response()->json(['reply' => $reply]);
             }
 
+            // Diagnostic: If Groq model is deprecated or missing, list all supported models!
+            $errorData = $response->json();
+            $errorCode = $errorData['error']['code'] ?? '';
+            
+            if ($response->status() === 404 || in_array($errorCode, ['model_not_found', 'model_decommissioned'])) {
+                $modelsResponse = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $apiKey
+                ])->timeout(10)->get("https://api.groq.com/openai/v1/models");
+                
+                if ($modelsResponse->successful()) {
+                    $allModels = collect($modelsResponse->json()['data'] ?? [])->pluck('id');
+                    $available = $allModels->filter(function ($id) {
+                        return strpos($id, 'vision') !== false;
+                    })->implode(', ');
+
+                    if (empty($available)) {
+                        $available = $allModels->implode(', '); // Show all if no vision models found
+                    }
+                    
+                    return response()->json([
+                        'reply' => "Model failed. However, your Groq API key strictly supports these models: " . $available
+                    ], 404);
+                }
+            }
+
             return response()->json([
-                'reply' => "Gemini API Error: " . $response->body()
+                'reply' => "Groq API Error: " . $response->body()
             ], $response->status());
 
         } catch (\Exception $e) {
-            return response()->json(['reply' => "Connection Error: I couldn't communicate with the Google AI backbone right now."], 500);
+            return response()->json(['reply' => "Connection Error: I couldn't communicate with the Groq backbone right now."], 500);
         }
     }
 }

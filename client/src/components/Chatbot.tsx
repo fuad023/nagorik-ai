@@ -86,7 +86,7 @@ const Chatbot: React.FC = () => {
             
         } catch (error: any) {
             console.error("Chat API Error:", error);
-            const serverReply = error.response?.data?.reply || "My connection to the AI matrix was interrupted. Ensure the GEMINI_API_KEY is configured.";
+            const serverReply = error.response?.data?.reply || "My connection to the AI matrix was interrupted. Ensure the GROQ_API_KEY is configured.";
             
             const errorMsg: Message = {
                 id: Date.now() + 1,
