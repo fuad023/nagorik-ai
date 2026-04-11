@@ -10,7 +10,9 @@ import {
     MDBTextArea,
     MDBBtn,
     MDBSpinner,
+    MDBIcon,
 } from 'mdb-react-ui-kit'
+import { useNavigate } from 'react-router-dom'
 import LocationPicker, { LocationResult } from './LocationPicker'
 import '../styles/ReportForm.css'
 import api from '../api'
@@ -28,6 +30,7 @@ interface LocationData {
 }
 
 export default function ReportForm() {
+    const navigate = useNavigate()
     /* ── State ── */
     const [formData, setFormData] = useState<FormData>({ location: '', description: '' })
     const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null)
@@ -183,6 +186,12 @@ export default function ReportForm() {
                         </span>
                     </div>
                 )}
+
+                <div className="mb-3 text-start">
+                    <MDBBtn color="light" size="sm" className="shadow-sm rounded-pill text-primary fw-bold px-3" onClick={() => navigate(-1)}>
+                        <MDBIcon fas icon="arrow-left" className="me-1" /> Back
+                    </MDBBtn>
+                </div>
 
                 <MDBCard className="report-card">
                     <MDBCardBody className="p-4 p-md-5">

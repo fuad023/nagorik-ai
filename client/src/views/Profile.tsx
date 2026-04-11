@@ -34,6 +34,10 @@ interface User {
   first_name: string;
   last_name: string;
   email: string;
+  phone?: string;
+  location?: string;
+  created_at?: string;
+  role?: string;
 }
 
 interface ReportStats {
@@ -57,16 +61,38 @@ const Profile: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordLoading, setPasswordLoading] = useState(false);
 
-  // Load user from localStorage
+  // Edit profile modal state
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editPhone, setEditPhone] = useState('');
+  const [editLocation, setEditLocation] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
+
+  // Load user from localStorage and fetch fresh from backend
   useEffect(() => {
     const stored = localStorage.getItem('user');
     if (stored) {
       const u = JSON.parse(stored) as User;
       setUser(u);
+      setEditPhone(u.phone || '');
+      setEditLocation(u.location || '');
       // Load per-user avatar
       const savedAvatar = localStorage.getItem(`avatar_${u.id}`);
       if (savedAvatar) setAvatarSrc(savedAvatar);
     }
+
+    const fetchFreshUser = async () => {
+      try {
+        const freshData = await ApiClient.getUserProfile();
+        if (freshData) {
+          setUser(freshData);
+          setEditPhone(freshData.phone || '');
+          setEditLocation(freshData.location || '');
+        }
+      } catch (err) {
+        console.log("Using cached user data due to fetch error", err);
+      }
+    };
+    fetchFreshUser();
   }, []);
 
   // Fetch real report stats
@@ -166,6 +192,44 @@ const Profile: React.FC = () => {
     }
   };
 
+  // --- Edit Profile ---
+  const handleEditProfile = async () => {
+    if (!editPhone.trim() || !editLocation.trim()) {
+      toast.error('Please fill in all fields.');
+      return;
+    }
+
+    setEditLoading(true);
+    const token = localStorage.getItem('auth_token');
+    try {
+      const response = await fetch(`${secrets.backendEndpoint}/api/user/profile`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phone: editPhone,
+          location: editLocation,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success('Profile updated successfully!');
+        setUser({ ...user, phone: editPhone, location: editLocation } as User);
+        localStorage.setItem('user', JSON.stringify({ ...user, phone: editPhone, location: editLocation }));
+        setShowEditModal(false);
+      } else {
+        toast.error(data.message || 'Failed to update profile.');
+      }
+    } catch (e) {
+      toast.error('Network error. Please try again.');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   const fullName = user ? `${user.first_name} ${user.last_name}` : 'Loading...';
   const initials = user ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase() : '?';
 
@@ -208,6 +272,11 @@ const Profile: React.FC = () => {
       <MDBContainer className="py-5 h-100 profile-container">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="10" xl="8">
+            <div className="mb-3 text-start">
+              <MDBBtn color="light" size="sm" className="shadow-sm rounded-pill text-primary fw-bold px-3" onClick={() => navigate(-1)}>
+                <MDBIcon fas icon="arrow-left" className="me-1" /> Back
+              </MDBBtn>
+            </div>
             <MDBCard className="profile-card">
               {/* Header */}
               <div className="profile-header text-white d-flex flex-row" style={{ backgroundColor: '#0288d1', height: '220px', borderRadius: '15px 15px 0 0' }}>
@@ -304,11 +373,46 @@ const Profile: React.FC = () => {
                         </MDBCardBody>
                       </MDBCard>
                     </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="phone" className="me-2" />Phone Number</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.phone ? user.phone : <span className="text-muted">Not provided</span>}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="map-marker-alt" className="me-2" />Location</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.location ? user.location : <span className="text-muted">Not provided</span>}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="calendar-alt" className="me-2" />Member Since</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user-shield" className="me-2" />Role</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.role ?? 'Citizen Reporter'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
                   </MDBRow>
                 </div>
 
                 {/* Actions */}
                 <div className="d-flex justify-content-between align-items-center pt-3 mt-4 border-top">
+                  <MDBBtn outline color="info" className="action-btn px-4 shadow-sm" rounded onClick={() => setShowEditModal(true)}>
+                    <MDBIcon fas icon="edit" className="me-2" />Edit Profile
+                  </MDBBtn>
                   <MDBBtn outline color="primary" className="action-btn px-4 shadow-sm" rounded onClick={() => setShowPasswordModal(true)}>
                     <MDBIcon fas icon="key" className="me-2" />Change Password
                   </MDBBtn>
@@ -359,6 +463,44 @@ const Profile: React.FC = () => {
                 <MDBBtn color="secondary" onClick={() => setShowPasswordModal(false)}>Cancel</MDBBtn>
                 <MDBBtn color="primary" onClick={handleChangePassword} disabled={passwordLoading}>
                   {passwordLoading ? <><MDBIcon fas icon="spinner" className="me-2 fa-spin" />Saving...</> : <><MDBIcon fas icon="check" className="me-2" />Update Password</>}
+                </MDBBtn>
+              </MDBModalFooter>
+            </MDBModalContent>
+          </MDBModalDialog>
+        </MDBModal>
+
+        {/* Edit Profile Modal */}
+        <MDBModal open={showEditModal} onClose={() => setShowEditModal(false)} tabIndex="-1">
+          <MDBModalDialog>
+            <MDBModalContent>
+              <MDBModalHeader>
+                <MDBModalTitle><MDBIcon fas icon="edit" className="me-2 text-info" />Edit Profile</MDBModalTitle>
+                <MDBBtn className="btn-close" color="none" onClick={() => setShowEditModal(false)} />
+              </MDBModalHeader>
+              <MDBModalBody>
+                <div className="mb-3">
+                  <MDBInput
+                    label="Phone Number"
+                    type="tel"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    placeholder="e.g., +880 1XXXXXXXXX"
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    label="Location"
+                    type="text"
+                    value={editLocation}
+                    onChange={(e) => setEditLocation(e.target.value)}
+                    placeholder="e.g., Dhaka, Bangladesh"
+                  />
+                </div>
+              </MDBModalBody>
+              <MDBModalFooter>
+                <MDBBtn color="secondary" onClick={() => setShowEditModal(false)}>Cancel</MDBBtn>
+                <MDBBtn color="info" onClick={handleEditProfile} disabled={editLoading}>
+                  {editLoading ? <><MDBIcon fas icon="spinner" className="me-2 fa-spin" />Saving...</> : <><MDBIcon fas icon="check" className="me-2" />Update Profile</>}
                 </MDBBtn>
               </MDBModalFooter>
             </MDBModalContent>

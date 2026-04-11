@@ -6,6 +6,10 @@ CREATE TABLE users (
     last_name         VARCHAR(128)    NOT NULL,
     email             VARCHAR(255)    NOT NULL,
     email_verified_at TIMESTAMP           NULL DEFAULT NULL,
+    
+    phone             VARCHAR(20)         NULL DEFAULT NULL,
+    location          VARCHAR(255)        NULL DEFAULT NULL,
+    role              VARCHAR(50)     NOT NULL DEFAULT 'Citizen',
 
     password          VARCHAR(255)    NOT NULL,
     remember_token    VARCHAR(100)        NULL DEFAULT NULL,

@@ -12,6 +12,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return $request->user();
     });
 
+    Route::put('/user/profile', function (Request $request) {
+        $user = $request->user();
+        $validated = $request->validate([
+            'phone' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
+        ]);
+        
+        $user->update($validated);
+        return $user;
+    });
+
     Route::put('/change-password', [ChangePasswordController::class, 'update']);
 
     Route::prefix('v1')->group(function () {

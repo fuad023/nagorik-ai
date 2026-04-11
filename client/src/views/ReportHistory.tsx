@@ -12,6 +12,7 @@ import {
 } from 'mdb-react-ui-kit';
 import '../styles/report-history.css';
 import { secrets } from '../secrets';
+import { useNavigate } from 'react-router-dom';
 
 interface TimelineStep {
   status: string;
@@ -25,6 +26,7 @@ interface Report {
   title: string;
   category: string;
   date: string;
+  rawDate?: string;
   status: string;
   description: string;
   location: string;
@@ -42,7 +44,10 @@ const getStatusColor = (status: string) => {
 };
 
 const ReportHistory: React.FC = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('All');
+  const [filterCategory, setFilterCategory] = useState('All');
+  const [filterDate, setFilterDate] = useState('All');
   const [expandedId, setExpandedId] = useState<string | number | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
 
@@ -69,6 +74,7 @@ const ReportHistory: React.FC = () => {
                 title: r.title,
                 category: r.category || 'General',
                 date: new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                rawDate: r.created_at,
                 status: formattedStatus,
                 description: r.description,
                 location: r.title, // In backend, 'title' currently stores the location string
@@ -91,9 +97,27 @@ const ReportHistory: React.FC = () => {
     fetchReports();
   }, []);
 
-  const filteredReports = filter === 'All' 
-    ? reports 
-    : reports.filter(r => filter === 'Open' ? r.status !== 'Resolved' : r.status === 'Resolved');
+  const filteredReports = reports.filter(r => {
+    const matchesStatus = filter === 'All' ? true : (filter === 'Open' ? r.status !== 'Resolved' : r.status === 'Resolved');
+    const matchesCategory = filterCategory === 'All' || r.category.toLowerCase() === filterCategory.toLowerCase();
+    
+    let matchesDate = true;
+    if (filterDate !== 'All' && r.rawDate) {
+        const rDate = new Date(r.rawDate);
+        const now = new Date();
+        const diffDays = (now.getTime() - rDate.getTime()) / (1000 * 3600 * 24);
+        
+        if (filterDate === 'today') {
+            matchesDate = rDate.toDateString() === now.toDateString();
+        } else if (filterDate === '7days') {
+            matchesDate = diffDays <= 7;
+        } else if (filterDate === '30days') {
+            matchesDate = diffDays <= 30;
+        }
+    }
+
+    return matchesStatus && matchesCategory && matchesDate;
+  });
 
   const toggleExpand = (id: string | number) => {
     setExpandedId(expandedId === id ? null : id);
@@ -103,6 +127,11 @@ const ReportHistory: React.FC = () => {
     <MDBContainer className="py-5 report-history-container">
       <MDBRow className="mb-4">
         <MDBCol>
+          <div className="mb-3 text-start">
+            <MDBBtn color="light" size="sm" className="shadow-sm rounded-pill text-primary fw-bold px-3" onClick={() => navigate(-1)}>
+              <MDBIcon fas icon="arrow-left" className="me-1" /> Back
+            </MDBBtn>
+          </div>
           <h3 className="fw-bold text-dark mb-3">Report History</h3>
           
           {/* Filters */}
@@ -129,6 +158,32 @@ const ReportHistory: React.FC = () => {
             >
               Resolved
             </MDBBtn>
+            <select
+                className="form-select w-auto rounded-pill border-0 shadow-sm ms-md-auto mt-2 mt-md-0 d-inline-block fw-bold"
+                style={{ cursor: 'pointer', maxWidth: '200px' }}
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+            >
+                <option value="All">All Categories</option>
+                <option value="infrastructure">Infrastructure</option>
+                <option value="roads">Roads</option>
+                <option value="sanitation">Sanitation</option>
+                <option value="water supply">Water Supply</option>
+                <option value="traffic">Traffic</option>
+                <option value="parks & recreation">Parks & Recreation</option>
+                <option value="general">General</option>
+            </select>
+            <select
+                className="form-select w-auto rounded-pill border-0 shadow-sm ms-2 mt-2 mt-md-0 d-inline-block fw-bold"
+                style={{ cursor: 'pointer', maxWidth: '180px' }}
+                value={filterDate}
+                onChange={(e) => setFilterDate(e.target.value)}
+            >
+                <option value="All">All Time</option>
+                <option value="today">Today</option>
+                <option value="7days">Last 7 Days</option>
+                <option value="30days">Last 30 Days</option>
+            </select>
           </div>
         </MDBCol>
       </MDBRow>
