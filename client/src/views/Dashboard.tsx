@@ -49,6 +49,7 @@ const Dashboard: React.FC = () => {
     const [showNewReportModal, setShowNewReportModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [filterCategory, setFilterCategory] = useState('all');
     const [reportTab, setReportTab] = useState<'mine' | 'all'>('mine');
 
     const [reports, setReports] = useState<Report[]>([]);
@@ -137,8 +138,9 @@ const Dashboard: React.FC = () => {
         const matchesSearch =
             report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             report.category.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesFilter = filterStatus === 'all' || report.status === filterStatus;
-        return matchesSearch && matchesFilter;
+        const matchesStatus = filterStatus === 'all' || report.status === filterStatus;
+        const matchesCategory = filterCategory === 'all' || report.category.toLowerCase() === filterCategory.toLowerCase();
+        return matchesSearch && matchesStatus && matchesCategory;
     });
 
     return (
@@ -259,12 +261,28 @@ const Dashboard: React.FC = () => {
 
                                 {/* Search and Filter */}
                                 <MDBRow className="mb-4">
-                                    <MDBCol md="8">
+                                    <MDBCol md="4" className="mb-2 mb-md-0">
                                         <MDBInput
                                             label="Search reports..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                         />
+                                    </MDBCol>
+                                    <MDBCol md="4" className="mb-2 mb-md-0">
+                                        <select
+                                            className="form-select"
+                                            value={filterCategory}
+                                            onChange={(e) => setFilterCategory(e.target.value)}
+                                        >
+                                            <option value="all">All Categories</option>
+                                            <option value="infrastructure">Infrastructure</option>
+                                            <option value="roads">Roads</option>
+                                            <option value="sanitation">Sanitation</option>
+                                            <option value="water supply">Water Supply</option>
+                                            <option value="traffic">Traffic</option>
+                                            <option value="parks & recreation">Parks & Recreation</option>
+                                            <option value="general">General</option>
+                                        </select>
                                     </MDBCol>
                                     <MDBCol md="4">
                                         <select

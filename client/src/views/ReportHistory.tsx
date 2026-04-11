@@ -43,6 +43,7 @@ const getStatusColor = (status: string) => {
 
 const ReportHistory: React.FC = () => {
   const [filter, setFilter] = useState('All');
+  const [filterCategory, setFilterCategory] = useState('All');
   const [expandedId, setExpandedId] = useState<string | number | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
 
@@ -91,9 +92,11 @@ const ReportHistory: React.FC = () => {
     fetchReports();
   }, []);
 
-  const filteredReports = filter === 'All' 
-    ? reports 
-    : reports.filter(r => filter === 'Open' ? r.status !== 'Resolved' : r.status === 'Resolved');
+  const filteredReports = reports.filter(r => {
+    const matchesStatus = filter === 'All' ? true : (filter === 'Open' ? r.status !== 'Resolved' : r.status === 'Resolved');
+    const matchesCategory = filterCategory === 'All' || r.category.toLowerCase() === filterCategory.toLowerCase();
+    return matchesStatus && matchesCategory;
+  });
 
   const toggleExpand = (id: string | number) => {
     setExpandedId(expandedId === id ? null : id);
@@ -129,6 +132,21 @@ const ReportHistory: React.FC = () => {
             >
               Resolved
             </MDBBtn>
+            <select
+                className="form-select w-auto rounded-pill border-0 shadow-sm ms-md-auto mt-2 mt-md-0 d-inline-block fw-bold"
+                style={{ cursor: 'pointer', maxWidth: '200px' }}
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+            >
+                <option value="All">All Categories</option>
+                <option value="infrastructure">Infrastructure</option>
+                <option value="roads">Roads</option>
+                <option value="sanitation">Sanitation</option>
+                <option value="water supply">Water Supply</option>
+                <option value="traffic">Traffic</option>
+                <option value="parks & recreation">Parks & Recreation</option>
+                <option value="general">General</option>
+            </select>
           </div>
         </MDBCol>
       </MDBRow>
