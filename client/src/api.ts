@@ -125,6 +125,39 @@ class ApiClient {
     }
   }
 
+  async googleAuth(credentialResponse: any) {
+    try {
+      const response = await this.client.post('/api/auth/google/callback', {
+        code: credentialResponse,
+      });
+
+      if (response.data && response.data.token) {
+        localStorage.setItem('auth_token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        return response.data;
+      }
+
+      const msg = response.data?.message || 'Google authentication failed';
+      toast.error(msg);
+      throw new Error(msg);
+    } catch (error: any) {
+      if (error.response || error.request) {
+        this.handleError(error);
+      }
+      throw error;
+    }
+  }
+
+  async getGoogleAuthUrl() {
+    try {
+      const response = await this.client.get('/api/auth/google/url');
+      return response.data.auth_url;
+    } catch (error) {
+      console.error('Failed to get Google auth URL:', error);
+      throw error;
+    }
+  }
+
   async getUserProfile() {
     try {
       const response = await this.client.get('/api/user');

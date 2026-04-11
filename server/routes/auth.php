@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterController::class, 'store'])
@@ -35,3 +36,11 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
 Route::post('/logout', [LoginController::class, 'destroy'])
     ->middleware('auth:sanctum')
     ->name('logout');
+    
+Route::get('/auth/google/url', [GoogleAuthController::class, 'getAuthUrl'])
+    ->name('google.auth.url');
+
+Route::post('/auth/google/callback', [GoogleAuthController::class, 'callback'])
+    ->middleware('guest')
+    ->name('google.callback');
+
