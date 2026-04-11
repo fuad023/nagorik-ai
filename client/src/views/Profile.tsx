@@ -34,6 +34,10 @@ interface User {
   first_name: string;
   last_name: string;
   email: string;
+  phone?: string;
+  location?: string;
+  join_date?: string;
+  role?: string;
 }
 
 interface ReportStats {
@@ -306,6 +310,38 @@ const Profile: React.FC = () => {
                         <MDBCardBody className="p-3">
                           <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="envelope" className="me-2" />Email</span>
                           <MDBCardText className="mb-0 fw-500 mt-2">{user?.email ?? '—'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="phone" className="me-2" />Phone Number</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.phone ?? '+880 1XXX-XXXXXX'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="map-marker-alt" className="me-2" />Location</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.location ?? 'Dhaka, Bangladesh'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="calendar-alt" className="me-2" />Member Since</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.join_date ?? 'Jan 2024'}</MDBCardText>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBCard className="info-card h-100 shadow-0 border bg-light">
+                        <MDBCardBody className="p-3">
+                          <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="user-shield" className="me-2" />Role</span>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.role ?? 'Citizen Reporter'}</MDBCardText>
                         </MDBCardBody>
                       </MDBCard>
                     </MDBCol>
