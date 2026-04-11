@@ -12,7 +12,6 @@ CREATE TABLE users (
     role              VARCHAR(50)     NOT NULL DEFAULT 'Citizen',
 
     password          VARCHAR(255)    NOT NULL,
-    google_id         VARCHAR(255)        NULL DEFAULT NULL,
     remember_token    VARCHAR(100)        NULL DEFAULT NULL,
 
     created_at        TIMESTAMP           NULL DEFAULT NULL,
@@ -20,7 +19,6 @@ CREATE TABLE users (
 
     CONSTRAINT PK_users       PRIMARY KEY (id),
     CONSTRAINT UQ_users_email UNIQUE      (email),
-    CONSTRAINT UQ_users_google_id UNIQUE  (google_id),
     INDEX IDX_users_name (first_name, last_name)
 );
 

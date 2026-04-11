@@ -2,5 +2,4 @@
 export const secrets = {
   backendEndpoint: import.meta.env.VITE_BACKEND_ENDPOINT,
   googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-  googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
 };
