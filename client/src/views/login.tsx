@@ -3,10 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import {
     MDBContainer,
     MDBCard,
-    MDBCardBody,
     MDBRow,
     MDBCol,
-    MDBInput,
     MDBBtn,
     MDBIcon,
     MDBTypography,
