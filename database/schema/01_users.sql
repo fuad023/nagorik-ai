@@ -45,6 +45,3 @@ CREATE TABLE personal_access_tokens (
     INDEX IDX_pat_tokenable_type_tokenable_id (tokenable_type, tokenable_id),
     INDEX IDX_pat_expires_at (expires_at)
 );
-
--- ALTER TABLE TO ADD GOOGLE_ID IF NOT EXISTS
-ALTER TABLE users ADD COLUMN google_id VARCHAR(255) NULL UNIQUE;
