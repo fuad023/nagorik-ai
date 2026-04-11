@@ -12,6 +12,7 @@ import {
 } from 'mdb-react-ui-kit';
 import '../styles/report-history.css';
 import { secrets } from '../secrets';
+import { useNavigate } from 'react-router-dom';
 
 interface TimelineStep {
   status: string;
@@ -43,6 +44,7 @@ const getStatusColor = (status: string) => {
 };
 
 const ReportHistory: React.FC = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('All');
   const [filterCategory, setFilterCategory] = useState('All');
   const [filterDate, setFilterDate] = useState('All');
@@ -125,6 +127,11 @@ const ReportHistory: React.FC = () => {
     <MDBContainer className="py-5 report-history-container">
       <MDBRow className="mb-4">
         <MDBCol>
+          <div className="mb-3 text-start">
+            <MDBBtn color="light" size="sm" className="shadow-sm rounded-pill text-primary fw-bold px-3" onClick={() => navigate(-1)}>
+              <MDBIcon fas icon="arrow-left" className="me-1" /> Back
+            </MDBBtn>
+          </div>
           <h3 className="fw-bold text-dark mb-3">Report History</h3>
           
           {/* Filters */}
