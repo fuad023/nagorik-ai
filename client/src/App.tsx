@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router';
 import Landing from './views/Landing';
+import About from './views/About';
 import Dashboard from './views/Dashboard';
 import Login from './views/login';
 import Registration from './views/registration';
@@ -14,7 +15,6 @@ import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ReportForm from './views/ReportForm';
 import AdminDashboard from './views/AdminDashboard';
-import ChatBot from './components/ChatBot/ChatBot';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const token = localStorage.getItem('auth_token');
@@ -41,6 +41,7 @@ function App() {
 
         {/* Public Landing/Auth Routes (Only for Guests) */}
         <Route path="/landing" element={<GuestRoute><Landing /></GuestRoute>} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/registration" element={<GuestRoute><Registration /></GuestRoute>} />
 
@@ -65,7 +66,6 @@ function App() {
           },
         }}
       />
-      <ChatBot />
     </>
   );
 }

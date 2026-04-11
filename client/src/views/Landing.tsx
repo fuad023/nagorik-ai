@@ -24,6 +24,10 @@ const Landing: React.FC = () => {
         navigate('/login');
     };
 
+    const handleAbout = () => {
+        navigate('/about');
+    };
+
     const handleRegister = () => {
         navigate('/registration');
     };
@@ -46,7 +50,7 @@ const Landing: React.FC = () => {
                             <MDBNavbarLink href="#features">Features</MDBNavbarLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="ms-3">
-                            <MDBNavbarLink href="#about">About</MDBNavbarLink>
+                            <MDBNavbarLink onClick={handleAbout} style={{cursor: 'pointer'}}>About</MDBNavbarLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="ms-3">
                             <MDBBtn color="primary" size="sm" onClick={handleLogin}>

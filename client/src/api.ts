@@ -112,18 +112,6 @@ class ApiClient {
     }
   }
 
-  async sendChatMessage(message: string) {
-    try {
-      const response = await this.client.post('/api/v1/chat/send', { message });
-      return response.data;
-    } catch (error: any) {
-      if (error.response || error.request) {
-        this.handleError(error);
-      }
-      throw error;
-    }
-  }
-
   async logout() {
     try {
       await this.client.post('/api/logout');
