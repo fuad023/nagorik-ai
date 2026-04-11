@@ -36,7 +36,7 @@ interface User {
   email: string;
   phone?: string;
   location?: string;
-  join_date?: string;
+  created_at?: string;
   role?: string;
 }
 
@@ -61,7 +61,7 @@ const Profile: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordLoading, setPasswordLoading] = useState(false);
 
-  // Load user from localStorage
+  // Load user from localStorage and fetch fresh from backend
   useEffect(() => {
     const stored = localStorage.getItem('user');
     if (stored) {
@@ -71,6 +71,16 @@ const Profile: React.FC = () => {
       const savedAvatar = localStorage.getItem(`avatar_${u.id}`);
       if (savedAvatar) setAvatarSrc(savedAvatar);
     }
+
+    const fetchFreshUser = async () => {
+      try {
+        const freshData = await ApiClient.getUserProfile();
+        if (freshData) setUser(freshData);
+      } catch (err) {
+        console.log("Using cached user data due to fetch error", err);
+      }
+    };
+    fetchFreshUser();
   }, []);
 
   // Fetch real report stats
@@ -333,7 +343,7 @@ const Profile: React.FC = () => {
                       <MDBCard className="info-card h-100 shadow-0 border bg-light">
                         <MDBCardBody className="p-3">
                           <span className="text-muted small text-uppercase fw-bold"><MDBIcon fas icon="calendar-alt" className="me-2" />Member Since</span>
-                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.join_date ?? 'Jan 2024'}</MDBCardText>
+                          <MDBCardText className="mb-0 fw-500 mt-2">{user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Jan 2024'}</MDBCardText>
                         </MDBCardBody>
                       </MDBCard>
                     </MDBCol>

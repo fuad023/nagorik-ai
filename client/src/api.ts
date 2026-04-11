@@ -47,12 +47,14 @@ class ApiClient {
     }
   }
 
-  async register(first_name: string, last_name: string, email: string, password: string, password_confirmation: string) {
+  async register(first_name: string, last_name: string, email: string, phone: string, location: string, password: string, password_confirmation: string) {
     try {
       const response = await this.client.post('/api/register', {
         first_name,
         last_name,
         email,
+        phone,
+        location,
         password,
         password_confirmation
       });
@@ -120,6 +122,19 @@ class ApiClient {
     } finally {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user');
+    }
+  }
+
+  async getUserProfile() {
+    try {
+      const response = await this.client.get('/api/user');
+      if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Fetch user profile failed:", error);
+      throw error;
     }
   }
 

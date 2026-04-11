@@ -22,6 +22,8 @@ class RegisterController extends Controller
             'first_name' => ['required', 'string', 'max:128'],
             'last_name' => ['required', 'string', 'max:128'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], // 'unique:'.User::class
+            'phone' => ['required', 'string', 'max:20'],
+            'location' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -29,6 +31,8 @@ class RegisterController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'location' => $request->location,
             'password' => Hash::make($request->password),
         ]);
 

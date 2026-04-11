@@ -15,6 +15,8 @@ interface RegErrors {
     firstName?: string;
     lastName?: string;
     email?: string;
+    phone?: string;
+    location?: string;
     password?: string;
     passwordConfirmation?: string;
 }
@@ -35,6 +37,16 @@ function validateEmail(email: string): string | undefined {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return "Please enter a valid email address.";
     if (email.length > 255) return "Email must not exceed 255 characters.";
+    return undefined;
+}
+
+function validatePhone(phone: string): string | undefined {
+    if (!phone.trim()) return "Phone number is required.";
+    return undefined;
+}
+
+function validateLocation(location: string): string | undefined {
+    if (!location.trim()) return "Location is required.";
     return undefined;
 }
 
@@ -76,6 +88,8 @@ export default function Registration() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [location, setLocation] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -104,6 +118,8 @@ export default function Registration() {
             firstName,
             lastName,
             email,
+            phone,
+            location,
             password,
             passwordConfirmation,
             ...overrides,
@@ -121,6 +137,14 @@ export default function Registration() {
         if (field === "email") {
             const err = validateEmail(vals.email);
             err ? (newErrors.email = err) : delete newErrors.email;
+        }
+        if (field === "phone") {
+            const err = validatePhone(vals.phone);
+            err ? (newErrors.phone = err) : delete newErrors.phone;
+        }
+        if (field === "location") {
+            const err = validateLocation(vals.location);
+            err ? (newErrors.location = err) : delete newErrors.location;
         }
         if (field === "password") {
             const err = validatePassword(vals.password);
@@ -142,6 +166,8 @@ export default function Registration() {
         firstName: string;
         lastName: string;
         email: string;
+        phone: string;
+        location: string;
         password: string;
         passwordConfirmation: string;
     }): RegErrors {
@@ -149,6 +175,8 @@ export default function Registration() {
             firstName: validateName(vals.firstName, "First name"),
             lastName: validateName(vals.lastName, "Last name"),
             email: validateEmail(vals.email),
+            phone: validatePhone(vals.phone),
+            location: validateLocation(vals.location),
             password: validatePassword(vals.password),
             passwordConfirmation: validateConfirmPassword(vals.password, vals.passwordConfirmation),
         };
@@ -160,11 +188,13 @@ export default function Registration() {
             firstName: true,
             lastName: true,
             email: true,
+            phone: true,
+            location: true,
             password: true,
             passwordConfirmation: true,
         });
 
-        const fieldErrors = getAllErrors({ firstName, lastName, email, password, passwordConfirmation });
+        const fieldErrors = getAllErrors({ firstName, lastName, email, phone, location, password, passwordConfirmation });
         const hasErrors = Object.values(fieldErrors).some(Boolean);
         setErrors(fieldErrors as RegErrors);
 
@@ -172,7 +202,7 @@ export default function Registration() {
 
         setIsSubmitting(true);
         try {
-            const data = await ApiClient.register(firstName, lastName, email, password, passwordConfirmation);
+            const data = await ApiClient.register(firstName, lastName, email, phone, location, password, passwordConfirmation);
             if (data && data.user) {
                 navigate("/login");
             }
@@ -320,6 +350,53 @@ export default function Registration() {
                                         <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.email}</span>
                                     )}
                                 </div>
+
+                                {/* Phone and Location */}
+                                <MDBRow className="mb-3">
+                                    <MDBCol sm="6" className="mb-3 mb-sm-0">
+                                        <div className={`border rounded-3 p-2 d-flex align-items-center ${touched.phone ? (errors.phone ? 'border-danger bg-danger bg-opacity-10' : 'border-success bg-success bg-opacity-10') : 'border-light bg-light'}`}>
+                                            <MDBIcon fas icon="phone" className="text-muted ms-2 me-2" />
+                                            <input
+                                                type="tel"
+                                                placeholder="Phone Number"
+                                                className="form-control border-0 bg-transparent shadow-none p-0"
+                                                value={phone}
+                                                onChange={(e) => {
+                                                    setPhone(e.target.value);
+                                                    if (touched.phone) updateError("phone", { phone: e.target.value });
+                                                }}
+                                                onBlur={() => handleBlur("phone")}
+                                                maxLength={20}
+                                                autoComplete="tel"
+                                            />
+                                        </div>
+                                        {touched.phone && errors.phone && (
+                                            <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.phone}</span>
+                                        )}
+                                    </MDBCol>
+
+                                    <MDBCol sm="6">
+                                        <div className={`border rounded-3 p-2 d-flex align-items-center ${touched.location ? (errors.location ? 'border-danger bg-danger bg-opacity-10' : 'border-success bg-success bg-opacity-10') : 'border-light bg-light'}`}>
+                                            <MDBIcon fas icon="map-marker-alt" className="text-muted ms-2 me-2" />
+                                            <input
+                                                type="text"
+                                                placeholder="Location (e.g. Dhaka)"
+                                                className="form-control border-0 bg-transparent shadow-none p-0"
+                                                value={location}
+                                                onChange={(e) => {
+                                                    setLocation(e.target.value);
+                                                    if (touched.location) updateError("location", { location: e.target.value });
+                                                }}
+                                                onBlur={() => handleBlur("location")}
+                                                maxLength={255}
+                                                autoComplete="address-level2"
+                                            />
+                                        </div>
+                                        {touched.location && errors.location && (
+                                            <span className="text-danger small mt-1 d-block"><MDBIcon fas icon="exclamation-circle" className="me-1"/>{errors.location}</span>
+                                        )}
+                                    </MDBCol>
+                                </MDBRow>
 
                                 {/* Password */}
                                 <div className="mb-3">
