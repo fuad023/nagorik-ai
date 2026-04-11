@@ -27,6 +27,7 @@ import '../styles/profile.css';
 import { useNavigate } from 'react-router-dom';
 import ApiClient from '../api';
 import toast from 'react-hot-toast';
+import { secrets } from '../secrets';
 
 interface User {
   id: number;
@@ -74,7 +75,7 @@ const Profile: React.FC = () => {
       const token = localStorage.getItem('auth_token');
       if (!token) return;
       try {
-        const response = await fetch('http://localhost:8000/api/v1/reports?mine=true&paginate=100', {
+        const response = await fetch(`${secrets.backendEndpoint}/api/v1/reports?mine=true&paginate=100`, {
           headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
         });
         if (response.ok) {
@@ -135,7 +136,7 @@ const Profile: React.FC = () => {
     setPasswordLoading(true);
     const token = localStorage.getItem('auth_token');
     try {
-      const response = await fetch('http://localhost:8000/api/change-password', {
+      const response = await fetch(`${secrets.backendEndpoint}/api/change-password`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
