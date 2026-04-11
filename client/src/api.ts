@@ -26,7 +26,7 @@ class ApiClient {
 
   async login(email: string, password: string) {
     try {
-      const response = await this.client.post('/login', { email, password });
+      const response = await this.client.post('/api/login', { email, password });
 
       if (response.data && response.data.token) {
         localStorage.setItem('auth_token', response.data.token);
@@ -49,7 +49,7 @@ class ApiClient {
 
   async register(first_name: string, last_name: string, email: string, phone: string, location: string, password: string, password_confirmation: string) {
     try {
-      const response = await this.client.post('/register', {
+      const response = await this.client.post('/api/register', {
         first_name,
         last_name,
         email,
@@ -84,7 +84,7 @@ class ApiClient {
       formData.append('mk_files[]', imageFile);
 
       const token = localStorage.getItem('auth_token');
-      const endpoint = `${secrets.backendEndpoint}/v1/reports`;
+      const endpoint = `${secrets.backendEndpoint}/api/v1/reports`;
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -116,7 +116,7 @@ class ApiClient {
 
   async logout() {
     try {
-      await this.client.post('/logout');
+      await this.client.post('/api/logout');
     } catch (error) {
       console.error(error);
     } finally {
@@ -127,7 +127,7 @@ class ApiClient {
 
   async googleAuth(credentialResponse: any) {
     try {
-      const response = await this.client.post('/auth/google/callback', {
+      const response = await this.client.post('/api/auth/google/callback', {
         code: credentialResponse,
       });
 
@@ -150,7 +150,7 @@ class ApiClient {
 
   async getGoogleAuthUrl() {
     try {
-      const response = await this.client.get('/auth/google/url');
+      const response = await this.client.get('/api/auth/google/url');
       return response.data.auth_url;
     } catch (error) {
       console.error('Failed to get Google auth URL:', error);
@@ -160,7 +160,7 @@ class ApiClient {
 
   async getUserProfile() {
     try {
-      const response = await this.client.get('/user');
+      const response = await this.client.get('/api/user');
       if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data));
         return response.data;
