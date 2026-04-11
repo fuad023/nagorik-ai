@@ -165,50 +165,6 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="dashboard-page">
-            {/* Top Navigation */}
-            <MDBNavbar expand="lg" light bgColor="white" className="shadow-sm sticky-top">
-                <MDBContainer fluid>
-                    <MDBNavbarBrand href="#" onClick={() => navigate('/landing')}>
-                        <MDBIcon fas icon="city" size="2x" className="text-primary me-2" />
-                        <span className="fw-bold text-primary">Nagorik-AI</span>
-                    </MDBNavbarBrand>
-                    <MDBNavbarNav className="ms-auto d-flex flex-row align-items-center">
-                        <MDBNavbarItem className="me-3 position-relative">
-                            <MDBIcon fas icon="bell" size="lg" className="text-muted cursor-pointer" />
-                            <MDBBadge color="danger" notification pill className="notification-badge">
-                                3
-                            </MDBBadge>
-                        </MDBNavbarItem>
-                        <MDBNavbarItem className="me-3">
-                            <div
-                                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
-                                onClick={() => navigate('/profile')}
-                            >
-                                <MDBIcon fas icon="user" />
-                            </div>
-                        </MDBNavbarItem>
-                        <MDBNavbarItem className="me-4">
-                            <div
-                                className="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer"
-                                onClick={() => navigate('/admin')}
-                            >
-                                <MDBIcon fas icon="fa-lock" />
-                            </div>
-                        </MDBNavbarItem>
-                        <MDBNavbarItem>
-                            <MDBBtn
-                                color="link"
-                                className="text-muted"
-                                onClick={handleLogout}
-                            >
-                                <MDBIcon fas icon="sign-out-alt" className="me-1" />
-                                Logout
-                            </MDBBtn>
-                        </MDBNavbarItem>
-                    </MDBNavbarNav>
-                </MDBContainer>
-            </MDBNavbar>
-
             {/* Main Content */}
             <MDBContainer fluid className="py-4">
                 {/* User Greeting */}
