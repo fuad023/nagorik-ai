@@ -26,6 +26,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.css';
 import { secrets } from '../secrets';
+import Chatbot from '../components/Chatbot';
 
 interface Report {
     id: number;
@@ -578,6 +579,9 @@ const Dashboard: React.FC = () => {
             >
                 <MDBIcon fas icon="plus" size="2x" />
             </MDBBtn>
+
+            {/* Chatbot Component */}
+            <Chatbot />
         </div>
     );
 };
