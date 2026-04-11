@@ -8,10 +8,6 @@ import {
     MDBCardBody,
     MDBIcon,
     MDBTypography,
-    MDBNavbar,
-    MDBNavbarBrand,
-    MDBNavbarNav,
-    MDBNavbarItem,
     MDBBadge,
     MDBInput,
     MDBTextArea,
@@ -144,13 +140,13 @@ const Dashboard: React.FC = () => {
             report.category.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = filterStatus === 'all' || report.status === filterStatus;
         const matchesCategory = filterCategory === 'all' || report.category.toLowerCase() === filterCategory.toLowerCase();
-        
+
         let matchesDate = true;
         if (filterDate !== 'all' && report.rawDate) {
             const rDate = new Date(report.rawDate);
             const now = new Date();
             const diffDays = (now.getTime() - rDate.getTime()) / (1000 * 3600 * 24);
-            
+
             if (filterDate === 'today') {
                 matchesDate = rDate.toDateString() === now.toDateString();
             } else if (filterDate === '7days') {
@@ -159,7 +155,7 @@ const Dashboard: React.FC = () => {
                 matchesDate = diffDays <= 30;
             }
         }
-        
+
         return matchesSearch && matchesStatus && matchesCategory && matchesDate;
     });
 
@@ -300,9 +296,9 @@ const Dashboard: React.FC = () => {
                                                     <MDBRow className="align-items-center">
                                                         <MDBCol md="2" className="d-none d-md-block">
                                                             <div className="report-card-img-wrapper rounded overflow-hidden">
-                                                                <img 
-                                                                    src={report.imageUrl} 
-                                                                    alt={report.title} 
+                                                                <img
+                                                                    src={report.imageUrl}
+                                                                    alt={report.title}
                                                                     className="img-fluid w-100 h-100 object-fit-cover"
                                                                     style={{ minHeight: '80px' }}
                                                                 />

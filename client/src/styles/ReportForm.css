@@ -140,23 +140,18 @@ html, body {
 
 .input-icon-wrapper .form-control,
 .input-icon-wrapper .form-control:focus {
-  padding-left: 2.4rem !important;
+  /* padding-left: 2.4rem !important; disabled to stop label distortion */
 }
 
 /* MDB overrides for consistent styling */
 .form-control {
-  border-radius: var(--radius-sm) !important;
-  border: 1.5px solid var(--border) !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 0.9rem !important;
   color: var(--text-primary) !important;
-  transition: border-color var(--transition), box-shadow var(--transition) !important;
   background: #fafbff !important;
 }
 
 .form-control:focus {
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12) !important;
   background: #ffffff !important;
 }
 
