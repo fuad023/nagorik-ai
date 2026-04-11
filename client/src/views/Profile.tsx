@@ -208,6 +208,11 @@ const Profile: React.FC = () => {
       <MDBContainer className="py-5 h-100 profile-container">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="10" xl="8">
+            <div className="mb-3 text-start">
+              <MDBBtn color="light" size="sm" className="shadow-sm rounded-pill text-primary fw-bold px-3" onClick={() => navigate(-1)}>
+                <MDBIcon fas icon="arrow-left" className="me-1" /> Back
+              </MDBBtn>
+            </div>
             <MDBCard className="profile-card">
               {/* Header */}
               <div className="profile-header text-white d-flex flex-row" style={{ backgroundColor: '#0288d1', height: '220px', borderRadius: '15px 15px 0 0' }}>
