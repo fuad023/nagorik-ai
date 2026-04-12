@@ -1,0 +1,73 @@
+services:
+
+  db:
+    image: mysql
+    container_name: mysql_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/schema:/docker-entrypoint-initdb.d/schema
+      - ./database/seed:/docker-entrypoint-initdb.d/seed
+      - ./database/init.sh:/docker-entrypoint-initdb.d/init.sh
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: ./server
+    image: laravel
+    container_name: laravel_server
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: ${APP_NAME}
+      APP_ENV: ${APP_ENV}
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      LOG_LEVEL: ${LOG_LEVEL}
+
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      CLOUDINARY_URL: ${CLOUDINARY_URL}
+    # include when in development
+    # volumes:
+    #   - ./server:/var/www
+    #   - /var/www/vendor # prevent host vendor from overwriting container's
+    depends_on:
+      db:
+        condition: service_healthy
+
+  client:
+    build: ./client
+    image: react
+    container_name: react_client
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+    # include when in development
+    # volumes:
+    #   - ./client:/app
+    #   - /app/node_modules # prevent host node_modules from overwriting container's
+    depends_on:
+      - server
+
+volumes:
+  db_data:
