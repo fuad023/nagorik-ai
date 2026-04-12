@@ -17,11 +17,11 @@ import {
   MDBModalBody,
   MDBModalFooter,
   MDBInput,
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBNavbarNav,
-  MDBNavbarItem,
-  MDBBadge,
+  // MDBNavbar,
+  // MDBNavbarBrand,
+  // MDBNavbarNav,
+  // MDBNavbarItem,
+  // MDBBadge,
 } from 'mdb-react-ui-kit';
 import '../styles/profile.css';
 import { useNavigate } from 'react-router-dom';
